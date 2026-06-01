@@ -1,0 +1,18 @@
+# Build output
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# Rider / VS
+.vs/
+.idea/
+*.user
+
+# Test results
+[Tt]est[Rr]esults/
+*.trx
+
+# Local session files (may contain real tokens — never commit)
+*.session.json
+eitaa.session.json

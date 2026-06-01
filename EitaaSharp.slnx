@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/EitaaSharp.Sample.Console/EitaaSharp.Sample.Console.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/EitaaSharp.Client/EitaaSharp.Client.csproj" />
+    <Project Path="src/EitaaSharp.Schema/EitaaSharp.Schema.csproj" />
+    <Project Path="src/EitaaSharp.Tl/EitaaSharp.Tl.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EitaaSharp.Client.Tests/EitaaSharp.Client.Tests.csproj" />
+    <Project Path="tests/EitaaSharp.Tl.Tests/EitaaSharp.Tl.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/EitaaSharp.SchemaGen/EitaaSharp.SchemaGen.csproj" />
+  </Folder>
+</Solution>

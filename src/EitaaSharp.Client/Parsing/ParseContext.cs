@@ -1,4 +1,5 @@
 using Schema = EitaaSharp.Schema;
+using Messages = EitaaSharp.Schema.Messages;
 
 namespace EitaaSharp.Client;
 
@@ -111,6 +112,57 @@ internal sealed class ParseContext
                 return m;
         return null;
     }
+
+    /// <summary>Parses every new/edited message carried by an <c>Updates</c> result (used by forward).</summary>
+    public static IReadOnlyList<Message> AllFromUpdates(EitaaClient client, Schema.IUpdates updates)
+    {
+        switch (updates)
+        {
+            case Schema.UpdatesContainer c:
+                return CollectMessages(client, c.Updates, c.Users, c.Chats);
+            case Schema.UpdatesCombined c:
+                return CollectMessages(client, c.Updates, c.Users, c.Chats);
+            case Schema.UpdateShort s:
+            {
+                var ctx = new ParseContext(client, null, null);
+                return ctx.MessageFromUpdate(s.Update) is { } m ? new[] { m } : Array.Empty<Message>();
+            }
+            default:
+                return Array.Empty<Message>();
+        }
+    }
+
+    private static IReadOnlyList<Message> CollectMessages(
+        EitaaClient client, IReadOnlyList<Schema.IUpdate> updates, Schema.IUser[] users, Schema.IChat[] chats)
+    {
+        var ctx = new ParseContext(client, users, chats);
+        var list = new List<Message>();
+        foreach (var u in updates)
+            if (ctx.MessageFromUpdate(u) is { } m)
+                list.Add(m);
+        return list;
+    }
+
+    /// <summary>Parses a <c>messages.Messages</c>/<c>MessagesSlice</c>/<c>ChannelMessages</c> result.</summary>
+    public static IReadOnlyList<Message> FromMessages(EitaaClient client, Messages.IMessages result)
+    {
+        var (msgs, users, chats) = Unpack(result);
+        var ctx = new ParseContext(client, users, chats);
+        var list = new List<Message>();
+        foreach (var m in msgs)
+            if (ctx.ParseMessage(m) is { } pm)
+                list.Add(pm);
+        return list;
+    }
+
+    private static (Schema.IMessage[] messages, Schema.IUser[] users, Schema.IChat[] chats) Unpack(Messages.IMessages result)
+        => result switch
+        {
+            Messages.Messages m => (m.MessagesValue, m.Users, m.Chats),
+            Messages.MessagesSlice s => (s.Messages, s.Users, s.Chats),
+            Messages.ChannelMessages c => (c.Messages, c.Users, c.Chats),
+            _ => (Array.Empty<Schema.IMessage>(), Array.Empty<Schema.IUser>(), Array.Empty<Schema.IChat>()),
+        };
 
     private Message? MessageFromUpdate(Schema.IUpdate update) => update switch
     {

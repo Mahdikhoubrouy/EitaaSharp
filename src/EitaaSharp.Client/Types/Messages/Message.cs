@@ -55,5 +55,17 @@ public sealed class Message
     public Task<Message> ReplyAsync(string text, CancellationToken cancellationToken = default)
         => _client.SendMessageAsync(Chat.Id, text, replyToMessageId: Id, cancellationToken: cancellationToken);
 
+    /// <summary>Edits this message's text.</summary>
+    public Task<Message> EditAsync(string text, CancellationToken cancellationToken = default)
+        => _client.EditMessageTextAsync(Chat.Id, Id, text, cancellationToken);
+
+    /// <summary>Deletes this message.</summary>
+    public Task<int> DeleteAsync(bool revoke = true, CancellationToken cancellationToken = default)
+        => _client.DeleteMessagesAsync(Chat.Id, [Id], revoke, cancellationToken);
+
+    /// <summary>Forwards this message to another chat.</summary>
+    public Task<IReadOnlyList<Message>> ForwardAsync(ChatId to, CancellationToken cancellationToken = default)
+        => _client.ForwardMessagesAsync(to, Chat.Id, [Id], cancellationToken: cancellationToken);
+
     public override string ToString() => $"Message(id={Id}, chat={Chat.Id}, \"{Text}\")";
 }

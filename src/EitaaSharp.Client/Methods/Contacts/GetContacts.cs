@@ -1,14 +1,15 @@
+using Schema = EitaaSharp.Schema;
 using Contacts = EitaaSharp.Schema.Contacts;
 
 namespace EitaaSharp.Client;
 
 public sealed partial class EitaaClient
 {
-    /// <summary>
-    /// Fetches the signed-in account's saved contacts.
-    /// </summary>
+    /// <summary>Fetches the signed-in account's saved contacts.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
-    /// <returns>The contact list together with the corresponding users.</returns>
-    public Task<Contacts.IContacts> GetContactsAsync(CancellationToken cancellationToken = default)
-        => CallAsync(new Contacts.GetContacts { Hash = 0 }, cancellationToken);
+    public async Task<IReadOnlyList<User>> GetContactsAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await CallAsync(new Contacts.GetContacts { Hash = 0 }, cancellationToken).ConfigureAwait(false);
+        return result is Contacts.Contacts c ? ResultParser.Users(this, c.Users) : Array.Empty<User>();
+    }
 }

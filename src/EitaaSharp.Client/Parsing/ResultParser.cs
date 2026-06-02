@@ -27,6 +27,16 @@ internal static class ResultParser
     public static int AffectedCount(Messages.IAffectedMessages affected)
         => affected is Messages.AffectedMessages a ? a.PtsCount : 0;
 
+    /// <summary>A vector of raw users → friendly <see cref="User"/> objects (skipping <c>userEmpty</c>).</summary>
+    public static IReadOnlyList<User> Users(EitaaClient client, Schema.IUser[] users)
+    {
+        var list = new List<User>(users.Length);
+        foreach (var u in users)
+            if (User.From(client, u) is { } fu)
+                list.Add(fu);
+        return list;
+    }
+
     /// <summary>A <c>users.userFull</c> → the friendly <see cref="User"/>.</summary>
     public static User UserFromFull(EitaaClient client, Schema.IUserFull full)
         => User.From(client, (full as Schema.UserFull)?.User)

@@ -43,7 +43,7 @@ public class SessionAndPeerTests
         var response = new UpdatesContainer
         {
             Updates = [],
-            Users = [new User { Id = 7, AccessHash = 555 }, new User { Id = 8, AccessHash = 888 }],
+            Users = [new EitaaSharp.Schema.User { Id = 7, AccessHash = 555 }, new EitaaSharp.Schema.User { Id = 8, AccessHash = 888 }],
             Chats = [],
             Date = 0,
             Seq = 0,

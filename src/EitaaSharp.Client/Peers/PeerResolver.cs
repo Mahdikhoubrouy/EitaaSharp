@@ -61,7 +61,9 @@ public sealed class PeerResolver
         if (type.GetProperty("Id")?.GetValue(entity) is long id &&
             type.GetProperty("AccessHash")?.GetValue(entity) is long accessHash)
         {
-            _session.SetAccessHash(id, accessHash);
+            // Only IUser and Channel expose an AccessHash; basic Chat has none.
+            var peerType = entity is IUser ? PeerType.User : PeerType.Channel;
+            _session.SetPeer(id, accessHash, peerType);
         }
     }
 

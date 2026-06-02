@@ -21,7 +21,7 @@ public class TokenPersistenceTests
         try
         {
             var w = new TlWriter();
-            new Auth.Authorization { Token = "tok-xyz", User = new User { Id = 1 } }.Serialize(w);
+            new Auth.Authorization { Token = "tok-xyz", User = new EitaaSharp.Schema.User { Id = 1 } }.Serialize(w);
             var transport = new FixedTransport(w.ToArray());
 
             var session = JsonFileSession.Open(path, imei: "mtpasdsxfgaabbcc__web");

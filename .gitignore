@@ -16,3 +16,4 @@ obj/
 # Local session files (may contain real tokens — never commit)
 *.session.json
 eitaa.session.json
+eitaa-android-source

@@ -2,9 +2,6 @@ using System.Text;
 using EitaaSharp.Client;
 using EitaaSharp.Client.Rpc;
 using EitaaSharp.Client.Session;
-using EitaaSharp.Schema;
-using Auth = EitaaSharp.Schema.Auth;
-using Contacts = EitaaSharp.Schema.Contacts;
 
 // End-to-end sample:
 //   1) If we are not logged in yet, run the interactive login (phone -> code -> sign in).
@@ -45,19 +42,19 @@ try
     }
 
     var me = await client.GetMeAsync();
-    Console.WriteLine($"✅ Signed in. user_id = {UserIdOf(me)}");
+    Console.WriteLine($"✅ Signed in as {me.FullName} (id={me.Id}).");
 
-    // ---- 2) Send a message to a user ----
-    Console.Write("\nSend to (@username, or blank for Saved Messages): ");
+    // ---- 2) Send a message ----
+    Console.Write("\nSend to (@username or id, blank = Saved Messages): ");
     string target = (Console.ReadLine() ?? "").Trim();
+    if (target.Length == 0) target = "me";
 
     Console.Write("Message text: ");
-    string text = Console.ReadLine() ?? "Hello from the C# Eitaa client 👋";
+    string text = Console.ReadLine() ?? "Hello from EitaaSharp 👋";
 
-    IInputPeer peer = await ResolveTargetAsync(client, target);
-
-    var sent = await client.SendMessageAsync(peer, text);
-    Console.WriteLine($"✅ Message sent. ({sent.GetType().Name})");
+    // ChatId accepts "@username", a numeric id, or "me" — resolution is automatic.
+    Message sent = await client.SendMessageAsync(target, text);
+    Console.WriteLine($"✅ Message sent. id={sent.Id}, chat={sent.Chat.Id}");
 }
 catch (RpcException ex)
 {
@@ -102,22 +99,3 @@ async Task LoginAsync(EitaaClient c)
     Console.WriteLine("✅ Logged in; token saved to the session file.");
 }
 
-// Turns "@username" (or blank) into an InputPeer the send call can use.
-async Task<IInputPeer> ResolveTargetAsync(EitaaClient c, string target)
-{
-    if (string.IsNullOrEmpty(target))
-        return new InputPeerSelf(); // Saved Messages
-
-    // Resolving caches the peer's access hash, so Peers.* can build the input peer afterwards.
-    var resolved = (Contacts.ResolvedPeer)await c.ResolveUsernameAsync(target);
-    return resolved.Peer switch
-    {
-        PeerUser u => c.Peers.UserPeer(u.UserId),
-        PeerChannel ch => c.Peers.ChannelPeer(ch.ChannelId),
-        PeerChat g => c.Peers.ChatPeer(g.ChatId),
-        _ => throw new NotSupportedException($"Unsupported peer: {resolved.Peer.GetType().Name}"),
-    };
-}
-
-static long UserIdOf(IUserFull full)
-    => full is UserFull { User: User u } ? u.Id : 0;

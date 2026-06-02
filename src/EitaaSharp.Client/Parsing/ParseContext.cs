@@ -1,5 +1,6 @@
 using Schema = EitaaSharp.Schema;
 using Messages = EitaaSharp.Schema.Messages;
+using Channels = EitaaSharp.Schema.Channels;
 
 namespace EitaaSharp.Client;
 
@@ -163,6 +164,88 @@ internal sealed class ParseContext
             Messages.ChannelMessages c => (c.Messages, c.Users, c.Chats),
             _ => (Array.Empty<Schema.IMessage>(), Array.Empty<Schema.IUser>(), Array.Empty<Schema.IChat>()),
         };
+
+    // ---- chats / members / dialogs ----
+
+    private User? UserById(long id) => _users.TryGetValue(id, out var u) ? new User(_client, u) : null;
+
+    /// <summary>Finds the chat with <paramref name="id"/> inside a full-chat result.</summary>
+    public static Chat ChatFromFull(EitaaClient client, Messages.IChatFull full, long id)
+    {
+        if (full is Messages.ChatFull cf)
+            foreach (var ch in cf.Chats)
+                if (ChatId(ch) == id)
+                    return Chat.FromRaw(client, ch);
+        return Chat.Minimal(client, id, ChatType.Group);
+    }
+
+    /// <summary>Maps a channel-participants result to friendly <see cref="ChatMember"/> objects.</summary>
+    public static IReadOnlyList<ChatMember> MembersFrom(EitaaClient client, Channels.IChannelParticipants result)
+    {
+        if (result is not Channels.ChannelParticipants cp)
+            return Array.Empty<ChatMember>();
+
+        var ctx = new ParseContext(client, cp.Users, cp.Chats);
+        var list = new List<ChatMember>();
+        foreach (var p in cp.Participants)
+        {
+            var (uid, status) = ParticipantInfo(p);
+            var user = ctx.UserById(uid) ?? new User(client, new Schema.User { Id = uid });
+            list.Add(new ChatMember(user, status, p));
+        }
+        return list;
+    }
+
+    /// <summary>Maps a dialogs result to friendly <see cref="Dialog"/> objects.</summary>
+    public static IReadOnlyList<Dialog> DialogsFrom(EitaaClient client, Messages.IDialogs result)
+    {
+        var (dialogs, users, chats) = UnpackDialogs(result);
+        var ctx = new ParseContext(client, users, chats);
+        var list = new List<Dialog>();
+        foreach (var d in dialogs)
+            if (d is Schema.Dialog dd)
+                list.Add(new Dialog(ctx.ResolveChat(dd.Peer), dd.TopMessage, dd.UnreadCount, dd));
+        return list;
+    }
+
+    /// <summary>Maps a single channel-participant result to a friendly <see cref="ChatMember"/>.</summary>
+    public static ChatMember MemberFrom(EitaaClient client, Channels.IChannelParticipant result)
+    {
+        if (result is Channels.ChannelParticipant cp)
+        {
+            var ctx = new ParseContext(client, cp.Users, cp.Chats);
+            var (uid, status) = ParticipantInfo(cp.Participant);
+            var user = ctx.UserById(uid) ?? new User(client, new Schema.User { Id = uid });
+            return new ChatMember(user, status, cp.Participant);
+        }
+        throw new InvalidOperationException($"Unexpected participant result: {result.GetType().Name}");
+    }
+
+    private static (long uid, ChatMemberStatus status) ParticipantInfo(Schema.IChannelParticipant p) => p switch
+    {
+        Schema.ChannelParticipantCreator c => (c.UserId, ChatMemberStatus.Creator),
+        Schema.ChannelParticipantAdmin a => (a.UserId, ChatMemberStatus.Administrator),
+        Schema.ChannelParticipantSelf s => (s.UserId, ChatMemberStatus.Member),
+        Schema.ChannelParticipantBanned b => (PeerUid(b.Peer), ChatMemberStatus.Banned),
+        Schema.ChannelParticipantLeft l => (PeerUid(l.Peer), ChatMemberStatus.Left),
+        Schema.ChannelParticipant cp => (cp.UserId, ChatMemberStatus.Member),
+        _ => (0, ChatMemberStatus.Member),
+    };
+
+    private static long PeerUid(Schema.IPeer peer) => peer is Schema.PeerUser u ? u.UserId : 0;
+
+    private static (Schema.IDialog[] dialogs, Schema.IUser[] users, Schema.IChat[] chats) UnpackDialogs(Messages.IDialogs result)
+    {
+        if (result is Messages.Dialogs d)
+            return (d.DialogsValue, d.Users, d.Chats);
+
+        var t = result.GetType();
+        var dialogs = (t.GetProperty("Dialogs") ?? t.GetProperty("DialogsValue"))?.GetValue(result) as Schema.IDialog[]
+                      ?? Array.Empty<Schema.IDialog>();
+        var users = t.GetProperty("Users")?.GetValue(result) as Schema.IUser[] ?? Array.Empty<Schema.IUser>();
+        var chats = t.GetProperty("Chats")?.GetValue(result) as Schema.IChat[] ?? Array.Empty<Schema.IChat>();
+        return (dialogs, users, chats);
+    }
 
     private Message? MessageFromUpdate(Schema.IUpdate update) => update switch
     {

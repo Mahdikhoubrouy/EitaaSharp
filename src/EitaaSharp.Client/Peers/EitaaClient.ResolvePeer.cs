@@ -47,4 +47,15 @@ public sealed partial class EitaaClient
         PeerChat g => _peers.ChatPeer(g.ChatId),
         _ => throw new NotSupportedException($"Unsupported peer: {peer.GetType().Name}"),
     };
+
+    private static IInputUser ToInputUser(IInputPeer peer) => peer switch
+    {
+        InputPeerSelf => new InputUserSelf(),
+        InputPeerUser u => new InputUser { UserId = u.UserId, AccessHash = u.AccessHash },
+        _ => throw new InvalidOperationException("This chat is not a user."),
+    };
+
+    private static InputChannel ToInputChannel(IInputPeer peer) => peer is InputPeerChannel c
+        ? new InputChannel { ChannelId = c.ChannelId, AccessHash = c.AccessHash }
+        : throw new InvalidOperationException("This chat is not a channel/supergroup.");
 }

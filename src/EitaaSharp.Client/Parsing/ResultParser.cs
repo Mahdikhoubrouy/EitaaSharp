@@ -1,5 +1,6 @@
 using Schema = EitaaSharp.Schema;
 using Messages = EitaaSharp.Schema.Messages;
+using Channels = EitaaSharp.Schema.Channels;
 
 namespace EitaaSharp.Client;
 
@@ -30,4 +31,20 @@ internal static class ResultParser
     public static User UserFromFull(EitaaClient client, Schema.IUserFull full)
         => User.From(client, (full as Schema.UserFull)?.User)
            ?? throw new InvalidOperationException("userFull contained no user.");
+
+    /// <summary>A full-chat result → the friendly <see cref="Chat"/> with the given id.</summary>
+    public static Chat ChatFromFull(EitaaClient client, Messages.IChatFull full, long id)
+        => ParseContext.ChatFromFull(client, full, id);
+
+    /// <summary>A channel-participants result → friendly <see cref="ChatMember"/> objects.</summary>
+    public static IReadOnlyList<ChatMember> Members(EitaaClient client, Channels.IChannelParticipants result)
+        => ParseContext.MembersFrom(client, result);
+
+    /// <summary>A single channel-participant result → a friendly <see cref="ChatMember"/>.</summary>
+    public static ChatMember Member(EitaaClient client, Channels.IChannelParticipant result)
+        => ParseContext.MemberFrom(client, result);
+
+    /// <summary>A dialogs result → friendly <see cref="Dialog"/> objects.</summary>
+    public static IReadOnlyList<Dialog> Dialogs(EitaaClient client, Messages.IDialogs result)
+        => ParseContext.DialogsFrom(client, result);
 }

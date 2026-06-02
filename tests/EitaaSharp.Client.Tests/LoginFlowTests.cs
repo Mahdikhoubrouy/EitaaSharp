@@ -34,7 +34,7 @@ public class LoginFlowTests
         byte[] authorization = Serialize(new Auth.Authorization
         {
             Token = "session-token",
-            User = new User { Id = 99 },
+            User = new EitaaSharp.Schema.User { Id = 99 },
         });
 
         var transport = new ScriptedTransport(call => call == 0 ? sentCode : authorization);

@@ -28,6 +28,12 @@ public interface IEitaaSession
     /// <summary>Looks up a cached access hash for a peer id.</summary>
     bool TryGetAccessHash(long peerId, out long accessHash);
 
+    /// <summary>Records a peer's access hash together with its kind (user/chat/channel).</summary>
+    void SetPeer(long peerId, long accessHash, PeerType type);
+
+    /// <summary>Looks up a cached peer (access hash + kind). Returns false if the kind is unknown.</summary>
+    bool TryGetPeer(long peerId, out long accessHash, out PeerType type);
+
     /// <summary>Persists the session (no-op for in-memory sessions).</summary>
     Task SaveAsync(CancellationToken cancellationToken = default);
 }

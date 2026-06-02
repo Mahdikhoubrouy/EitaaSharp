@@ -1,36 +1,35 @@
-using EitaaSharp.Schema;
+using Schema = EitaaSharp.Schema;
 using Messages = EitaaSharp.Schema.Messages;
 
 namespace EitaaSharp.Client;
 
 public sealed partial class EitaaClient
 {
-    /// <summary>
-    /// Uploads a local file and sends it as a document (any non-photo file). The upload is chunked
-    /// automatically (see <see cref="Uploads"/>).
-    /// </summary>
-    /// <param name="peer">Destination peer.</param>
-    /// <param name="path">Path to the local file to upload.</param>
-    /// <param name="caption">Optional caption shown with the document.</param>
-    /// <param name="mimeType">MIME type of the file, e.g. <c>application/pdf</c>; defaults to a generic binary type.</param>
-    /// <param name="cancellationToken">Cancels the upload and the send.</param>
-    /// <returns>The server updates produced by the send, containing the new media message.</returns>
-    public async Task<IUpdates> SendDocumentAsync(
-        IInputPeer peer, string path, string caption = "", string mimeType = "application/octet-stream",
+    /// <summary>Uploads a local file and sends it as a document.</summary>
+    /// <param name="chat">Destination — id, <c>@username</c>, or <c>"me"</c>.</param>
+    /// <param name="path">Path to the local file.</param>
+    /// <param name="caption">Optional caption.</param>
+    /// <param name="mimeType">MIME type; defaults to a generic binary type.</param>
+    /// <param name="cancellationToken">Cancels the upload and send.</param>
+    /// <returns>The sent <see cref="Message"/>.</returns>
+    public async Task<Message> SendDocumentAsync(
+        ChatId chat, string path, string caption = "", string mimeType = "application/octet-stream",
         CancellationToken cancellationToken = default)
     {
+        var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
         var file = await Uploads.UploadAsync(path, cancellationToken).ConfigureAwait(false);
-        return await CallAsync(new Messages.SendMedia
+        var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,
-            Media = new InputMediaUploadedDocument
+            Media = new Schema.InputMediaUploadedDocument
             {
                 File = file,
                 MimeType = mimeType,
-                Attributes = [new DocumentAttributeFilename { FileName = Path.GetFileName(path) }],
+                Attributes = [new Schema.DocumentAttributeFilename { FileName = Path.GetFileName(path) }],
             },
             Message = caption,
             RandomId = RandomId(),
         }, cancellationToken).ConfigureAwait(false);
+        return ResultParser.MessageFromUpdates(this, updates, peer, caption);
     }
 }

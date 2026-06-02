@@ -1,18 +1,20 @@
-using EitaaSharp.Schema;
+using Schema = EitaaSharp.Schema;
+using Users = EitaaSharp.Schema.Users;
 
 namespace EitaaSharp.Client;
 
 public sealed partial class EitaaClient
 {
-    /// <summary>
-    /// Fetches the basic info (name, username, photo) of several users at once.
-    /// </summary>
-    /// <param name="userIds">Ids of the users to fetch (access hashes come from the peer cache).</param>
+    /// <summary>Fetches the basic info of one or more users.</summary>
+    /// <param name="users">The users — ids, @usernames, or <c>"me"</c>.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
-    /// <returns>The requested users.</returns>
-    public Task<IUser[]> GetUsersAsync(long[] userIds, CancellationToken cancellationToken = default)
-        => CallAsync(new EitaaSharp.Schema.Users.GetUsers
-        {
-            Id = Array.ConvertAll<long, IInputUser>(userIds, _peers.User),
-        }, cancellationToken);
+    public async Task<IReadOnlyList<User>> GetUsersAsync(ChatId[] users, CancellationToken cancellationToken = default)
+    {
+        var inputUsers = new Schema.IInputUser[users.Length];
+        for (int i = 0; i < users.Length; i++)
+            inputUsers[i] = ToInputUser(await ResolvePeerAsync(users[i], cancellationToken).ConfigureAwait(false));
+
+        var result = await CallAsync(new Users.GetUsers { Id = inputUsers }, cancellationToken).ConfigureAwait(false);
+        return ResultParser.Users(this, result);
+    }
 }

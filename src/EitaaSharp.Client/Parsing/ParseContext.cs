@@ -165,6 +165,17 @@ internal sealed class ParseContext
             _ => (Array.Empty<Schema.IMessage>(), Array.Empty<Schema.IUser>(), Array.Empty<Schema.IChat>()),
         };
 
+    /// <summary>Resolves a list of peers (e.g. global-search results) to friendly <see cref="Chat"/> objects.</summary>
+    public static IReadOnlyList<Chat> ChatsFromPeers(
+        EitaaClient client, IEnumerable<Schema.IPeer> peers, Schema.IUser[] users, Schema.IChat[] chats)
+    {
+        var ctx = new ParseContext(client, users, chats);
+        var list = new List<Chat>();
+        foreach (var p in peers)
+            list.Add(ctx.ResolveChat(p));
+        return list;
+    }
+
     // ---- chats / members / dialogs ----
 
     private User? UserById(long id) => _users.TryGetValue(id, out var u) ? new User(_client, u) : null;

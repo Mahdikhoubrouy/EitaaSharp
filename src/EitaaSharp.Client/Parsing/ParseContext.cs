@@ -144,6 +144,22 @@ internal sealed class ParseContext
         return list;
     }
 
+    /// <summary>Parses the new messages from an <c>updates.getDifference</c> result.</summary>
+    public static IReadOnlyList<Message> MessagesFromDifference(
+        EitaaClient client, Schema.IMessage[] newMessages, IReadOnlyList<Schema.IUpdate> otherUpdates,
+        Schema.IUser[] users, Schema.IChat[] chats)
+    {
+        var ctx = new ParseContext(client, users, chats);
+        var list = new List<Message>();
+        foreach (var m in newMessages)
+            if (ctx.ParseMessage(m) is { } pm)
+                list.Add(pm);
+        foreach (var u in otherUpdates)
+            if (ctx.MessageFromUpdate(u) is { } pm)
+                list.Add(pm);
+        return list;
+    }
+
     /// <summary>Parses a <c>messages.Messages</c>/<c>MessagesSlice</c>/<c>ChannelMessages</c> result.</summary>
     public static IReadOnlyList<Message> FromMessages(EitaaClient client, Messages.IMessages result)
     {

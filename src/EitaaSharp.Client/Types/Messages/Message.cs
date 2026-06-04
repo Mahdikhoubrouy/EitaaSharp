@@ -67,5 +67,12 @@ public sealed class Message
     public Task<IReadOnlyList<Message>> ForwardAsync(ChatId to, CancellationToken cancellationToken = default)
         => _client.ForwardMessagesAsync(to, Chat.Id, [Id], cancellationToken: cancellationToken);
 
+    /// <summary>Downloads this message's photo/document into memory.</summary>
+    public Task<byte[]> DownloadAsync(CancellationToken cancellationToken = default)
+        => _client.DownloadMediaAsync(this, cancellationToken);
+
+    /// <summary>True if this message has a downloadable photo or document.</summary>
+    public bool HasMedia => Media is Schema.MessageMediaPhoto or Schema.MessageMediaDocument;
+
     public override string ToString() => $"Message(id={Id}, chat={Chat.Id}, \"{Text}\")";
 }

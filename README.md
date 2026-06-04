@@ -58,39 +58,52 @@ using EitaaSharp.Client.Session;
 
 // A persistent session file remembers the token + peer cache across runs.
 var session = JsonFileSession.Open("my-account.session.json");
-
 using var client = new EitaaClient(new EitaaClientOptions { Session = session });
 
-// Update events
-client.UpdateReceived += (_, update) => Console.WriteLine($"update: {update.GetType().Name}");
+// One-call login (Eitaa delivers the code in-app to your other logged-in device).
+// On later runs the stored token is reused and no prompts appear.
+User me = await client.StartAsync(
+    requestPhoneNumber: () => Task.FromResult(Console.ReadLine()!),
+    requestCode:        () => Task.FromResult(Console.ReadLine()!));
+Console.WriteLine($"Signed in as {me.FullName}");
 
-// First run: log in. Eitaa sends the code in-app to your other logged-in device.
-// SendCodeAsync stores the phone + phone_code_hash in the session, so SignInAsync(code)
-// just needs the code. The token is saved into the session automatically on success.
-if (string.IsNullOrEmpty(session.Token))
-{
-    await client.SendCodeAsync("+98912...");   // default (empty) api_id/hash — what Eitaa accepts
-    await client.SignInAsync("12345");          // reads phone + hash from the session; token persisted
-}
+// Address chats/users/channels by id, @username, or "me" — resolution is automatic.
+Message sent = await client.SendMessageAsync("@my_channel", "Hello from C#!");
+await sent.ReplyAsync("a reply");
+await sent.EditAsync("edited");
 
-// High-level helpers (peers addressed by id; access hashes are cached for you)
-await client.SendMessageAsync(client.Peers.ChannelPeer(channelId: 123), "Hello from C#!");
-var dialogs = await client.GetDialogsAsync(limit: 50);
-var history = await client.GetHistoryAsync(client.Peers.UserPeer(userId: 456), limit: 20);
-await client.SendPhotoAsync(client.Peers.ChannelPeer(123), "photo.jpg", caption: "nice");
-await client.JoinChannelAsync(123);
-var me = await client.GetMeAsync();
+// Friendly objects with auto-paging
+await foreach (Message m in client.GetChatHistoryAsync("@news", limit: 200))
+    Console.WriteLine($"{m.From?.Username}: {m.Text}");
 
-// Anything not wrapped: call the raw TL method record directly (full API surface).
+await foreach (Dialog d in client.GetDialogsAsync())
+    Console.WriteLine($"{d.Chat.Title ?? d.Chat.Id.ToString()} — {d.UnreadCount} unread");
+
+await client.SendPhotoAsync("me", "photo.jpg", caption: "nice");
+Chat chat = await client.GetChatAsync("@my_channel");
+await client.JoinChatAsync("@some_channel");
+
+// Media download
+byte[] bytes = await sent.DownloadAsync();   // when sent.HasMedia
+
+// Anything not wrapped: call the raw TL method record directly (full ~423-method API).
 var wallpapers = await client.InvokeAsync(new EitaaSharp.Schema.Account.GetWallPapers { Hash = 0 });
 ```
 
+### Two layers (like Pyrogram)
+- **High-level** — friendly methods returning `Message`/`Chat`/`User`/`Dialog`/`ChatMember`,
+  accepting a `ChatId` (id / `@username` / `"me"`). Bound methods: `message.ReplyAsync/EditAsync/DeleteAsync/ForwardAsync/DownloadAsync`, `chat.SendMessageAsync`, `user.SendMessageAsync`.
+- **Raw** — `client.InvokeAsync(new Messages.SendMessage { … })` reaches every TL method.
+
 ### Building blocks
-- `JsonFileSession` / `MemorySession` — persistent vs in-memory session (token, imei, peer cache).
-- `client.Peers` — `UserPeer(id)` / `ChannelPeer(id)` / `User(id)` / `Channel(id)` resolution.
+- `JsonFileSession` / `MemorySession` — persistent vs in-memory session (token, imei, typed peer cache).
+- `client.StartAsync(…)` — connect + login in one call.
 - `client.Uploads` / `client.Downloads` — chunked file transfer.
 - `client.UpdatesReceived` / `client.UpdateReceived` — update events.
 - `client.CallAsync` / `client.InvokeAsync` — invoke any of the ~423 TL methods, strongly typed.
+
+### Method groups (`Methods/<Category>/`, one method per file)
+`Auth` · `Messages` · `Chats` · `Users` · `Contacts` · `Account` · `Utilities`
 
 ## Design notes
 

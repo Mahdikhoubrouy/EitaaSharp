@@ -31,6 +31,19 @@ public sealed class EitaaClientOptions
     /// </summary>
     public Func<EitaaClient, CancellationToken, Task<bool>>? TokenRefreshHandler { get; init; }
 
+    /// <summary>
+    /// When <c>true</c> (the default) and no <see cref="TokenRefreshHandler"/> is supplied, the client
+    /// refreshes an expired token automatically via <c>eitaaRefreshToken</c> and retries the call —
+    /// the same behaviour as the official Android client. Set <c>false</c> to surface the error instead.
+    /// </summary>
+    public bool AutoRefreshToken { get; init; } = true;
+
+    /// <summary>
+    /// Optional device descriptor sent with the automatic token refresh. A neutral EitaaSharp
+    /// descriptor is used when null.
+    /// </summary>
+    public EitaaSharp.Schema.Mt.IEitaaAppInfo? AppInfo { get; init; }
+
     /// <summary>The TL layer advertised in the envelope. Matches the current Eitaa Android client (137).</summary>
     public int Layer { get; init; } = 137;
 

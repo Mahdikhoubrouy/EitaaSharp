@@ -28592,17 +28592,6 @@
       "type": "EitaaObject"
     },
     {
-      "id": -599448727,
-      "method": "eitaaRefreshToken",
-      "params": [
-        {
-          "name": "app_info",
-          "type": "EitaaAppInfo"
-        }
-      ],
-      "type": "EitaaRefreshToken"
-    },
-    {
       "id": 1640969877,
       "method": "liveGetMedia",
       "params": [

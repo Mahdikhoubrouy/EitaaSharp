@@ -3,6 +3,7 @@ using EitaaSharp.Client.Session;
 using EitaaSharp.Client.Transport;
 using EitaaSharp.Schema;
 using EitaaSharp.Tl;
+using Mt = EitaaSharp.Schema.Mt;
 
 namespace EitaaSharp.Client.Tests;
 
@@ -74,5 +75,28 @@ public class TokenRefreshTests
 
         await Assert.ThrowsAsync<SessionExpiredException>(() => client.GetNearestDcAsync());
         Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task RefreshTokenAsync_ParsesUpdatesToken_AndStoresNewToken()
+    {
+        // eitaaRefreshToken answers with eitaa_updates_token (token/expire/date/msg_id/socket_token);
+        // the new token must be parsed out and written back to the session.
+        var transport = new ScriptedTransport(_ => Serialize(new Mt.EitaaUpdatesToken
+        {
+            Token = "fresh-token", Expire = 999, Date = 1, MsgId = 7, SocketToken = "sk",
+        }));
+        var session = new MemorySession("imei", token: "stale");
+        using var client = new EitaaClient(transport, session);
+
+        var result = (Mt.EitaaUpdatesToken)await client.RefreshTokenAsync(new Mt.EitaaAppInfo
+        {
+            BuildVersion = 0, DeviceModel = "t", SystemVersion = "t",
+            AppVersion = "t", LangCode = "en", Sign = "",
+        });
+
+        Assert.Equal("fresh-token", result.Token);     // 5-field eitaa_updates_token parsed
+        Assert.Equal(7, result.MsgId);
+        Assert.Equal("fresh-token", session.Token);    // and persisted to the session
     }
 }

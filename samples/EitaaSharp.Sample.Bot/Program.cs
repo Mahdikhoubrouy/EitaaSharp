@@ -51,9 +51,6 @@ catch (RpcException ex)
 
 Console.WriteLine($"✅ Bot online as {me.FullName} (id={me.Id}). Send it /help. Press Ctrl+C to stop.");
 
-// If the server sends a TL constructor we don't model yet, the loop resyncs instead of crashing.
-client.OnReceiveError = ex => Console.WriteLine($"   ⚠ update skipped — {ex.Message}");
-
 // One handler, dispatched for every new message the poll loop sees.
 client.OnMessage(async message =>
 {
@@ -108,7 +105,7 @@ static async Task HandleCommandAsync(
                 argument.Length > 0 ? argument : "Usage: /echo <text>", ct);
             break;
 
-        case "/whoami":
+        case "زز":
             var u = message.From;
             await message.ReplyAsync(
                 u is null

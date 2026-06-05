@@ -26739,24 +26739,6 @@ namespace EitaaSharp.Schema
             => reader.ReadObject<global::EitaaSharp.Schema.IEitaaObject>();
     }
 
-    /// <summary>TL <c>eitaaRefreshToken#dc452369</c>.</summary>
-    public sealed record EitaaRefreshToken : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IEitaaRefreshToken>
-    {
-        public const uint TypeId = 0xDC452369u;
-        public uint ConstructorId => TypeId;
-
-        public required global::EitaaSharp.Schema.IEitaaAppInfo AppInfo { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteObject(AppInfo);
-        }
-
-        public global::EitaaSharp.Schema.IEitaaRefreshToken ReadResult(global::EitaaSharp.Tl.TlReader reader)
-            => reader.ReadObject<global::EitaaSharp.Schema.IEitaaRefreshToken>();
-    }
-
     /// <summary>TL <c>liveGetMedia#61cf3695</c>.</summary>
     public sealed record LiveGetMedia_61CF3695 : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILiveGetMedia>
     {
@@ -28038,9 +28020,6 @@ namespace EitaaSharp.Schema
 
     /// <summary>TL boxed type <c>ExportedMessageLink</c>.</summary>
     public interface IExportedMessageLink : global::EitaaSharp.Tl.ITlObject { }
-
-    /// <summary>TL boxed type <c>EitaaRefreshToken</c>.</summary>
-    public interface IEitaaRefreshToken : global::EitaaSharp.Tl.ITlObject { }
 
     /// <summary>TL boxed type <c>AdsGetAdsPack</c>.</summary>
     public interface IAdsGetAdsPack : global::EitaaSharp.Tl.ITlObject { }

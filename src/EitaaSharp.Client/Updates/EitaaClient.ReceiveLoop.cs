@@ -1,4 +1,5 @@
 using EitaaSharp.Client.Rpc;
+using EitaaSharp.Tl;
 using Schema = EitaaSharp.Schema;
 using Upd = EitaaSharp.Schema.Updates;
 
@@ -14,6 +15,13 @@ public sealed partial class EitaaClient
     /// <summary>Registers a message handler that only runs when <paramref name="filter"/> matches.</summary>
     public void OnMessage(Func<Message, bool> filter, Func<Message, Task> handler)
         => _messageHandlers.Add(m => filter(m) ? handler(m) : Task.CompletedTask);
+
+    /// <summary>
+    /// Invoked when <see cref="RunAsync"/> cannot deserialize an update batch (e.g. the server sent a
+    /// TL constructor not yet modelled). The loop logs via this hook, resyncs the update state, and
+    /// keeps running instead of crashing. Leave null to ignore.
+    /// </summary>
+    public Action<Exception>? OnReceiveError { get; set; }
 
     /// <summary>
     /// Polls Eitaa for new updates (via <c>updates.getDifference</c>) and dispatches new messages to the
@@ -39,6 +47,22 @@ public sealed partial class EitaaClient
             }
             catch (OperationCanceledException) { break; }
             catch (RpcException) { await DelaySafe(interval, cancellationToken).ConfigureAwait(false); continue; }
+            catch (TlException ex)
+            {
+                // An update referenced a TL constructor we don't model yet. Deserialization is
+                // positional, so the whole batch is unreadable — skip it and resync from the
+                // server's current state instead of letting the loop die.
+                OnReceiveError?.Invoke(ex);
+                try
+                {
+                    var fresh = (Upd.State)await GetStateAsync(cancellationToken).ConfigureAwait(false);
+                    (pts, qts, date) = (fresh.Pts, fresh.Qts, fresh.Date);
+                }
+                catch (OperationCanceledException) { break; }
+                catch { /* keep previous state and retry */ }
+                await DelaySafe(interval, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
 
             bool immediate = false;
             switch (diff)

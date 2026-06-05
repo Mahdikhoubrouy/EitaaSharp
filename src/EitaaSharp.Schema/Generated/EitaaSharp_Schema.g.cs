@@ -1333,10 +1333,10 @@ namespace EitaaSharp.Schema
         }
     }
 
-    /// <summary>TL <c>user#3ff6ecb0</c>.</summary>
+    /// <summary>TL <c>user#ecd26dcb</c>.</summary>
     public sealed record User : global::EitaaSharp.Schema.IUser
     {
-        public const uint TypeId = 0x3FF6ECB0u;
+        public const uint TypeId = 0xECD26DCBu;
         public uint ConstructorId => TypeId;
 
         public bool Self { get; init; }
@@ -1351,9 +1351,14 @@ namespace EitaaSharp.Schema
         public bool Min { get; init; }
         public bool BotInlineGeo { get; init; }
         public bool Support { get; init; }
-        public bool Scam { get; init; }
+        public bool Trusty { get; init; }
         public bool ApplyMinPhoto { get; init; }
         public bool Fake { get; init; }
+        public bool MXBVIRTUALUSER { get; init; }
+        public bool MXBREGISTEREDUSER { get; init; }
+        public bool MiniApp { get; init; }
+        public bool BadgeRedColor { get; init; }
+        public bool MiniAppGeo { get; init; }
         public required long Id { get; init; }
         public long? AccessHash { get; init; }
         public string? FirstName { get; init; }
@@ -1366,6 +1371,8 @@ namespace EitaaSharp.Schema
         public global::EitaaSharp.Schema.IRestrictionReason[]? RestrictionReason { get; init; }
         public string? BotInlinePlaceholder { get; init; }
         public string? LangCode { get; init; }
+        public string? BadgeName { get; init; }
+        public int? BotActiveUsers { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
@@ -1383,9 +1390,11 @@ namespace EitaaSharp.Schema
             if (Min) flags |= 0x100000;
             if (BotInlineGeo) flags |= 0x200000;
             if (Support) flags |= 0x800000;
-            if (Scam) flags |= 0x1000000;
+            if (Trusty) flags |= 0x1000000;
             if (ApplyMinPhoto) flags |= 0x2000000;
             if (Fake) flags |= 0x4000000;
+            if (MXBVIRTUALUSER) flags |= 0x200;
+            if (MXBREGISTEREDUSER) flags |= 0x100;
             if (AccessHash is not null) flags |= 0x1;
             if (FirstName is not null) flags |= 0x2;
             if (LastName is not null) flags |= 0x4;
@@ -1398,6 +1407,15 @@ namespace EitaaSharp.Schema
             if (BotInlinePlaceholder is not null) flags |= 0x80000;
             if (LangCode is not null) flags |= 0x400000;
             writer.WriteInt32(flags);
+            int flags2 = 0;
+            if (BotActiveUsers is not null) flags2 |= 0x1000;
+            writer.WriteInt32(flags2);
+            int eFlags = 0;
+            if (MiniApp) eFlags |= 0x1;
+            if (BadgeRedColor) eFlags |= 0x4;
+            if (MiniAppGeo) eFlags |= 0x10;
+            if (BadgeName is not null) eFlags |= 0x2;
+            writer.WriteInt32(eFlags);
             writer.WriteLong(Id);
             if (AccessHash is not null) writer.WriteLong(AccessHash.Value);
             if (FirstName is not null) writer.WriteString(FirstName);
@@ -1410,11 +1428,15 @@ namespace EitaaSharp.Schema
             if (RestrictionReason is not null) writer.WriteVector(RestrictionReason, (w, x) => w.WriteObject(x));
             if (BotInlinePlaceholder is not null) writer.WriteString(BotInlinePlaceholder);
             if (LangCode is not null) writer.WriteString(LangCode);
+            if (BadgeName is not null) writer.WriteString(BadgeName);
+            if (BotActiveUsers is not null) writer.WriteInt32(BotActiveUsers.Value);
         }
 
         public static User Deserialize(global::EitaaSharp.Tl.TlReader reader)
         {
             int flags = reader.ReadInt32();
+            int flags2 = reader.ReadInt32();
+            int eFlags = reader.ReadInt32();
             bool _Self = (flags & 0x400) != 0;
             bool _Contact = (flags & 0x800) != 0;
             bool _MutualContact = (flags & 0x1000) != 0;
@@ -1427,9 +1449,14 @@ namespace EitaaSharp.Schema
             bool _Min = (flags & 0x100000) != 0;
             bool _BotInlineGeo = (flags & 0x200000) != 0;
             bool _Support = (flags & 0x800000) != 0;
-            bool _Scam = (flags & 0x1000000) != 0;
+            bool _Trusty = (flags & 0x1000000) != 0;
             bool _ApplyMinPhoto = (flags & 0x2000000) != 0;
             bool _Fake = (flags & 0x4000000) != 0;
+            bool _MXBVIRTUALUSER = (flags & 0x200) != 0;
+            bool _MXBREGISTEREDUSER = (flags & 0x100) != 0;
+            bool _MiniApp = (eFlags & 0x1) != 0;
+            bool _BadgeRedColor = (eFlags & 0x4) != 0;
+            bool _MiniAppGeo = (eFlags & 0x10) != 0;
             long _Id = reader.ReadLong();
             long? _AccessHash = (flags & 0x1) != 0 ? reader.ReadLong() : (long?)null;
             string? _FirstName = (flags & 0x2) != 0 ? reader.ReadString() : null;
@@ -1442,7 +1469,9 @@ namespace EitaaSharp.Schema
             global::EitaaSharp.Schema.IRestrictionReason[]? _RestrictionReason = (flags & 0x40000) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IRestrictionReason>()) : null;
             string? _BotInlinePlaceholder = (flags & 0x80000) != 0 ? reader.ReadString() : null;
             string? _LangCode = (flags & 0x400000) != 0 ? reader.ReadString() : null;
-            return new User { Self = _Self, Contact = _Contact, MutualContact = _MutualContact, Deleted = _Deleted, Bot = _Bot, BotChatHistory = _BotChatHistory, BotNochats = _BotNochats, Verified = _Verified, Restricted = _Restricted, Min = _Min, BotInlineGeo = _BotInlineGeo, Support = _Support, Scam = _Scam, ApplyMinPhoto = _ApplyMinPhoto, Fake = _Fake, Id = _Id, AccessHash = _AccessHash, FirstName = _FirstName, LastName = _LastName, Username = _Username, Phone = _Phone, Photo = _Photo, Status = _Status, BotInfoVersion = _BotInfoVersion, RestrictionReason = _RestrictionReason, BotInlinePlaceholder = _BotInlinePlaceholder, LangCode = _LangCode };
+            string? _BadgeName = (eFlags & 0x2) != 0 ? reader.ReadString() : null;
+            int? _BotActiveUsers = (flags2 & 0x1000) != 0 ? reader.ReadInt32() : (int?)null;
+            return new User { Self = _Self, Contact = _Contact, MutualContact = _MutualContact, Deleted = _Deleted, Bot = _Bot, BotChatHistory = _BotChatHistory, BotNochats = _BotNochats, Verified = _Verified, Restricted = _Restricted, Min = _Min, BotInlineGeo = _BotInlineGeo, Support = _Support, Trusty = _Trusty, ApplyMinPhoto = _ApplyMinPhoto, Fake = _Fake, MXBVIRTUALUSER = _MXBVIRTUALUSER, MXBREGISTEREDUSER = _MXBREGISTEREDUSER, MiniApp = _MiniApp, BadgeRedColor = _BadgeRedColor, MiniAppGeo = _MiniAppGeo, Id = _Id, AccessHash = _AccessHash, FirstName = _FirstName, LastName = _LastName, Username = _Username, Phone = _Phone, Photo = _Photo, Status = _Status, BotInfoVersion = _BotInfoVersion, RestrictionReason = _RestrictionReason, BotInlinePlaceholder = _BotInlinePlaceholder, LangCode = _LangCode, BadgeName = _BadgeName, BotActiveUsers = _BotActiveUsers };
         }
     }
 
@@ -26412,6 +26441,119 @@ namespace EitaaSharp.Schema
             int? _LiveStreamMsgId = (flags & 0x20000000) != 0 ? reader.ReadInt32() : (int?)null;
             string? _BadgeName = (eFlags & 0x10) != 0 ? reader.ReadString() : null;
             return new Channel { Creator = _Creator, Left = _Left, Broadcast = _Broadcast, Verified = _Verified, Megagroup = _Megagroup, Restricted = _Restricted, Signatures = _Signatures, Min = _Min, HasLink = _HasLink, HasGeo = _HasGeo, SlowmodeEnabled = _SlowmodeEnabled, CallActive = _CallActive, CallNotEmpty = _CallNotEmpty, Gigagroup = _Gigagroup, Noforwards = _Noforwards, Trusty = _Trusty, Fake = _Fake, Shop = _Shop, SponsoredMessage = _SponsoredMessage, BadgeRedColor = _BadgeRedColor, Id = _Id, AccessHash = _AccessHash, Title = _Title, Username = _Username, Photo = _Photo, Date = _Date, RestrictionReason = _RestrictionReason, AdminRights = _AdminRights, BannedRights = _BannedRights, DefaultBannedRights = _DefaultBannedRights, ParticipantsCount = _ParticipantsCount, LiveStreamMsgId = _LiveStreamMsgId, BadgeName = _BadgeName };
+        }
+    }
+
+    /// <summary>TL <c>userWeb#3ff6ecb0</c>.</summary>
+    public sealed record UserWeb : global::EitaaSharp.Schema.IUser
+    {
+        public const uint TypeId = 0x3FF6ECB0u;
+        public uint ConstructorId => TypeId;
+
+        public bool Self { get; init; }
+        public bool Contact { get; init; }
+        public bool MutualContact { get; init; }
+        public bool Deleted { get; init; }
+        public bool Bot { get; init; }
+        public bool BotChatHistory { get; init; }
+        public bool BotNochats { get; init; }
+        public bool Verified { get; init; }
+        public bool Restricted { get; init; }
+        public bool Min { get; init; }
+        public bool BotInlineGeo { get; init; }
+        public bool Support { get; init; }
+        public bool Scam { get; init; }
+        public bool ApplyMinPhoto { get; init; }
+        public bool Fake { get; init; }
+        public required long Id { get; init; }
+        public long? AccessHash { get; init; }
+        public string? FirstName { get; init; }
+        public string? LastName { get; init; }
+        public string? Username { get; init; }
+        public string? Phone { get; init; }
+        public global::EitaaSharp.Schema.IUserProfilePhoto? Photo { get; init; }
+        public global::EitaaSharp.Schema.IUserStatus? Status { get; init; }
+        public int? BotInfoVersion { get; init; }
+        public global::EitaaSharp.Schema.IRestrictionReason[]? RestrictionReason { get; init; }
+        public string? BotInlinePlaceholder { get; init; }
+        public string? LangCode { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Self) flags |= 0x400;
+            if (Contact) flags |= 0x800;
+            if (MutualContact) flags |= 0x1000;
+            if (Deleted) flags |= 0x2000;
+            if (Bot) flags |= 0x4000;
+            if (BotChatHistory) flags |= 0x8000;
+            if (BotNochats) flags |= 0x10000;
+            if (Verified) flags |= 0x20000;
+            if (Restricted) flags |= 0x40000;
+            if (Min) flags |= 0x100000;
+            if (BotInlineGeo) flags |= 0x200000;
+            if (Support) flags |= 0x800000;
+            if (Scam) flags |= 0x1000000;
+            if (ApplyMinPhoto) flags |= 0x2000000;
+            if (Fake) flags |= 0x4000000;
+            if (AccessHash is not null) flags |= 0x1;
+            if (FirstName is not null) flags |= 0x2;
+            if (LastName is not null) flags |= 0x4;
+            if (Username is not null) flags |= 0x8;
+            if (Phone is not null) flags |= 0x10;
+            if (Photo is not null) flags |= 0x20;
+            if (Status is not null) flags |= 0x40;
+            if (BotInfoVersion is not null) flags |= 0x4000;
+            if (RestrictionReason is not null) flags |= 0x40000;
+            if (BotInlinePlaceholder is not null) flags |= 0x80000;
+            if (LangCode is not null) flags |= 0x400000;
+            writer.WriteInt32(flags);
+            writer.WriteLong(Id);
+            if (AccessHash is not null) writer.WriteLong(AccessHash.Value);
+            if (FirstName is not null) writer.WriteString(FirstName);
+            if (LastName is not null) writer.WriteString(LastName);
+            if (Username is not null) writer.WriteString(Username);
+            if (Phone is not null) writer.WriteString(Phone);
+            if (Photo is not null) writer.WriteObject(Photo);
+            if (Status is not null) writer.WriteObject(Status);
+            if (BotInfoVersion is not null) writer.WriteInt32(BotInfoVersion.Value);
+            if (RestrictionReason is not null) writer.WriteVector(RestrictionReason, (w, x) => w.WriteObject(x));
+            if (BotInlinePlaceholder is not null) writer.WriteString(BotInlinePlaceholder);
+            if (LangCode is not null) writer.WriteString(LangCode);
+        }
+
+        public static UserWeb Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Self = (flags & 0x400) != 0;
+            bool _Contact = (flags & 0x800) != 0;
+            bool _MutualContact = (flags & 0x1000) != 0;
+            bool _Deleted = (flags & 0x2000) != 0;
+            bool _Bot = (flags & 0x4000) != 0;
+            bool _BotChatHistory = (flags & 0x8000) != 0;
+            bool _BotNochats = (flags & 0x10000) != 0;
+            bool _Verified = (flags & 0x20000) != 0;
+            bool _Restricted = (flags & 0x40000) != 0;
+            bool _Min = (flags & 0x100000) != 0;
+            bool _BotInlineGeo = (flags & 0x200000) != 0;
+            bool _Support = (flags & 0x800000) != 0;
+            bool _Scam = (flags & 0x1000000) != 0;
+            bool _ApplyMinPhoto = (flags & 0x2000000) != 0;
+            bool _Fake = (flags & 0x4000000) != 0;
+            long _Id = reader.ReadLong();
+            long? _AccessHash = (flags & 0x1) != 0 ? reader.ReadLong() : (long?)null;
+            string? _FirstName = (flags & 0x2) != 0 ? reader.ReadString() : null;
+            string? _LastName = (flags & 0x4) != 0 ? reader.ReadString() : null;
+            string? _Username = (flags & 0x8) != 0 ? reader.ReadString() : null;
+            string? _Phone = (flags & 0x10) != 0 ? reader.ReadString() : null;
+            global::EitaaSharp.Schema.IUserProfilePhoto? _Photo = (flags & 0x20) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>() : null;
+            global::EitaaSharp.Schema.IUserStatus? _Status = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>() : null;
+            int? _BotInfoVersion = (flags & 0x4000) != 0 ? reader.ReadInt32() : (int?)null;
+            global::EitaaSharp.Schema.IRestrictionReason[]? _RestrictionReason = (flags & 0x40000) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IRestrictionReason>()) : null;
+            string? _BotInlinePlaceholder = (flags & 0x80000) != 0 ? reader.ReadString() : null;
+            string? _LangCode = (flags & 0x400000) != 0 ? reader.ReadString() : null;
+            return new UserWeb { Self = _Self, Contact = _Contact, MutualContact = _MutualContact, Deleted = _Deleted, Bot = _Bot, BotChatHistory = _BotChatHistory, BotNochats = _BotNochats, Verified = _Verified, Restricted = _Restricted, Min = _Min, BotInlineGeo = _BotInlineGeo, Support = _Support, Scam = _Scam, ApplyMinPhoto = _ApplyMinPhoto, Fake = _Fake, Id = _Id, AccessHash = _AccessHash, FirstName = _FirstName, LastName = _LastName, Username = _Username, Phone = _Phone, Photo = _Photo, Status = _Status, BotInfoVersion = _BotInfoVersion, RestrictionReason = _RestrictionReason, BotInlinePlaceholder = _BotInlinePlaceholder, LangCode = _LangCode };
         }
     }
 

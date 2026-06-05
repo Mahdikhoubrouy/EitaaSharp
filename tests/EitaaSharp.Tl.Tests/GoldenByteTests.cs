@@ -102,6 +102,45 @@ public class GoldenByteTests
     }
 
     [Fact]
+    public void User_TripleBitmask_RoundTrips()
+    {
+        // The Eitaa layer-137 server sends user id -321753653 (TL_user_layer135), which carries
+        // THREE bitmask fields — flags / flags2 / eFlags — plus the mini-app presence bits.
+        // This is the constructor that previously threw "No TL type registered".
+        GeneratedSchema.RegisterAll();
+
+        var original = new User
+        {
+            Bot = true,                 // flags.14 (coupled with bot_info_version)
+            BotInfoVersion = 3,          // flags.14
+            Id = 555000111L,
+            AccessHash = 12345678901L,   // flags.0
+            FirstName = "Mini",          // flags.1
+            Username = "miniapp_bot",    // flags.3
+            MiniApp = true,              // eFlags.0
+            MiniAppGeo = true,           // eFlags.4
+            BadgeName = "official",      // eFlags.1
+            BotActiveUsers = 9001,       // flags2.12
+        };
+
+        var w = new TlWriter();
+        original.Serialize(w);
+        var parsed = new TlReader(w.ToArray()).ReadObject<User>();
+
+        Assert.Equal(555000111L, parsed.Id);
+        Assert.Equal(12345678901L, parsed.AccessHash);
+        Assert.Equal("Mini", parsed.FirstName);
+        Assert.Equal("miniapp_bot", parsed.Username);
+        Assert.True(parsed.Bot);
+        // the second & third bitmasks survive independently
+        Assert.True(parsed.MiniApp);
+        Assert.True(parsed.MiniAppGeo);
+        Assert.False(parsed.Self);
+        Assert.Equal("official", parsed.BadgeName);
+        Assert.Equal(9001, parsed.BotActiveUsers);
+    }
+
+    [Fact]
     public void AuthSentCode_RoundTrips_ThroughRegistry()
     {
         GeneratedSchema.RegisterAll();

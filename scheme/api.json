@@ -976,11 +976,19 @@
       "type": "User"
     },
     {
-      "id": 1073147056,
+      "id": -321753653,
       "predicate": "user",
       "params": [
         {
           "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "flags2",
+          "type": "#"
+        },
+        {
+          "name": "eFlags",
           "type": "#"
         },
         {
@@ -1032,7 +1040,7 @@
           "type": "flags.23?true"
         },
         {
-          "name": "scam",
+          "name": "trusty",
           "type": "flags.24?true"
         },
         {
@@ -1042,6 +1050,26 @@
         {
           "name": "fake",
           "type": "flags.26?true"
+        },
+        {
+          "name": "MXB_VIRTUAL_USER",
+          "type": "flags.9?true"
+        },
+        {
+          "name": "MXB_REGISTERED_USER",
+          "type": "flags.8?true"
+        },
+        {
+          "name": "miniApp",
+          "type": "eFlags.0?true"
+        },
+        {
+          "name": "badge_red_color",
+          "type": "eFlags.2?true"
+        },
+        {
+          "name": "miniAppGeo",
+          "type": "eFlags.4?true"
         },
         {
           "name": "id",
@@ -1090,6 +1118,14 @@
         {
           "name": "lang_code",
           "type": "flags.22?string"
+        },
+        {
+          "name": "badge_name",
+          "type": "eFlags.1?string"
+        },
+        {
+          "name": "bot_active_users",
+          "type": "flags2.12?int"
         }
       ],
       "type": "User"
@@ -21501,6 +21537,125 @@
           "type": "eFlags.4?string"
         }
       ]
+    },
+    {
+      "id": 1073147056,
+      "predicate": "userWeb",
+      "params": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "self",
+          "type": "flags.10?true"
+        },
+        {
+          "name": "contact",
+          "type": "flags.11?true"
+        },
+        {
+          "name": "mutual_contact",
+          "type": "flags.12?true"
+        },
+        {
+          "name": "deleted",
+          "type": "flags.13?true"
+        },
+        {
+          "name": "bot",
+          "type": "flags.14?true"
+        },
+        {
+          "name": "bot_chat_history",
+          "type": "flags.15?true"
+        },
+        {
+          "name": "bot_nochats",
+          "type": "flags.16?true"
+        },
+        {
+          "name": "verified",
+          "type": "flags.17?true"
+        },
+        {
+          "name": "restricted",
+          "type": "flags.18?true"
+        },
+        {
+          "name": "min",
+          "type": "flags.20?true"
+        },
+        {
+          "name": "bot_inline_geo",
+          "type": "flags.21?true"
+        },
+        {
+          "name": "support",
+          "type": "flags.23?true"
+        },
+        {
+          "name": "scam",
+          "type": "flags.24?true"
+        },
+        {
+          "name": "apply_min_photo",
+          "type": "flags.25?true"
+        },
+        {
+          "name": "fake",
+          "type": "flags.26?true"
+        },
+        {
+          "name": "id",
+          "type": "long"
+        },
+        {
+          "name": "access_hash",
+          "type": "flags.0?long"
+        },
+        {
+          "name": "first_name",
+          "type": "flags.1?string"
+        },
+        {
+          "name": "last_name",
+          "type": "flags.2?string"
+        },
+        {
+          "name": "username",
+          "type": "flags.3?string"
+        },
+        {
+          "name": "phone",
+          "type": "flags.4?string"
+        },
+        {
+          "name": "photo",
+          "type": "flags.5?UserProfilePhoto"
+        },
+        {
+          "name": "status",
+          "type": "flags.6?UserStatus"
+        },
+        {
+          "name": "bot_info_version",
+          "type": "flags.14?int"
+        },
+        {
+          "name": "restriction_reason",
+          "type": "flags.18?Vector<RestrictionReason>"
+        },
+        {
+          "name": "bot_inline_placeholder",
+          "type": "flags.19?string"
+        },
+        {
+          "name": "lang_code",
+          "type": "flags.22?string"
+        }
+      ],
+      "type": "User"
     }
   ],
   "methods": [

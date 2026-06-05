@@ -121,7 +121,7 @@ namespace EitaaSharp.Schema
                 registry.Register(0xB3CEA0E4u, global::EitaaSharp.Schema.Storage.FileMp4.Deserialize);
                 registry.Register(0x1081464Cu, global::EitaaSharp.Schema.Storage.FileWebp.Deserialize);
                 registry.Register(0xD3BC4B7Au, global::EitaaSharp.Schema.UserEmpty.Deserialize);
-                registry.Register(0x3FF6ECB0u, global::EitaaSharp.Schema.User.Deserialize);
+                registry.Register(0xECD26DCBu, global::EitaaSharp.Schema.User.Deserialize);
                 registry.Register(0x4F11BAE1u, global::EitaaSharp.Schema.UserProfilePhotoEmpty.Deserialize);
                 registry.Register(0x09D05049u, global::EitaaSharp.Schema.UserStatusEmpty.Deserialize);
                 registry.Register(0xEDB93949u, global::EitaaSharp.Schema.UserStatusOnline.Deserialize);
@@ -1179,9 +1179,10 @@ namespace EitaaSharp.Schema
                 registry.Register(0x8F300B57u, global::EitaaSharp.Schema.BotInfo.Deserialize);
                 registry.Register(0x1F486803u, global::EitaaSharp.Schema.ExportedMessageLink.Deserialize);
                 registry.Register(0xC6D14312u, global::EitaaSharp.Schema.Channel.Deserialize);
+                registry.Register(0x3FF6ECB0u, global::EitaaSharp.Schema.UserWeb.Deserialize);
                 if (registry == global::EitaaSharp.Tl.TlRegistry.Default) _registered = true;
             }
         }
-        public const int ConstructorCount = 1165;
+        public const int ConstructorCount = 1166;
     }
 }

@@ -62,6 +62,8 @@ public sealed class FileUploader
             var chunk = read == PartSize ? part : part[..read];
             md5?.AppendData(chunk);
 
+            // Eitaa's saveFilePart/saveBigFilePart always carry the total file size (flags.1),
+            // unlike upstream Telegram. Omitting it desyncs the request (server: INVALID_CONSTRUCTOR).
             bool ok = isBig
                 ? await _rpc.CallAsync(new Upload.SaveBigFilePart
                 {
@@ -69,12 +71,14 @@ public sealed class FileUploader
                     FilePart = partIndex,
                     FileTotalParts = totalParts,
                     Bytes = chunk,
+                    TotalFileSize = length,
                 }, cancellationToken).ConfigureAwait(false)
                 : await _rpc.CallAsync(new Upload.SaveFilePart
                 {
                     FileId = fileId,
                     FilePart = partIndex,
                     Bytes = chunk,
+                    TotalFileSize = length,
                 }, cancellationToken).ConfigureAwait(false);
 
             if (!ok)

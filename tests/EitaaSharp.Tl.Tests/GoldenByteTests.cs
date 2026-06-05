@@ -1,6 +1,7 @@
 using EitaaSharp.Schema;
 using EitaaSharp.Tl;
 using Auth = EitaaSharp.Schema.Auth;
+using Upload = EitaaSharp.Schema.Upload;
 
 namespace EitaaSharp.Tl.Tests;
 
@@ -138,6 +139,29 @@ public class GoldenByteTests
         Assert.False(parsed.Self);
         Assert.Equal("official", parsed.BadgeName);
         Assert.Equal(9001, parsed.BotActiveUsers);
+    }
+
+    [Fact]
+    public void SaveFilePart_AlwaysCarriesTotalSize()
+    {
+        // Eitaa's upload.saveFilePart always sets flags bit1 (=2) and writes totalFileSize,
+        // unlike upstream Telegram. Omitting it caused the server to answer INVALID_CONSTRUCTOR.
+        var w = new TlWriter();
+        new Upload.SaveFilePart
+        {
+            FileId = 7,
+            FilePart = 0,
+            Bytes = new byte[] { 1, 2, 3 },
+            TotalFileSize = 999,
+        }.Serialize(w);
+
+        var r = new TlReader(w.ToArray());
+        r.ReadInt32();                                   // constructor id
+        Assert.Equal(7L, r.ReadLong());                  // file_id
+        Assert.Equal(0, r.ReadInt32());                  // file_part
+        Assert.Equal(new byte[] { 1, 2, 3 }, r.ReadBytes());
+        Assert.Equal(2, r.ReadInt32());                  // flags: bit1 set, no peer (bit0)
+        Assert.Equal(999L, r.ReadLong());                // totalFileSize present
     }
 
     [Fact]

@@ -105,7 +105,7 @@ static async Task HandleCommandAsync(
                 argument.Length > 0 ? argument : "Usage: /echo <text>", ct);
             break;
 
-        case "زز":
+        case "/whoami":
             var u = message.From;
             await message.ReplyAsync(
                 u is null

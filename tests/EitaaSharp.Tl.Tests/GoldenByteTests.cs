@@ -142,26 +142,28 @@ public class GoldenByteTests
     }
 
     [Fact]
-    public void SaveFilePart_AlwaysCarriesTotalSize()
+    public void SaveFilePart_IsThreeFields_NoTrailingBytes()
     {
-        // Eitaa's upload.saveFilePart always sets flags bit1 (=2) and writes totalFileSize,
-        // unlike upstream Telegram. Omitting it caused the server to answer INVALID_CONSTRUCTOR.
+        // Eitaa's upload.saveFilePart (no peer) is the plain 3-field call: file_id, file_part, bytes.
+        // Writing extra trailing bytes (a flags int + totalFileSize) made the server answer
+        // INVALID_CONSTRUCTOR — the request desynced. This asserts nothing follows `bytes`.
         var w = new TlWriter();
         new Upload.SaveFilePart
         {
             FileId = 7,
             FilePart = 0,
             Bytes = new byte[] { 1, 2, 3 },
-            TotalFileSize = 999,
         }.Serialize(w);
 
-        var r = new TlReader(w.ToArray());
+        var bytes = w.ToArray();
+        var r = new TlReader(bytes);
         r.ReadInt32();                                   // constructor id
         Assert.Equal(7L, r.ReadLong());                  // file_id
         Assert.Equal(0, r.ReadInt32());                  // file_part
         Assert.Equal(new byte[] { 1, 2, 3 }, r.ReadBytes());
-        Assert.Equal(2, r.ReadInt32());                  // flags: bit1 set, no peer (bit0)
-        Assert.Equal(999L, r.ReadLong());                // totalFileSize present
+        // constructor(4) + file_id(8) + file_part(4) + bytes(1 len + 3 data + 0 pad = 4) = 20 bytes,
+        // nothing more.
+        Assert.Equal(20, bytes.Length);
     }
 
     [Fact]

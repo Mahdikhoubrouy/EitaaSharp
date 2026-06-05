@@ -26503,18 +26503,6 @@
         {
           "name": "bytes",
           "type": "bytes"
-        },
-        {
-          "name": "flags",
-          "type": "#"
-        },
-        {
-          "name": "peer",
-          "type": "flags.0?Peer"
-        },
-        {
-          "name": "totalFileSize",
-          "type": "flags.1?long"
         }
       ],
       "type": "Bool"

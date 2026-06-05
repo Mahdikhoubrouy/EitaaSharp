@@ -10,7 +10,9 @@ namespace EitaaSharp.Client.Files;
 /// </summary>
 public sealed class FileDownloader
 {
-    public const int ChunkSize = 512 * 1024;
+    // 128 KB — the chunk size the official Eitaa/Telegram client uses for downloads
+    // (FileLoadOperation.downloadChunkSizeBig). A valid getFile limit (1 MB % 128 KB == 0).
+    public const int ChunkSize = 128 * 1024;
 
     private readonly EitaaRpc _rpc;
 

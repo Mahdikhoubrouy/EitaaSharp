@@ -2133,6 +2133,24 @@ namespace EitaaSharp.Schema.Account
             => reader.ReadObject<global::EitaaSharp.Schema.Account.IChatThemes>();
     }
 
+    /// <summary>TL <c>account.sendDeviceUserIds#57824ae5</c>.</summary>
+    public sealed record SendDeviceUserIds : global::EitaaSharp.Tl.ITlMethod<bool>
+    {
+        public const uint TypeId = 0x57824AE5u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject[] UserIds { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(UserIds, (w, x) => w.WriteObject(x));
+        }
+
+        public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadBool();
+    }
+
     /// <summary>TL boxed type <c>account.Password</c>.</summary>
     public interface IPassword : global::EitaaSharp.Tl.ITlObject { }
 

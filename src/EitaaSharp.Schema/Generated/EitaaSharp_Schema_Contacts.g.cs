@@ -658,6 +658,40 @@ namespace EitaaSharp.Schema.Contacts
             => reader.ReadObject<global::EitaaSharp.Schema.IUpdates>();
     }
 
+    /// <summary>TL <c>contacts.exportCard#84e53737</c>.</summary>
+    public sealed record ExportCard : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject[]>
+    {
+        public const uint TypeId = 0x84E53737u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public global::EitaaSharp.Tl.ITlObject[] ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadVector(r => r.ReadObject());
+    }
+
+    /// <summary>TL <c>contacts.importCard#4fe196fe</c>.</summary>
+    public sealed record ImportCard : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IUser>
+    {
+        public const uint TypeId = 0x4FE196FEu;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject[] ExportCard { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(ExportCard, (w, x) => w.WriteObject(x));
+        }
+
+        public global::EitaaSharp.Schema.IUser ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.IUser>();
+    }
+
     /// <summary>TL boxed type <c>contacts.Contacts</c>.</summary>
     public interface IContacts : global::EitaaSharp.Tl.ITlObject { }
 

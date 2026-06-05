@@ -26,7 +26,7 @@ public sealed class EitaaRpc
     public EitaaRpc(
         IEitaaTransport transport,
         IEitaaSession session,
-        int layer = 133,
+        int layer = 137,
         TlRegistry? registry = null)
     {
         _transport = transport;
@@ -39,7 +39,7 @@ public sealed class EitaaRpc
     }
 
     /// <summary>Convenience overload that wraps a fixed token/imei in an in-memory session.</summary>
-    public EitaaRpc(IEitaaTransport transport, string token, string imei, int layer = 133, TlRegistry? registry = null)
+    public EitaaRpc(IEitaaTransport transport, string token, string imei, int layer = 137, TlRegistry? registry = null)
         : this(transport, new MemorySession(imei, token), layer, registry)
     {
     }

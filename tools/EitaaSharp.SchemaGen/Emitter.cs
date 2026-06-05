@@ -475,11 +475,16 @@ public sealed class Emitter
         foreach (var old in Directory.GetFiles(outputDir, "*.g.cs"))
             File.Delete(old);
 
-        // Emit interfaces grouped by their namespace.
+        // Emit interfaces grouped by their namespace. Dedup by the generated C# name
+        // (namespace + PascalCase), so casing/underscore variants of the same abstract type
+        // (e.g. "AdsLocation" and "Ads_Location") collapse to a single interface.
+        var emittedInterfaces = new HashSet<string>();
         foreach (var tlType in _interfaces)
         {
             var (ns, name) = Names.Split(tlType);
             string fullNs = ns.Length == 0 ? Names.RootNamespace : $"{Names.RootNamespace}.{Names.Pascal(ns)}";
+            if (!emittedInterfaces.Add($"{fullNs}.I{Names.Pascal(name)}"))
+                continue;
             var sb = NamespaceBuilder(fullNs);
             sb.AppendLine($"    /// <summary>TL boxed type <c>{tlType}</c>.</summary>");
             sb.AppendLine($"    public interface I{Names.Pascal(name)} : global::EitaaSharp.Tl.ITlObject {{ }}");

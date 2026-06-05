@@ -2,48 +2,6 @@
 #nullable enable
 namespace EitaaSharp.Schema.Langpack
 {
-    /// <summary>TL <c>langpack.getLangPack#f2f2330a</c>.</summary>
-    public sealed record GetLangPack : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackDifference>
-    {
-        public const uint TypeId = 0xF2F2330Au;
-        public uint ConstructorId => TypeId;
-
-        public required string LangPack { get; init; }
-        public required string LangCode { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteString(LangPack);
-            writer.WriteString(LangCode);
-        }
-
-        public global::EitaaSharp.Schema.ILangPackDifference ReadResult(global::EitaaSharp.Tl.TlReader reader)
-            => reader.ReadObject<global::EitaaSharp.Schema.ILangPackDifference>();
-    }
-
-    /// <summary>TL <c>langpack.getStrings#efea3803</c>.</summary>
-    public sealed record GetStrings : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackString[]>
-    {
-        public const uint TypeId = 0xEFEA3803u;
-        public uint ConstructorId => TypeId;
-
-        public required string LangPack { get; init; }
-        public required string LangCode { get; init; }
-        public required string[] Keys { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteString(LangPack);
-            writer.WriteString(LangCode);
-            writer.WriteVector(Keys, (w, x) => w.WriteString(x));
-        }
-
-        public global::EitaaSharp.Schema.ILangPackString[] ReadResult(global::EitaaSharp.Tl.TlReader reader)
-            => reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.ILangPackString>());
-    }
-
     /// <summary>TL <c>langpack.getDifference#cd984aa5</c>.</summary>
     public sealed record GetDifference : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackDifference>
     {
@@ -66,24 +24,6 @@ namespace EitaaSharp.Schema.Langpack
             => reader.ReadObject<global::EitaaSharp.Schema.ILangPackDifference>();
     }
 
-    /// <summary>TL <c>langpack.getLanguages#42c6978f</c>.</summary>
-    public sealed record GetLanguages : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackLanguage[]>
-    {
-        public const uint TypeId = 0x42C6978Fu;
-        public uint ConstructorId => TypeId;
-
-        public required string LangPack { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteString(LangPack);
-        }
-
-        public global::EitaaSharp.Schema.ILangPackLanguage[] ReadResult(global::EitaaSharp.Tl.TlReader reader)
-            => reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.ILangPackLanguage>());
-    }
-
     /// <summary>TL <c>langpack.getLanguage#6a596502</c>.</summary>
     public sealed record GetLanguage : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackLanguage>
     {
@@ -102,6 +42,60 @@ namespace EitaaSharp.Schema.Langpack
 
         public global::EitaaSharp.Schema.ILangPackLanguage ReadResult(global::EitaaSharp.Tl.TlReader reader)
             => reader.ReadObject<global::EitaaSharp.Schema.ILangPackLanguage>();
+    }
+
+    /// <summary>TL <c>langpack.getLangPack#9ab5c58e</c>.</summary>
+    public sealed record GetLangPack : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackDifference>
+    {
+        public const uint TypeId = 0x9AB5C58Eu;
+        public uint ConstructorId => TypeId;
+
+        public required string LangCode { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(LangCode);
+        }
+
+        public global::EitaaSharp.Schema.ILangPackDifference ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.ILangPackDifference>();
+    }
+
+    /// <summary>TL <c>langpack.getStrings#2e1ee318</c>.</summary>
+    public sealed record GetStrings : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackString[]>
+    {
+        public const uint TypeId = 0x2E1EE318u;
+        public uint ConstructorId => TypeId;
+
+        public required string LangCode { get; init; }
+        public required string[] Keys { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(LangCode);
+            writer.WriteVector(Keys, (w, x) => w.WriteString(x));
+        }
+
+        public global::EitaaSharp.Schema.ILangPackString[] ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.ILangPackString>());
+    }
+
+    /// <summary>TL <c>langpack.getLanguages#800fd57d</c>.</summary>
+    public sealed record GetLanguages : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ILangPackLanguage[]>
+    {
+        public const uint TypeId = 0x800FD57Du;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public global::EitaaSharp.Schema.ILangPackLanguage[] ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.ILangPackLanguage>());
     }
 
 }

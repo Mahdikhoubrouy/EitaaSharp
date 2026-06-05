@@ -104,6 +104,24 @@ namespace EitaaSharp.Schema.Channels
         }
     }
 
+    /// <summary>TL <c>channels.getParticipants_2#47cad8e1</c>.</summary>
+    public sealed record GetParticipants2 : global::EitaaSharp.Schema.ITLChannelsGetParticipants
+    {
+        public const uint TypeId = 0x47CAD8E1u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static GetParticipants2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new GetParticipants2();
+        }
+    }
+
     /// <summary>TL <c>channels.readHistory#cc104937</c>.</summary>
     public sealed record ReadHistory : global::EitaaSharp.Tl.ITlMethod<bool>
     {
@@ -184,26 +202,6 @@ namespace EitaaSharp.Schema.Channels
 
         public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)
             => reader.ReadBool();
-    }
-
-    /// <summary>TL <c>channels.getMessages#ad8c9a23</c>.</summary>
-    public sealed record GetMessages : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.Messages.IMessages>
-    {
-        public const uint TypeId = 0xAD8C9A23u;
-        public uint ConstructorId => TypeId;
-
-        public required global::EitaaSharp.Schema.IInputChannel Channel { get; init; }
-        public required global::EitaaSharp.Schema.IInputMessage[] Id { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteObject(Channel);
-            writer.WriteVector(Id, (w, x) => w.WriteObject(x));
-        }
-
-        public global::EitaaSharp.Schema.Messages.IMessages ReadResult(global::EitaaSharp.Tl.TlReader reader)
-            => reader.ReadObject<global::EitaaSharp.Schema.Messages.IMessages>();
     }
 
     /// <summary>TL <c>channels.getParticipants#77ced9d0</c>.</summary>
@@ -910,6 +908,72 @@ namespace EitaaSharp.Schema.Channels
 
         public global::EitaaSharp.Schema.Messages.ISponsoredMessages ReadResult(global::EitaaSharp.Tl.TlReader reader)
             => reader.ReadObject<global::EitaaSharp.Schema.Messages.ISponsoredMessages>();
+    }
+
+    /// <summary>TL <c>channels.searchPosts#43a0a7e2</c>.</summary>
+    public sealed record SearchPosts : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.Messages.IMessages>
+    {
+        public const uint TypeId = 0x43A0A7E2u;
+        public uint ConstructorId => TypeId;
+
+        public required string Q { get; init; }
+        public required int OffsetRate { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject OffsetPeer { get; init; }
+        public required int OffsetId { get; init; }
+        public required int Limit { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Q);
+            writer.WriteInt32(OffsetRate);
+            writer.WriteObject(OffsetPeer);
+            writer.WriteInt32(OffsetId);
+            writer.WriteInt32(Limit);
+        }
+
+        public global::EitaaSharp.Schema.Messages.IMessages ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.Messages.IMessages>();
+    }
+
+    /// <summary>TL <c>channels.toggleContentType#0b907801</c>.</summary>
+    public sealed record ToggleContentType : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IUpdates>
+    {
+        public const uint TypeId = 0x0B907801u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject Channel { get; init; }
+        public required bool IsMedia { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Channel);
+            writer.WriteBool(IsMedia);
+        }
+
+        public global::EitaaSharp.Schema.IUpdates ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.IUpdates>();
+    }
+
+    /// <summary>TL <c>channels.getMessages#93d7b347</c>.</summary>
+    public sealed record GetMessages : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.Messages.IMessages>
+    {
+        public const uint TypeId = 0x93D7B347u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IInputChannel Channel { get; init; }
+        public required int[] Id { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Channel);
+            writer.WriteVector(Id, (w, x) => w.WriteInt32(x));
+        }
+
+        public global::EitaaSharp.Schema.Messages.IMessages ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.Messages.IMessages>();
     }
 
     /// <summary>TL boxed type <c>channels.ChannelParticipants</c>.</summary>

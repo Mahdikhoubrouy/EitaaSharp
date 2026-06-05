@@ -15,14 +15,15 @@ public sealed partial class EitaaClient
         ChatId chat, int[] messageIds, CancellationToken cancellationToken = default)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var ids = Array.ConvertAll<int, Schema.IInputMessage>(messageIds, x => new Schema.InputMessageID { Id = x });
+        // Eitaa's messages.getMessages / channels.getMessages take a plain Vector<int> of
+        // message ids (not Vector<InputMessage> as in upstream Telegram).
         Messages.IMessages result = peer is Schema.InputPeerChannel ipc
             ? await CallAsync(new Channels.GetMessages
             {
                 Channel = new Schema.InputChannel { ChannelId = ipc.ChannelId, AccessHash = ipc.AccessHash },
-                Id = ids,
+                Id = messageIds,
             }, cancellationToken).ConfigureAwait(false)
-            : await CallAsync(new Messages.GetMessages { Id = ids }, cancellationToken).ConfigureAwait(false);
+            : await CallAsync(new Messages.GetMessages { Id = messageIds }, cancellationToken).ConfigureAwait(false);
         return ResultParser.Messages(this, result);
     }
 }

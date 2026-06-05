@@ -914,37 +914,6 @@ namespace EitaaSharp.Schema
         }
     }
 
-    /// <summary>TL <c>inputGeoPoint#48222faf</c>.</summary>
-    public sealed record InputGeoPoint : global::EitaaSharp.Schema.IInputGeoPoint
-    {
-        public const uint TypeId = 0x48222FAFu;
-        public uint ConstructorId => TypeId;
-
-        public required double Lat { get; init; }
-        public required double Long { get; init; }
-        public int? AccuracyRadius { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            int flags = 0;
-            if (AccuracyRadius is not null) flags |= 0x1;
-            writer.WriteInt32(flags);
-            writer.WriteDouble(Lat);
-            writer.WriteDouble(Long);
-            if (AccuracyRadius is not null) writer.WriteInt32(AccuracyRadius.Value);
-        }
-
-        public static InputGeoPoint Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            int flags = reader.ReadInt32();
-            double _Lat = reader.ReadDouble();
-            double _Long = reader.ReadDouble();
-            int? _AccuracyRadius = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
-            return new InputGeoPoint { Lat = _Lat, Long = _Long, AccuracyRadius = _AccuracyRadius };
-        }
-    }
-
     /// <summary>TL <c>inputPhotoEmpty#1cd7bf0d</c>.</summary>
     public sealed record InputPhotoEmpty : global::EitaaSharp.Schema.IInputPhoto
     {
@@ -1495,42 +1464,6 @@ namespace EitaaSharp.Schema
         }
     }
 
-    /// <summary>TL <c>userProfilePhoto#69d3ab26</c>.</summary>
-    public sealed record UserProfilePhoto : global::EitaaSharp.Schema.IUserProfilePhoto
-    {
-        public const uint TypeId = 0x69D3AB26u;
-        public uint ConstructorId => TypeId;
-
-        public bool HasVideo { get; init; }
-        public required long PhotoId { get; init; }
-        public required global::EitaaSharp.Schema.IFileLocation PhotoSmall { get; init; }
-        public required global::EitaaSharp.Schema.IFileLocation PhotoBig { get; init; }
-        public required int DcId { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            int flags = 0;
-            if (HasVideo) flags |= 0x1;
-            writer.WriteInt32(flags);
-            writer.WriteLong(PhotoId);
-            writer.WriteObject(PhotoSmall);
-            writer.WriteObject(PhotoBig);
-            writer.WriteInt32(DcId);
-        }
-
-        public static UserProfilePhoto Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            int flags = reader.ReadInt32();
-            bool _HasVideo = (flags & 0x1) != 0;
-            long _PhotoId = reader.ReadLong();
-            global::EitaaSharp.Schema.IFileLocation _PhotoSmall = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
-            global::EitaaSharp.Schema.IFileLocation _PhotoBig = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
-            int _DcId = reader.ReadInt32();
-            return new UserProfilePhoto { HasVideo = _HasVideo, PhotoId = _PhotoId, PhotoSmall = _PhotoSmall, PhotoBig = _PhotoBig, DcId = _DcId };
-        }
-    }
-
     /// <summary>TL <c>userStatusEmpty#09d05049</c>.</summary>
     public sealed record UserStatusEmpty : global::EitaaSharp.Schema.IUserStatus
     {
@@ -1756,119 +1689,6 @@ namespace EitaaSharp.Schema
             long _Id = reader.ReadLong();
             string _Title = reader.ReadString();
             return new ChatForbidden { Id = _Id, Title = _Title };
-        }
-    }
-
-    /// <summary>TL <c>channel#8261ac61</c>.</summary>
-    public sealed record Channel : global::EitaaSharp.Schema.IChat
-    {
-        public const uint TypeId = 0x8261AC61u;
-        public uint ConstructorId => TypeId;
-
-        public bool Creator { get; init; }
-        public bool Left { get; init; }
-        public bool Broadcast { get; init; }
-        public bool Verified { get; init; }
-        public bool Megagroup { get; init; }
-        public bool Restricted { get; init; }
-        public bool Signatures { get; init; }
-        public bool Min { get; init; }
-        public bool Scam { get; init; }
-        public bool HasLink { get; init; }
-        public bool HasGeo { get; init; }
-        public bool SlowmodeEnabled { get; init; }
-        public bool CallActive { get; init; }
-        public bool CallNotEmpty { get; init; }
-        public bool Fake { get; init; }
-        public bool Gigagroup { get; init; }
-        public required long Id { get; init; }
-        public long? AccessHash { get; init; }
-        public required string Title { get; init; }
-        public string? Username { get; init; }
-        public required global::EitaaSharp.Schema.IChatPhoto Photo { get; init; }
-        public required int Date { get; init; }
-        public global::EitaaSharp.Schema.IRestrictionReason[]? RestrictionReason { get; init; }
-        public global::EitaaSharp.Schema.IChatAdminRights? AdminRights { get; init; }
-        public global::EitaaSharp.Schema.IChatBannedRights? BannedRights { get; init; }
-        public global::EitaaSharp.Schema.IChatBannedRights? DefaultBannedRights { get; init; }
-        public int? ParticipantsCount { get; init; }
-        public int? LiveMsgId { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            int flags = 0;
-            if (Creator) flags |= 0x1;
-            if (Left) flags |= 0x4;
-            if (Broadcast) flags |= 0x20;
-            if (Verified) flags |= 0x80;
-            if (Megagroup) flags |= 0x100;
-            if (Restricted) flags |= 0x200;
-            if (Signatures) flags |= 0x800;
-            if (Min) flags |= 0x1000;
-            if (Scam) flags |= 0x80000;
-            if (HasLink) flags |= 0x100000;
-            if (HasGeo) flags |= 0x200000;
-            if (SlowmodeEnabled) flags |= 0x400000;
-            if (CallActive) flags |= 0x800000;
-            if (CallNotEmpty) flags |= 0x1000000;
-            if (Fake) flags |= 0x2000000;
-            if (Gigagroup) flags |= 0x4000000;
-            if (AccessHash is not null) flags |= 0x2000;
-            if (Username is not null) flags |= 0x40;
-            if (RestrictionReason is not null) flags |= 0x200;
-            if (AdminRights is not null) flags |= 0x4000;
-            if (BannedRights is not null) flags |= 0x8000;
-            if (DefaultBannedRights is not null) flags |= 0x40000;
-            if (ParticipantsCount is not null) flags |= 0x20000;
-            if (LiveMsgId is not null) flags |= 0x20000000;
-            writer.WriteInt32(flags);
-            writer.WriteLong(Id);
-            if (AccessHash is not null) writer.WriteLong(AccessHash.Value);
-            writer.WriteString(Title);
-            if (Username is not null) writer.WriteString(Username);
-            writer.WriteObject(Photo);
-            writer.WriteInt32(Date);
-            if (RestrictionReason is not null) writer.WriteVector(RestrictionReason, (w, x) => w.WriteObject(x));
-            if (AdminRights is not null) writer.WriteObject(AdminRights);
-            if (BannedRights is not null) writer.WriteObject(BannedRights);
-            if (DefaultBannedRights is not null) writer.WriteObject(DefaultBannedRights);
-            if (ParticipantsCount is not null) writer.WriteInt32(ParticipantsCount.Value);
-            if (LiveMsgId is not null) writer.WriteInt32(LiveMsgId.Value);
-        }
-
-        public static Channel Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            int flags = reader.ReadInt32();
-            bool _Creator = (flags & 0x1) != 0;
-            bool _Left = (flags & 0x4) != 0;
-            bool _Broadcast = (flags & 0x20) != 0;
-            bool _Verified = (flags & 0x80) != 0;
-            bool _Megagroup = (flags & 0x100) != 0;
-            bool _Restricted = (flags & 0x200) != 0;
-            bool _Signatures = (flags & 0x800) != 0;
-            bool _Min = (flags & 0x1000) != 0;
-            bool _Scam = (flags & 0x80000) != 0;
-            bool _HasLink = (flags & 0x100000) != 0;
-            bool _HasGeo = (flags & 0x200000) != 0;
-            bool _SlowmodeEnabled = (flags & 0x400000) != 0;
-            bool _CallActive = (flags & 0x800000) != 0;
-            bool _CallNotEmpty = (flags & 0x1000000) != 0;
-            bool _Fake = (flags & 0x2000000) != 0;
-            bool _Gigagroup = (flags & 0x4000000) != 0;
-            long _Id = reader.ReadLong();
-            long? _AccessHash = (flags & 0x2000) != 0 ? reader.ReadLong() : (long?)null;
-            string _Title = reader.ReadString();
-            string? _Username = (flags & 0x40) != 0 ? reader.ReadString() : null;
-            global::EitaaSharp.Schema.IChatPhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IChatPhoto>();
-            int _Date = reader.ReadInt32();
-            global::EitaaSharp.Schema.IRestrictionReason[]? _RestrictionReason = (flags & 0x200) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IRestrictionReason>()) : null;
-            global::EitaaSharp.Schema.IChatAdminRights? _AdminRights = (flags & 0x4000) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IChatAdminRights>() : null;
-            global::EitaaSharp.Schema.IChatBannedRights? _BannedRights = (flags & 0x8000) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IChatBannedRights>() : null;
-            global::EitaaSharp.Schema.IChatBannedRights? _DefaultBannedRights = (flags & 0x40000) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IChatBannedRights>() : null;
-            int? _ParticipantsCount = (flags & 0x20000) != 0 ? reader.ReadInt32() : (int?)null;
-            int? _LiveMsgId = (flags & 0x20000000) != 0 ? reader.ReadInt32() : (int?)null;
-            return new Channel { Creator = _Creator, Left = _Left, Broadcast = _Broadcast, Verified = _Verified, Megagroup = _Megagroup, Restricted = _Restricted, Signatures = _Signatures, Min = _Min, Scam = _Scam, HasLink = _HasLink, HasGeo = _HasGeo, SlowmodeEnabled = _SlowmodeEnabled, CallActive = _CallActive, CallNotEmpty = _CallNotEmpty, Fake = _Fake, Gigagroup = _Gigagroup, Id = _Id, AccessHash = _AccessHash, Title = _Title, Username = _Username, Photo = _Photo, Date = _Date, RestrictionReason = _RestrictionReason, AdminRights = _AdminRights, BannedRights = _BannedRights, DefaultBannedRights = _DefaultBannedRights, ParticipantsCount = _ParticipantsCount, LiveMsgId = _LiveMsgId };
         }
     }
 
@@ -2292,42 +2112,6 @@ namespace EitaaSharp.Schema
         public static ChatPhotoEmpty Deserialize(global::EitaaSharp.Tl.TlReader reader)
         {
             return new ChatPhotoEmpty();
-        }
-    }
-
-    /// <summary>TL <c>chatPhoto#d20b9f3c</c>.</summary>
-    public sealed record ChatPhoto : global::EitaaSharp.Schema.IChatPhoto
-    {
-        public const uint TypeId = 0xD20B9F3Cu;
-        public uint ConstructorId => TypeId;
-
-        public bool HasVideo { get; init; }
-        public required long PhotoId { get; init; }
-        public required global::EitaaSharp.Schema.IFileLocation PhotoSmall { get; init; }
-        public required global::EitaaSharp.Schema.IFileLocation PhotoBig { get; init; }
-        public required int DcId { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            int flags = 0;
-            if (HasVideo) flags |= 0x1;
-            writer.WriteInt32(flags);
-            writer.WriteLong(PhotoId);
-            writer.WriteObject(PhotoSmall);
-            writer.WriteObject(PhotoBig);
-            writer.WriteInt32(DcId);
-        }
-
-        public static ChatPhoto Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            int flags = reader.ReadInt32();
-            bool _HasVideo = (flags & 0x1) != 0;
-            long _PhotoId = reader.ReadLong();
-            global::EitaaSharp.Schema.IFileLocation _PhotoSmall = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
-            global::EitaaSharp.Schema.IFileLocation _PhotoBig = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
-            int _DcId = reader.ReadInt32();
-            return new ChatPhoto { HasVideo = _HasVideo, PhotoId = _PhotoId, PhotoSmall = _PhotoSmall, PhotoBig = _PhotoBig, DcId = _DcId };
         }
     }
 
@@ -8849,30 +8633,6 @@ namespace EitaaSharp.Schema
         }
     }
 
-    /// <summary>TL <c>sendMessageEmojiInteraction#6a3233b6</c>.</summary>
-    public sealed record SendMessageEmojiInteraction : global::EitaaSharp.Schema.ISendMessageAction
-    {
-        public const uint TypeId = 0x6A3233B6u;
-        public uint ConstructorId => TypeId;
-
-        public required string Emoticon { get; init; }
-        public required global::EitaaSharp.Schema.IDataJSON Interaction { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteString(Emoticon);
-            writer.WriteObject(Interaction);
-        }
-
-        public static SendMessageEmojiInteraction Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            string _Emoticon = reader.ReadString();
-            global::EitaaSharp.Schema.IDataJSON _Interaction = reader.ReadObject<global::EitaaSharp.Schema.IDataJSON>();
-            return new SendMessageEmojiInteraction { Emoticon = _Emoticon, Interaction = _Interaction };
-        }
-    }
-
     /// <summary>TL <c>sendMessageEmojiInteractionSeen#b665902e</c>.</summary>
     public sealed record SendMessageEmojiInteractionSeen : global::EitaaSharp.Schema.ISendMessageAction
     {
@@ -10396,33 +10156,6 @@ namespace EitaaSharp.Schema
             string _Command = reader.ReadString();
             string _Description = reader.ReadString();
             return new BotCommand { Command = _Command, Description = _Description };
-        }
-    }
-
-    /// <summary>TL <c>botInfo#1b74b335</c>.</summary>
-    public sealed record BotInfo : global::EitaaSharp.Schema.IBotInfo
-    {
-        public const uint TypeId = 0x1B74B335u;
-        public uint ConstructorId => TypeId;
-
-        public required long UserId { get; init; }
-        public required string Description { get; init; }
-        public required global::EitaaSharp.Schema.IBotCommand[] Commands { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteLong(UserId);
-            writer.WriteString(Description);
-            writer.WriteVector(Commands, (w, x) => w.WriteObject(x));
-        }
-
-        public static BotInfo Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            long _UserId = reader.ReadLong();
-            string _Description = reader.ReadString();
-            global::EitaaSharp.Schema.IBotCommand[] _Commands = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IBotCommand>());
-            return new BotInfo { UserId = _UserId, Description = _Description, Commands = _Commands };
         }
     }
 
@@ -12541,30 +12274,6 @@ namespace EitaaSharp.Schema
             string? _Description = (flags & 0x8) != 0 ? reader.ReadString() : null;
             global::EitaaSharp.Schema.IBotInlineMessage _SendMessage = reader.ReadObject<global::EitaaSharp.Schema.IBotInlineMessage>();
             return new BotInlineMediaResult { Id = _Id, Type = _Type, Photo = _Photo, Document = _Document, Title = _Title, Description = _Description, SendMessage = _SendMessage };
-        }
-    }
-
-    /// <summary>TL <c>exportedMessageLink#5dab1af4</c>.</summary>
-    public sealed record ExportedMessageLink : global::EitaaSharp.Schema.IExportedMessageLink
-    {
-        public const uint TypeId = 0x5DAB1AF4u;
-        public uint ConstructorId => TypeId;
-
-        public required string Link { get; init; }
-        public required string Html { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteString(Link);
-            writer.WriteString(Html);
-        }
-
-        public static ExportedMessageLink Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            string _Link = reader.ReadString();
-            string _Html = reader.ReadString();
-            return new ExportedMessageLink { Link = _Link, Html = _Html };
         }
     }
 
@@ -20815,30 +20524,6 @@ namespace EitaaSharp.Schema
         }
     }
 
-    /// <summary>TL <c>chatPhoto#6153276a</c>.</summary>
-    public sealed record ChatPhoto_6153276A : global::EitaaSharp.Schema.IChatPhoto
-    {
-        public const uint TypeId = 0x6153276Au;
-        public uint ConstructorId => TypeId;
-
-        public required global::EitaaSharp.Schema.IFileLocation PhotoSmall { get; init; }
-        public required global::EitaaSharp.Schema.IFileLocation PhotoBig { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteObject(PhotoSmall);
-            writer.WriteObject(PhotoBig);
-        }
-
-        public static ChatPhoto_6153276A Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            global::EitaaSharp.Schema.IFileLocation _PhotoSmall = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
-            global::EitaaSharp.Schema.IFileLocation _PhotoBig = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
-            return new ChatPhoto_6153276A { PhotoSmall = _PhotoSmall, PhotoBig = _PhotoBig };
-        }
-    }
-
     /// <summary>TL <c>fileLocationToBeDeprecated#bc7fc6cd</c>.</summary>
     public sealed record FileLocationToBeDeprecated : global::EitaaSharp.Schema.IFileLocation
     {
@@ -20956,47 +20641,6 @@ namespace EitaaSharp.Schema
             int _H = reader.ReadInt32();
             int _Size = reader.ReadInt32();
             return new PhotoSize_77BFB61B { Type = _Type, Location = _Location, W = _W, H = _H, Size = _Size };
-        }
-    }
-
-    /// <summary>TL <c>messageMediaLiveStream#cbf43926</c>.</summary>
-    public sealed record MessageMediaLiveStream : global::EitaaSharp.Schema.IMessageMedia
-    {
-        public const uint TypeId = 0xCBF43926u;
-        public uint ConstructorId => TypeId;
-
-        public bool FromSelf { get; init; }
-        public required long Id { get; init; }
-        public required long AccessHash { get; init; }
-        public int? TotalViewers { get; init; }
-        public required global::EitaaSharp.Schema.ILiveStreamState State { get; init; }
-        public global::EitaaSharp.Schema.IPhotoSize[]? Thumbs { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            int flags = 0;
-            if (FromSelf) flags |= 0x2;
-            if (TotalViewers is not null) flags |= 0x1;
-            if (Thumbs is not null) flags |= 0x4;
-            writer.WriteInt32(flags);
-            writer.WriteLong(Id);
-            writer.WriteLong(AccessHash);
-            if (TotalViewers is not null) writer.WriteInt32(TotalViewers.Value);
-            writer.WriteObject(State);
-            if (Thumbs is not null) writer.WriteVector(Thumbs, (w, x) => w.WriteObject(x));
-        }
-
-        public static MessageMediaLiveStream Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            int flags = reader.ReadInt32();
-            bool _FromSelf = (flags & 0x2) != 0;
-            long _Id = reader.ReadLong();
-            long _AccessHash = reader.ReadLong();
-            int? _TotalViewers = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
-            global::EitaaSharp.Schema.ILiveStreamState _State = reader.ReadObject<global::EitaaSharp.Schema.ILiveStreamState>();
-            global::EitaaSharp.Schema.IPhotoSize[]? _Thumbs = (flags & 0x4) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IPhotoSize>()) : null;
-            return new MessageMediaLiveStream { FromSelf = _FromSelf, Id = _Id, AccessHash = _AccessHash, TotalViewers = _TotalViewers, State = _State, Thumbs = _Thumbs };
         }
     }
 
@@ -21310,6 +20954,5467 @@ namespace EitaaSharp.Schema
         }
     }
 
+    /// <summary>TL <c>chatChannelParticipant#c8d7493e</c>.</summary>
+    public sealed record ChatChannelParticipant : global::EitaaSharp.Schema.IChatParticipant
+    {
+        public const uint TypeId = 0xC8D7493Eu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static ChatChannelParticipant Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new ChatChannelParticipant();
+        }
+    }
+
+    /// <summary>TL <c>documentAttributeAudio_old#051448e5</c>.</summary>
+    public sealed record DocumentAttributeAudioOld : global::EitaaSharp.Schema.ITLDocumentAttributeAudio
+    {
+        public const uint TypeId = 0x051448E5u;
+        public uint ConstructorId => TypeId;
+
+        public required int Duration { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Duration);
+        }
+
+        public static DocumentAttributeAudioOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Duration = reader.ReadInt32();
+            return new DocumentAttributeAudioOld { Duration = _Duration };
+        }
+    }
+
+    /// <summary>TL <c>documentAttributeSticker_old#fb0a5727</c>.</summary>
+    public sealed record DocumentAttributeStickerOld : global::EitaaSharp.Schema.ITLDocumentAttributeSticker
+    {
+        public const uint TypeId = 0xFB0A5727u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static DocumentAttributeStickerOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new DocumentAttributeStickerOld();
+        }
+    }
+
+    /// <summary>TL <c>documentAttributeSticker_old2#994c9882</c>.</summary>
+    public sealed record DocumentAttributeStickerOld2 : global::EitaaSharp.Schema.ITLDocumentAttributeSticker
+    {
+        public const uint TypeId = 0x994C9882u;
+        public uint ConstructorId => TypeId;
+
+        public required string Alt { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Alt);
+        }
+
+        public static DocumentAttributeStickerOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Alt = reader.ReadString();
+            return new DocumentAttributeStickerOld2 { Alt = _Alt };
+        }
+    }
+
+    /// <summary>TL <c>messageUserReaction#d267dcbc</c>.</summary>
+    public sealed record MessageUserReaction : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xD267DCBCu;
+        public uint ConstructorId => TypeId;
+
+        public required int UserId { get; init; }
+        public required string Reaction { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(UserId);
+            writer.WriteString(Reaction);
+        }
+
+        public static MessageUserReaction Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _UserId = reader.ReadInt32();
+            string _Reaction = reader.ReadString();
+            return new MessageUserReaction { UserId = _UserId, Reaction = _Reaction };
+        }
+    }
+
+    /// <summary>TL <c>getSocketToken#62933e64</c>.</summary>
+    public sealed record GetSocketToken : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x62933E64u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static GetSocketToken Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new GetSocketToken();
+        }
+    }
+
+    /// <summary>TL <c>contactLinkNone#feedd3ad</c>.</summary>
+    public sealed record ContactLinkNone : global::EitaaSharp.Schema.IContactLinkLayer101
+    {
+        public const uint TypeId = 0xFEEDD3ADu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static ContactLinkNone Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new ContactLinkNone();
+        }
+    }
+
+    /// <summary>TL <c>contactLinkContact#d502c2d0</c>.</summary>
+    public sealed record ContactLinkContact : global::EitaaSharp.Schema.IContactLinkLayer101
+    {
+        public const uint TypeId = 0xD502C2D0u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static ContactLinkContact Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new ContactLinkContact();
+        }
+    }
+
+    /// <summary>TL <c>contactLinkUnknown#5f4f9247</c>.</summary>
+    public sealed record ContactLinkUnknown : global::EitaaSharp.Schema.IContactLinkLayer101
+    {
+        public const uint TypeId = 0x5F4F9247u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static ContactLinkUnknown Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new ContactLinkUnknown();
+        }
+    }
+
+    /// <summary>TL <c>chatInvitePreview#db74f557</c>.</summary>
+    public sealed record ChatInvitePreview : global::EitaaSharp.Schema.IChatInvite
+    {
+        public const uint TypeId = 0xDB74F557u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IChat Chat { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Chat);
+        }
+
+        public static ChatInvitePreview Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IChat _Chat = reader.ReadObject<global::EitaaSharp.Schema.IChat>();
+            return new ChatInvitePreview { Chat = _Chat };
+        }
+    }
+
+    /// <summary>TL <c>sendMessageUploadVideoAction_old#92042ff7</c>.</summary>
+    public sealed record SendMessageUploadVideoActionOld : global::EitaaSharp.Schema.ITLSendMessageUploadVideoAction
+    {
+        public const uint TypeId = 0x92042FF7u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static SendMessageUploadVideoActionOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new SendMessageUploadVideoActionOld();
+        }
+    }
+
+    /// <summary>TL <c>sendMessageUploadAudioAction_old#e6ac8a6f</c>.</summary>
+    public sealed record SendMessageUploadAudioActionOld : global::EitaaSharp.Schema.ITLSendMessageUploadAudioAction
+    {
+        public const uint TypeId = 0xE6AC8A6Fu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static SendMessageUploadAudioActionOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new SendMessageUploadAudioActionOld();
+        }
+    }
+
+    /// <summary>TL <c>sendMessageUploadDocumentAction_old#8faee98e</c>.</summary>
+    public sealed record SendMessageUploadDocumentActionOld : global::EitaaSharp.Schema.ITLSendMessageUploadDocumentAction
+    {
+        public const uint TypeId = 0x8FAEE98Eu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static SendMessageUploadDocumentActionOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new SendMessageUploadDocumentActionOld();
+        }
+    }
+
+    /// <summary>TL <c>sendMessageUploadPhotoAction_old#990a3c1a</c>.</summary>
+    public sealed record SendMessageUploadPhotoActionOld : global::EitaaSharp.Schema.ITLSendMessageUploadPhotoAction
+    {
+        public const uint TypeId = 0x990A3C1Au;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static SendMessageUploadPhotoActionOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new SendMessageUploadPhotoActionOld();
+        }
+    }
+
+    /// <summary>TL <c>messageMediaUnsupported_old#29632a36</c>.</summary>
+    public sealed record MessageMediaUnsupportedOld : global::EitaaSharp.Schema.ITLMessageMediaUnsupported
+    {
+        public const uint TypeId = 0x29632A36u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static MessageMediaUnsupportedOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new MessageMediaUnsupportedOld();
+        }
+    }
+
+    /// <summary>TL <c>messageMediaPhoto_old#c8c45a2a</c>.</summary>
+    public sealed record MessageMediaPhotoOld : global::EitaaSharp.Schema.ITLMessageMediaPhoto
+    {
+        public const uint TypeId = 0xC8C45A2Au;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IPhoto Photo { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Photo);
+        }
+
+        public static MessageMediaPhotoOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IPhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IPhoto>();
+            return new MessageMediaPhotoOld { Photo = _Photo };
+        }
+    }
+
+    /// <summary>TL <c>messageMediaVideo_old#a2d24290</c>.</summary>
+    public sealed record MessageMediaVideoOld : global::EitaaSharp.Schema.ITLMessageMediaVideoLayer45
+    {
+        public const uint TypeId = 0xA2D24290u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject VideoUnused { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(VideoUnused);
+        }
+
+        public static MessageMediaVideoOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Tl.ITlObject _VideoUnused = reader.ReadObject();
+            return new MessageMediaVideoOld { VideoUnused = _VideoUnused };
+        }
+    }
+
+    /// <summary>TL <c>messageMediaDocument_old#2fda2204</c>.</summary>
+    public sealed record MessageMediaDocumentOld : global::EitaaSharp.Schema.ITLMessageMediaDocument
+    {
+        public const uint TypeId = 0x2FDA2204u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IDocument Document { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Document);
+        }
+
+        public static MessageMediaDocumentOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IDocument _Document = reader.ReadObject<global::EitaaSharp.Schema.IDocument>();
+            return new MessageMediaDocumentOld { Document = _Document };
+        }
+    }
+
+    /// <summary>TL <c>messageReactionsList#e3ae6108</c>.</summary>
+    public sealed record MessageReactionsList : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xE3AE6108u;
+        public uint ConstructorId => TypeId;
+
+        public required int Count { get; init; }
+        public string? NextOffset { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (NextOffset is not null) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Count);
+            if (NextOffset is not null) writer.WriteString(NextOffset);
+        }
+
+        public static MessageReactionsList Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            int _Count = reader.ReadInt32();
+            string? _NextOffset = (flags & 0x1) != 0 ? reader.ReadString() : null;
+            return new MessageReactionsList { Count = _Count, NextOffset = _NextOffset };
+        }
+    }
+
+    /// <summary>TL <c>audio_old#427425e7</c>.</summary>
+    public sealed record AudioOld : global::EitaaSharp.Schema.ITLAudioLayer45
+    {
+        public const uint TypeId = 0x427425E7u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required int Duration { get; init; }
+        public required int Size { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(Duration);
+            writer.WriteInt32(Size);
+            writer.WriteInt32(DcId);
+        }
+
+        public static AudioOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            int _Duration = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            int _DcId = reader.ReadInt32();
+            return new AudioOld { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Duration = _Duration, Size = _Size, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>audioEncrypted#555555f6</c>.</summary>
+    public sealed record AudioEncrypted : global::EitaaSharp.Schema.ITLAudioLayer45
+    {
+        public const uint TypeId = 0x555555F6u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required int Duration { get; init; }
+        public required int Size { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(Duration);
+            writer.WriteInt32(Size);
+            writer.WriteInt32(DcId);
+        }
+
+        public static AudioEncrypted Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            int _Duration = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            int _DcId = reader.ReadInt32();
+            return new AudioEncrypted { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Duration = _Duration, Size = _Size, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>audio_old2#c7ac6496</c>.</summary>
+    public sealed record AudioOld2 : global::EitaaSharp.Schema.ITLAudioLayer45
+    {
+        public const uint TypeId = 0xC7AC6496u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required int Duration { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(Duration);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+            writer.WriteInt32(DcId);
+        }
+
+        public static AudioOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            int _Duration = reader.ReadInt32();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            int _DcId = reader.ReadInt32();
+            return new AudioOld2 { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Duration = _Duration, MimeType = _MimeType, Size = _Size, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>botMenuButton#c7b57ce6</c>.</summary>
+    public sealed record BotMenuButton : global::EitaaSharp.Schema.IBotMenuButton
+    {
+        public const uint TypeId = 0xC7B57CE6u;
+        public uint ConstructorId => TypeId;
+
+        public required string Text { get; init; }
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Text);
+            writer.WriteString(Url);
+        }
+
+        public static BotMenuButton Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Text = reader.ReadString();
+            string _Url = reader.ReadString();
+            return new BotMenuButton { Text = _Text, Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>botMenuButtonDefault#7533a588</c>.</summary>
+    public sealed record BotMenuButtonDefault : global::EitaaSharp.Schema.IBotMenuButton
+    {
+        public const uint TypeId = 0x7533A588u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static BotMenuButtonDefault Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new BotMenuButtonDefault();
+        }
+    }
+
+    /// <summary>TL <c>botMenuButtonCommands#4258c205</c>.</summary>
+    public sealed record BotMenuButtonCommands : global::EitaaSharp.Schema.IBotMenuButton
+    {
+        public const uint TypeId = 0x4258C205u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static BotMenuButtonCommands Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new BotMenuButtonCommands();
+        }
+    }
+
+    /// <summary>TL <c>updateBotMenuButton#14b85813</c>.</summary>
+    public sealed record UpdateBotMenuButton : global::EitaaSharp.Schema.IUpdate
+    {
+        public const uint TypeId = 0x14B85813u;
+        public uint ConstructorId => TypeId;
+
+        public required long BotId { get; init; }
+        public required global::EitaaSharp.Schema.IBotMenuButton Button { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(BotId);
+            writer.WriteObject(Button);
+        }
+
+        public static UpdateBotMenuButton Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _BotId = reader.ReadLong();
+            global::EitaaSharp.Schema.IBotMenuButton _Button = reader.ReadObject<global::EitaaSharp.Schema.IBotMenuButton>();
+            return new UpdateBotMenuButton { BotId = _BotId, Button = _Button };
+        }
+    }
+
+    /// <summary>TL <c>channelFull_old#fab31aa3</c>.</summary>
+    public sealed record ChannelFullOld : global::EitaaSharp.Schema.ITLChannelFull
+    {
+        public const uint TypeId = 0xFAB31AA3u;
+        public uint ConstructorId => TypeId;
+
+        public bool CanViewParticipants { get; init; }
+        public required int Id { get; init; }
+        public required string About { get; init; }
+        public int? ParticipantsCount { get; init; }
+        public int? AdminsCount { get; init; }
+        public int? KickedCount { get; init; }
+        public required int ReadInboxMaxId { get; init; }
+        public required int UnreadCount { get; init; }
+        public required int UnreadImportantCount { get; init; }
+        public required global::EitaaSharp.Schema.IPhoto ChatPhoto { get; init; }
+        public required global::EitaaSharp.Schema.IPeerNotifySettings NotifySettings { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (CanViewParticipants) flags |= 0x8;
+            if (ParticipantsCount is not null) flags |= 0x1;
+            if (AdminsCount is not null) flags |= 0x2;
+            if (KickedCount is not null) flags |= 0x4;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteString(About);
+            if (ParticipantsCount is not null) writer.WriteInt32(ParticipantsCount.Value);
+            if (AdminsCount is not null) writer.WriteInt32(AdminsCount.Value);
+            if (KickedCount is not null) writer.WriteInt32(KickedCount.Value);
+            writer.WriteInt32(ReadInboxMaxId);
+            writer.WriteInt32(UnreadCount);
+            writer.WriteInt32(UnreadImportantCount);
+            writer.WriteObject(ChatPhoto);
+            writer.WriteObject(NotifySettings);
+        }
+
+        public static ChannelFullOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _CanViewParticipants = (flags & 0x8) != 0;
+            int _Id = reader.ReadInt32();
+            string _About = reader.ReadString();
+            int? _ParticipantsCount = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _AdminsCount = (flags & 0x2) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _KickedCount = (flags & 0x4) != 0 ? reader.ReadInt32() : (int?)null;
+            int _ReadInboxMaxId = reader.ReadInt32();
+            int _UnreadCount = reader.ReadInt32();
+            int _UnreadImportantCount = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhoto _ChatPhoto = reader.ReadObject<global::EitaaSharp.Schema.IPhoto>();
+            global::EitaaSharp.Schema.IPeerNotifySettings _NotifySettings = reader.ReadObject<global::EitaaSharp.Schema.IPeerNotifySettings>();
+            return new ChannelFullOld { CanViewParticipants = _CanViewParticipants, Id = _Id, About = _About, ParticipantsCount = _ParticipantsCount, AdminsCount = _AdminsCount, KickedCount = _KickedCount, ReadInboxMaxId = _ReadInboxMaxId, UnreadCount = _UnreadCount, UnreadImportantCount = _UnreadImportantCount, ChatPhoto = _ChatPhoto, NotifySettings = _NotifySettings };
+        }
+    }
+
+    /// <summary>TL <c>webPage_old#a31ea0b5</c>.</summary>
+    public sealed record WebPageOld : global::EitaaSharp.Schema.ITLWebPage
+    {
+        public const uint TypeId = 0xA31EA0B5u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required string Url { get; init; }
+        public required string DisplayUrl { get; init; }
+        public string? Type { get; init; }
+        public string? SiteName { get; init; }
+        public string? Title { get; init; }
+        public string? Description { get; init; }
+        public global::EitaaSharp.Schema.IPhoto? Photo { get; init; }
+        public string? EmbedUrl { get; init; }
+        public string? EmbedType { get; init; }
+        public int? EmbedWidth { get; init; }
+        public int? EmbedHeight { get; init; }
+        public int? Duration { get; init; }
+        public string? Author { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Type is not null) flags |= 0x1;
+            if (SiteName is not null) flags |= 0x2;
+            if (Title is not null) flags |= 0x4;
+            if (Description is not null) flags |= 0x8;
+            if (Photo is not null) flags |= 0x10;
+            if (EmbedUrl is not null) flags |= 0x20;
+            if (EmbedType is not null) flags |= 0x20;
+            if (EmbedWidth is not null) flags |= 0x40;
+            if (EmbedHeight is not null) flags |= 0x40;
+            if (Duration is not null) flags |= 0x80;
+            if (Author is not null) flags |= 0x100;
+            writer.WriteInt32(flags);
+            writer.WriteLong(Id);
+            writer.WriteString(Url);
+            writer.WriteString(DisplayUrl);
+            if (Type is not null) writer.WriteString(Type);
+            if (SiteName is not null) writer.WriteString(SiteName);
+            if (Title is not null) writer.WriteString(Title);
+            if (Description is not null) writer.WriteString(Description);
+            if (Photo is not null) writer.WriteObject(Photo);
+            if (EmbedUrl is not null) writer.WriteString(EmbedUrl);
+            if (EmbedType is not null) writer.WriteString(EmbedType);
+            if (EmbedWidth is not null) writer.WriteInt32(EmbedWidth.Value);
+            if (EmbedHeight is not null) writer.WriteInt32(EmbedHeight.Value);
+            if (Duration is not null) writer.WriteInt32(Duration.Value);
+            if (Author is not null) writer.WriteString(Author);
+        }
+
+        public static WebPageOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            long _Id = reader.ReadLong();
+            string _Url = reader.ReadString();
+            string _DisplayUrl = reader.ReadString();
+            string? _Type = (flags & 0x1) != 0 ? reader.ReadString() : null;
+            string? _SiteName = (flags & 0x2) != 0 ? reader.ReadString() : null;
+            string? _Title = (flags & 0x4) != 0 ? reader.ReadString() : null;
+            string? _Description = (flags & 0x8) != 0 ? reader.ReadString() : null;
+            global::EitaaSharp.Schema.IPhoto? _Photo = (flags & 0x10) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPhoto>() : null;
+            string? _EmbedUrl = (flags & 0x20) != 0 ? reader.ReadString() : null;
+            string? _EmbedType = (flags & 0x20) != 0 ? reader.ReadString() : null;
+            int? _EmbedWidth = (flags & 0x40) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _EmbedHeight = (flags & 0x40) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _Duration = (flags & 0x80) != 0 ? reader.ReadInt32() : (int?)null;
+            string? _Author = (flags & 0x100) != 0 ? reader.ReadString() : null;
+            return new WebPageOld { Id = _Id, Url = _Url, DisplayUrl = _DisplayUrl, Type = _Type, SiteName = _SiteName, Title = _Title, Description = _Description, Photo = _Photo, EmbedUrl = _EmbedUrl, EmbedType = _EmbedType, EmbedWidth = _EmbedWidth, EmbedHeight = _EmbedHeight, Duration = _Duration, Author = _Author };
+        }
+    }
+
+    /// <summary>TL <c>webPageUrlPending#d41a5167</c>.</summary>
+    public sealed record WebPageUrlPending : global::EitaaSharp.Schema.IWebPage
+    {
+        public const uint TypeId = 0xD41A5167u;
+        public uint ConstructorId => TypeId;
+
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Url);
+        }
+
+        public static WebPageUrlPending Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Url = reader.ReadString();
+            return new WebPageUrlPending { Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>userContact_old2#cab35e18</c>.</summary>
+    public sealed record UserContactOld2 : global::EitaaSharp.Schema.IUser
+    {
+        public const uint TypeId = 0xCAB35E18u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required string Username { get; init; }
+        public required long AccessHash { get; init; }
+        public required string Phone { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteString(Username);
+            writer.WriteLong(AccessHash);
+            writer.WriteString(Phone);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+        }
+
+        public static UserContactOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            string _Username = reader.ReadString();
+            long _AccessHash = reader.ReadLong();
+            string _Phone = reader.ReadString();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            return new UserContactOld2 { Id = _Id, FirstName = _FirstName, LastName = _LastName, Username = _Username, AccessHash = _AccessHash, Phone = _Phone, Photo = _Photo, Status = _Status };
+        }
+    }
+
+    /// <summary>TL <c>userContact_old#f2fb8319</c>.</summary>
+    public sealed record UserContactOld : global::EitaaSharp.Schema.ITLUserContactOld2
+    {
+        public const uint TypeId = 0xF2FB8319u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required long AccessHash { get; init; }
+        public required string Phone { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteLong(AccessHash);
+            writer.WriteString(Phone);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+        }
+
+        public static UserContactOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            long _AccessHash = reader.ReadLong();
+            string _Phone = reader.ReadString();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            return new UserContactOld { Id = _Id, FirstName = _FirstName, LastName = _LastName, AccessHash = _AccessHash, Phone = _Phone, Photo = _Photo, Status = _Status };
+        }
+    }
+
+    /// <summary>TL <c>inputReplyToMessage#22c0f6d5</c>.</summary>
+    public sealed record InputReplyToMessage : global::EitaaSharp.Schema.IInputReplyTo
+    {
+        public const uint TypeId = 0x22C0F6D5u;
+        public uint ConstructorId => TypeId;
+
+        public required int ReplyToMsgId { get; init; }
+        public int? TopMsgId { get; init; }
+        public global::EitaaSharp.Schema.IInputPeer? ReplyToPeerId { get; init; }
+        public string? QuoteText { get; init; }
+        public global::EitaaSharp.Schema.IMessageEntity[]? QuoteEntities { get; init; }
+        public int? QuoteOffset { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (TopMsgId is not null) flags |= 0x1;
+            if (ReplyToPeerId is not null) flags |= 0x2;
+            if (QuoteText is not null) flags |= 0x4;
+            if (QuoteEntities is not null) flags |= 0x8;
+            if (QuoteOffset is not null) flags |= 0x10;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(ReplyToMsgId);
+            if (TopMsgId is not null) writer.WriteInt32(TopMsgId.Value);
+            if (ReplyToPeerId is not null) writer.WriteObject(ReplyToPeerId);
+            if (QuoteText is not null) writer.WriteString(QuoteText);
+            if (QuoteEntities is not null) writer.WriteVector(QuoteEntities, (w, x) => w.WriteObject(x));
+            if (QuoteOffset is not null) writer.WriteInt32(QuoteOffset.Value);
+        }
+
+        public static InputReplyToMessage Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            int _ReplyToMsgId = reader.ReadInt32();
+            int? _TopMsgId = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
+            global::EitaaSharp.Schema.IInputPeer? _ReplyToPeerId = (flags & 0x2) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IInputPeer>() : null;
+            string? _QuoteText = (flags & 0x4) != 0 ? reader.ReadString() : null;
+            global::EitaaSharp.Schema.IMessageEntity[]? _QuoteEntities = (flags & 0x8) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IMessageEntity>()) : null;
+            int? _QuoteOffset = (flags & 0x10) != 0 ? reader.ReadInt32() : (int?)null;
+            return new InputReplyToMessage { ReplyToMsgId = _ReplyToMsgId, TopMsgId = _TopMsgId, ReplyToPeerId = _ReplyToPeerId, QuoteText = _QuoteText, QuoteEntities = _QuoteEntities, QuoteOffset = _QuoteOffset };
+        }
+    }
+
+    /// <summary>TL <c>inputReplyToStory#5881323a</c>.</summary>
+    public sealed record InputReplyToStory : global::EitaaSharp.Schema.IInputReplyTo
+    {
+        public const uint TypeId = 0x5881323Au;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IInputPeer Peer { get; init; }
+        public required int StoryId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Peer);
+            writer.WriteInt32(StoryId);
+        }
+
+        public static InputReplyToStory Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IInputPeer _Peer = reader.ReadObject<global::EitaaSharp.Schema.IInputPeer>();
+            int _StoryId = reader.ReadInt32();
+            return new InputReplyToStory { Peer = _Peer, StoryId = _StoryId };
+        }
+    }
+
+    /// <summary>TL <c>webViewResultUrl#0c14557c</c>.</summary>
+    public sealed record WebViewResultUrl : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x0C14557Cu;
+        public uint ConstructorId => TypeId;
+
+        public required long QueryId { get; init; }
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(QueryId);
+            writer.WriteString(Url);
+        }
+
+        public static WebViewResultUrl Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _QueryId = reader.ReadLong();
+            string _Url = reader.ReadString();
+            return new WebViewResultUrl { QueryId = _QueryId, Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>userSelf_old#720535ec</c>.</summary>
+    public sealed record UserSelfOld : global::EitaaSharp.Schema.ITLUserSelfOld3
+    {
+        public const uint TypeId = 0x720535ECu;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required string Phone { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+        public required bool Inactive { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteString(Phone);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+            writer.WriteBool(Inactive);
+        }
+
+        public static UserSelfOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            string _Phone = reader.ReadString();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            bool _Inactive = reader.ReadBool();
+            return new UserSelfOld { Id = _Id, FirstName = _FirstName, LastName = _LastName, Phone = _Phone, Photo = _Photo, Status = _Status, Inactive = _Inactive };
+        }
+    }
+
+    /// <summary>TL <c>userSelf_old3#1c60e608</c>.</summary>
+    public sealed record UserSelfOld3 : global::EitaaSharp.Schema.IUser
+    {
+        public const uint TypeId = 0x1C60E608u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required string Username { get; init; }
+        public required string Phone { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteString(Username);
+            writer.WriteString(Phone);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+        }
+
+        public static UserSelfOld3 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            string _Username = reader.ReadString();
+            string _Phone = reader.ReadString();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            return new UserSelfOld3 { Id = _Id, FirstName = _FirstName, LastName = _LastName, Username = _Username, Phone = _Phone, Photo = _Photo, Status = _Status };
+        }
+    }
+
+    /// <summary>TL <c>userDeleted_old2#d6016d7a</c>.</summary>
+    public sealed record UserDeletedOld2 : global::EitaaSharp.Schema.IUser
+    {
+        public const uint TypeId = 0xD6016D7Au;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required string Username { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteString(Username);
+        }
+
+        public static UserDeletedOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            string _Username = reader.ReadString();
+            return new UserDeletedOld2 { Id = _Id, FirstName = _FirstName, LastName = _LastName, Username = _Username };
+        }
+    }
+
+    /// <summary>TL <c>userRequest_old#22e8ceb0</c>.</summary>
+    public sealed record UserRequestOld : global::EitaaSharp.Schema.ITLUserRequestOld2
+    {
+        public const uint TypeId = 0x22E8CEB0u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required long AccessHash { get; init; }
+        public required string Phone { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteLong(AccessHash);
+            writer.WriteString(Phone);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+        }
+
+        public static UserRequestOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            long _AccessHash = reader.ReadLong();
+            string _Phone = reader.ReadString();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            return new UserRequestOld { Id = _Id, FirstName = _FirstName, LastName = _LastName, AccessHash = _AccessHash, Phone = _Phone, Photo = _Photo, Status = _Status };
+        }
+    }
+
+    /// <summary>TL <c>userForeign_old#5214c89d</c>.</summary>
+    public sealed record UserForeignOld : global::EitaaSharp.Schema.ITLUserForeignOld2
+    {
+        public const uint TypeId = 0x5214C89Du;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required long AccessHash { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteLong(AccessHash);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+        }
+
+        public static UserForeignOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            long _AccessHash = reader.ReadLong();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            return new UserForeignOld { Id = _Id, FirstName = _FirstName, LastName = _LastName, AccessHash = _AccessHash, Photo = _Photo, Status = _Status };
+        }
+    }
+
+    /// <summary>TL <c>userForeign_old2#075cf7a8</c>.</summary>
+    public sealed record UserForeignOld2 : global::EitaaSharp.Schema.IUser
+    {
+        public const uint TypeId = 0x075CF7A8u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required string Username { get; init; }
+        public required long AccessHash { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteString(Username);
+            writer.WriteLong(AccessHash);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+        }
+
+        public static UserForeignOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            string _Username = reader.ReadString();
+            long _AccessHash = reader.ReadLong();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            return new UserForeignOld2 { Id = _Id, FirstName = _FirstName, LastName = _LastName, Username = _Username, AccessHash = _AccessHash, Photo = _Photo, Status = _Status };
+        }
+    }
+
+    /// <summary>TL <c>userRequest_old2#d9ccc4ef</c>.</summary>
+    public sealed record UserRequestOld2 : global::EitaaSharp.Schema.IUser
+    {
+        public const uint TypeId = 0xD9CCC4EFu;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required string Username { get; init; }
+        public required long AccessHash { get; init; }
+        public required string Phone { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteString(Username);
+            writer.WriteLong(AccessHash);
+            writer.WriteString(Phone);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+        }
+
+        public static UserRequestOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            string _Username = reader.ReadString();
+            long _AccessHash = reader.ReadLong();
+            string _Phone = reader.ReadString();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            return new UserRequestOld2 { Id = _Id, FirstName = _FirstName, LastName = _LastName, Username = _Username, AccessHash = _AccessHash, Phone = _Phone, Photo = _Photo, Status = _Status };
+        }
+    }
+
+    /// <summary>TL <c>userDeleted_old#b29ad7cc</c>.</summary>
+    public sealed record UserDeletedOld : global::EitaaSharp.Schema.ITLUserDeletedOld2
+    {
+        public const uint TypeId = 0xB29AD7CCu;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+        }
+
+        public static UserDeletedOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            return new UserDeletedOld { Id = _Id, FirstName = _FirstName, LastName = _LastName };
+        }
+    }
+
+    /// <summary>TL <c>user_old#22e49072</c>.</summary>
+    public sealed record UserOld : global::EitaaSharp.Schema.ITLUser
+    {
+        public const uint TypeId = 0x22E49072u;
+        public uint ConstructorId => TypeId;
+
+        public bool Self { get; init; }
+        public bool Contact { get; init; }
+        public bool ExplicitContent { get; init; }
+        public required int Id { get; init; }
+        public long? AccessHash { get; init; }
+        public string? FirstName { get; init; }
+        public string? LastName { get; init; }
+        public string? Username { get; init; }
+        public string? Phone { get; init; }
+        public global::EitaaSharp.Schema.IUserProfilePhoto? Photo { get; init; }
+        public global::EitaaSharp.Schema.IUserStatus? Status { get; init; }
+        public required int BotInfoVersion { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Self) flags |= 0x400;
+            if (Contact) flags |= 0x800;
+            if (ExplicitContent) flags |= 0x40000;
+            if (AccessHash is not null) flags |= 0x1;
+            if (FirstName is not null) flags |= 0x2;
+            if (LastName is not null) flags |= 0x4;
+            if (Username is not null) flags |= 0x8;
+            if (Phone is not null) flags |= 0x10;
+            if (Photo is not null) flags |= 0x20;
+            if (Status is not null) flags |= 0x40;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            if (AccessHash is not null) writer.WriteLong(AccessHash.Value);
+            if (FirstName is not null) writer.WriteString(FirstName);
+            if (LastName is not null) writer.WriteString(LastName);
+            if (Username is not null) writer.WriteString(Username);
+            if (Phone is not null) writer.WriteString(Phone);
+            if (Photo is not null) writer.WriteObject(Photo);
+            if (Status is not null) writer.WriteObject(Status);
+            writer.WriteInt32(BotInfoVersion);
+        }
+
+        public static UserOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Self = (flags & 0x400) != 0;
+            bool _Contact = (flags & 0x800) != 0;
+            bool _ExplicitContent = (flags & 0x40000) != 0;
+            int _Id = reader.ReadInt32();
+            long? _AccessHash = (flags & 0x1) != 0 ? reader.ReadLong() : (long?)null;
+            string? _FirstName = (flags & 0x2) != 0 ? reader.ReadString() : null;
+            string? _LastName = (flags & 0x4) != 0 ? reader.ReadString() : null;
+            string? _Username = (flags & 0x8) != 0 ? reader.ReadString() : null;
+            string? _Phone = (flags & 0x10) != 0 ? reader.ReadString() : null;
+            global::EitaaSharp.Schema.IUserProfilePhoto? _Photo = (flags & 0x20) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>() : null;
+            global::EitaaSharp.Schema.IUserStatus? _Status = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>() : null;
+            int _BotInfoVersion = reader.ReadInt32();
+            return new UserOld { Self = _Self, Contact = _Contact, ExplicitContent = _ExplicitContent, Id = _Id, AccessHash = _AccessHash, FirstName = _FirstName, LastName = _LastName, Username = _Username, Phone = _Phone, Photo = _Photo, Status = _Status, BotInfoVersion = _BotInfoVersion };
+        }
+    }
+
+    /// <summary>TL <c>userSelf_old2#7007b451</c>.</summary>
+    public sealed record UserSelfOld2 : global::EitaaSharp.Schema.ITLUserSelfOld3
+    {
+        public const uint TypeId = 0x7007B451u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required string Username { get; init; }
+        public required string Phone { get; init; }
+        public required global::EitaaSharp.Schema.IUserProfilePhoto Photo { get; init; }
+        public required global::EitaaSharp.Schema.IUserStatus Status { get; init; }
+        public required bool Inactive { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteString(Username);
+            writer.WriteString(Phone);
+            writer.WriteObject(Photo);
+            writer.WriteObject(Status);
+            writer.WriteBool(Inactive);
+        }
+
+        public static UserSelfOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            string _Username = reader.ReadString();
+            string _Phone = reader.ReadString();
+            global::EitaaSharp.Schema.IUserProfilePhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            global::EitaaSharp.Schema.IUserStatus _Status = reader.ReadObject<global::EitaaSharp.Schema.IUserStatus>();
+            bool _Inactive = reader.ReadBool();
+            return new UserSelfOld2 { Id = _Id, FirstName = _FirstName, LastName = _LastName, Username = _Username, Phone = _Phone, Photo = _Photo, Status = _Status, Inactive = _Inactive };
+        }
+    }
+
+    /// <summary>TL <c>messageActionLoginUnknownLocation#555555f5</c>.</summary>
+    public sealed record MessageActionLoginUnknownLocation : global::EitaaSharp.Schema.IMessageAction
+    {
+        public const uint TypeId = 0x555555F5u;
+        public uint ConstructorId => TypeId;
+
+        public required string Title { get; init; }
+        public required string Address { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Title);
+            writer.WriteString(Address);
+        }
+
+        public static MessageActionLoginUnknownLocation Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Title = reader.ReadString();
+            string _Address = reader.ReadString();
+            return new MessageActionLoginUnknownLocation { Title = _Title, Address = _Address };
+        }
+    }
+
+    /// <summary>TL <c>messageEncryptedAction#555555f7</c>.</summary>
+    public sealed record MessageEncryptedAction : global::EitaaSharp.Schema.IMessageAction
+    {
+        public const uint TypeId = 0x555555F7u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IDecryptedMessageAction EncryptedAction { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(EncryptedAction);
+        }
+
+        public static MessageEncryptedAction Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IDecryptedMessageAction _EncryptedAction = reader.ReadObject<global::EitaaSharp.Schema.IDecryptedMessageAction>();
+            return new MessageEncryptedAction { EncryptedAction = _EncryptedAction };
+        }
+    }
+
+    /// <summary>TL <c>messageActionCreatedBroadcastList#55555557</c>.</summary>
+    public sealed record MessageActionCreatedBroadcastList : global::EitaaSharp.Schema.IMessageAction
+    {
+        public const uint TypeId = 0x55555557u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static MessageActionCreatedBroadcastList Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new MessageActionCreatedBroadcastList();
+        }
+    }
+
+    /// <summary>TL <c>messageActionUserJoined#55555550</c>.</summary>
+    public sealed record MessageActionUserJoined : global::EitaaSharp.Schema.IMessageAction
+    {
+        public const uint TypeId = 0x55555550u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static MessageActionUserJoined Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new MessageActionUserJoined();
+        }
+    }
+
+    /// <summary>TL <c>messageActionUserUpdatedPhoto#55555551</c>.</summary>
+    public sealed record MessageActionUserUpdatedPhoto : global::EitaaSharp.Schema.IMessageAction
+    {
+        public const uint TypeId = 0x55555551u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IUserProfilePhoto NewUserPhoto { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(NewUserPhoto);
+        }
+
+        public static MessageActionUserUpdatedPhoto Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IUserProfilePhoto _NewUserPhoto = reader.ReadObject<global::EitaaSharp.Schema.IUserProfilePhoto>();
+            return new MessageActionUserUpdatedPhoto { NewUserPhoto = _NewUserPhoto };
+        }
+    }
+
+    /// <summary>TL <c>messageActionChatAddUser_old#5e3cfc4b</c>.</summary>
+    public sealed record MessageActionChatAddUserOld : global::EitaaSharp.Schema.ITLMessageActionChatAddUser
+    {
+        public const uint TypeId = 0x5E3CFC4Bu;
+        public uint ConstructorId => TypeId;
+
+        public required int UserId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(UserId);
+        }
+
+        public static MessageActionChatAddUserOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _UserId = reader.ReadInt32();
+            return new MessageActionChatAddUserOld { UserId = _UserId };
+        }
+    }
+
+    /// <summary>TL <c>messageActionTTLChange#55555552</c>.</summary>
+    public sealed record MessageActionTTLChange : global::EitaaSharp.Schema.IMessageAction
+    {
+        public const uint TypeId = 0x55555552u;
+        public uint ConstructorId => TypeId;
+
+        public required int Ttl { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Ttl);
+        }
+
+        public static MessageActionTTLChange Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Ttl = reader.ReadInt32();
+            return new MessageActionTTLChange { Ttl = _Ttl };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageService#73164160</c>.</summary>
+    public sealed record DecryptedMessageService : global::EitaaSharp.Schema.IDecryptedMessage
+    {
+        public const uint TypeId = 0x73164160u;
+        public uint ConstructorId => TypeId;
+
+        public required long RandomId { get; init; }
+        public required global::EitaaSharp.Schema.IDecryptedMessageAction Action { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(RandomId);
+            writer.WriteObject(Action);
+        }
+
+        public static DecryptedMessageService Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _RandomId = reader.ReadLong();
+            global::EitaaSharp.Schema.IDecryptedMessageAction _Action = reader.ReadObject<global::EitaaSharp.Schema.IDecryptedMessageAction>();
+            return new DecryptedMessageService { RandomId = _RandomId, Action = _Action };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessage#91cc4674</c>.</summary>
+    public sealed record DecryptedMessage : global::EitaaSharp.Schema.IDecryptedMessage
+    {
+        public const uint TypeId = 0x91CC4674u;
+        public uint ConstructorId => TypeId;
+
+        public bool Silent { get; init; }
+        public required long RandomId { get; init; }
+        public required int Ttl { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IDecryptedMessageMedia? Media { get; init; }
+        public string? ViaBotName { get; init; }
+        public long? ReplyToRandomId { get; init; }
+        public long? GroupedId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Silent) flags |= 0x20;
+            if (Media is not null) flags |= 0x200;
+            if (ViaBotName is not null) flags |= 0x800;
+            if (ReplyToRandomId is not null) flags |= 0x8;
+            if (GroupedId is not null) flags |= 0x20000;
+            writer.WriteInt32(flags);
+            writer.WriteLong(RandomId);
+            writer.WriteInt32(Ttl);
+            writer.WriteString(Message);
+            if (Media is not null) writer.WriteObject(Media);
+            if (ViaBotName is not null) writer.WriteString(ViaBotName);
+            if (ReplyToRandomId is not null) writer.WriteLong(ReplyToRandomId.Value);
+            if (GroupedId is not null) writer.WriteLong(GroupedId.Value);
+        }
+
+        public static DecryptedMessage Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Silent = (flags & 0x20) != 0;
+            long _RandomId = reader.ReadLong();
+            int _Ttl = reader.ReadInt32();
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IDecryptedMessageMedia? _Media = (flags & 0x200) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IDecryptedMessageMedia>() : null;
+            string? _ViaBotName = (flags & 0x800) != 0 ? reader.ReadString() : null;
+            long? _ReplyToRandomId = (flags & 0x8) != 0 ? reader.ReadLong() : (long?)null;
+            long? _GroupedId = (flags & 0x20000) != 0 ? reader.ReadLong() : (long?)null;
+            return new DecryptedMessage { Silent = _Silent, RandomId = _RandomId, Ttl = _Ttl, Message = _Message, Media = _Media, ViaBotName = _ViaBotName, ReplyToRandomId = _ReplyToRandomId, GroupedId = _GroupedId };
+        }
+    }
+
+    /// <summary>TL <c>messageReactions#b87a24d1</c>.</summary>
+    public sealed record MessageReactions : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xB87A24D1u;
+        public uint ConstructorId => TypeId;
+
+        public bool Min { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Min) flags |= 0x1;
+            writer.WriteInt32(flags);
+        }
+
+        public static MessageReactions Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Min = (flags & 0x1) != 0;
+            return new MessageReactions { Min = _Min };
+        }
+    }
+
+    /// <summary>TL <c>video_old3#ee9f4a4d</c>.</summary>
+    public sealed record VideoOld3 : global::EitaaSharp.Schema.ITLVideoLayer45
+    {
+        public const uint TypeId = 0xEE9F4A4Du;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required int Duration { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize Thumb { get; init; }
+        public required int DcId { get; init; }
+        public required int W { get; init; }
+        public required int H { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(Duration);
+            writer.WriteInt32(Size);
+            writer.WriteObject(Thumb);
+            writer.WriteInt32(DcId);
+            writer.WriteInt32(W);
+            writer.WriteInt32(H);
+        }
+
+        public static VideoOld3 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            int _Duration = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize _Thumb = reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>();
+            int _DcId = reader.ReadInt32();
+            int _W = reader.ReadInt32();
+            int _H = reader.ReadInt32();
+            return new VideoOld3 { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Duration = _Duration, Size = _Size, Thumb = _Thumb, DcId = _DcId, W = _W, H = _H };
+        }
+    }
+
+    /// <summary>TL <c>videoEncrypted#55555553</c>.</summary>
+    public sealed record VideoEncrypted : global::EitaaSharp.Schema.ITLVideoLayer45
+    {
+        public const uint TypeId = 0x55555553u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required string Caption { get; init; }
+        public required int Duration { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize Thumb { get; init; }
+        public required int DcId { get; init; }
+        public required int W { get; init; }
+        public required int H { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Caption);
+            writer.WriteInt32(Duration);
+            writer.WriteInt32(Size);
+            writer.WriteObject(Thumb);
+            writer.WriteInt32(DcId);
+            writer.WriteInt32(W);
+            writer.WriteInt32(H);
+        }
+
+        public static VideoEncrypted Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            string _Caption = reader.ReadString();
+            int _Duration = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize _Thumb = reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>();
+            int _DcId = reader.ReadInt32();
+            int _W = reader.ReadInt32();
+            int _H = reader.ReadInt32();
+            return new VideoEncrypted { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Caption = _Caption, Duration = _Duration, Size = _Size, Thumb = _Thumb, DcId = _DcId, W = _W, H = _H };
+        }
+    }
+
+    /// <summary>TL <c>video_old#5a04a49f</c>.</summary>
+    public sealed record VideoOld : global::EitaaSharp.Schema.ITLVideoLayer45
+    {
+        public const uint TypeId = 0x5A04A49Fu;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required string Caption { get; init; }
+        public required int Duration { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize Thumb { get; init; }
+        public required int DcId { get; init; }
+        public required int W { get; init; }
+        public required int H { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Caption);
+            writer.WriteInt32(Duration);
+            writer.WriteInt32(Size);
+            writer.WriteObject(Thumb);
+            writer.WriteInt32(DcId);
+            writer.WriteInt32(W);
+            writer.WriteInt32(H);
+        }
+
+        public static VideoOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            string _Caption = reader.ReadString();
+            int _Duration = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize _Thumb = reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>();
+            int _DcId = reader.ReadInt32();
+            int _W = reader.ReadInt32();
+            int _H = reader.ReadInt32();
+            return new VideoOld { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Caption = _Caption, Duration = _Duration, Size = _Size, Thumb = _Thumb, DcId = _DcId, W = _W, H = _H };
+        }
+    }
+
+    /// <summary>TL <c>video_old2#388fa391</c>.</summary>
+    public sealed record VideoOld2 : global::EitaaSharp.Schema.ITLVideoLayer45
+    {
+        public const uint TypeId = 0x388FA391u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required string Caption { get; init; }
+        public required int Duration { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize Thumb { get; init; }
+        public required int DcId { get; init; }
+        public required int W { get; init; }
+        public required int H { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Caption);
+            writer.WriteInt32(Duration);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+            writer.WriteObject(Thumb);
+            writer.WriteInt32(DcId);
+            writer.WriteInt32(W);
+            writer.WriteInt32(H);
+        }
+
+        public static VideoOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            string _Caption = reader.ReadString();
+            int _Duration = reader.ReadInt32();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize _Thumb = reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>();
+            int _DcId = reader.ReadInt32();
+            int _W = reader.ReadInt32();
+            int _H = reader.ReadInt32();
+            return new VideoOld2 { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Caption = _Caption, Duration = _Duration, MimeType = _MimeType, Size = _Size, Thumb = _Thumb, DcId = _DcId, W = _W, H = _H };
+        }
+    }
+
+    /// <summary>TL <c>documentEncrypted_old#55555556</c>.</summary>
+    public sealed record DocumentEncryptedOld : global::EitaaSharp.Schema.ITLDocument
+    {
+        public const uint TypeId = 0x55555556u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required string FileName { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize[] Thumbs { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteString(FileName);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+            writer.WriteVector(Thumbs, (w, x) => w.WriteObject(x));
+            writer.WriteInt32(DcId);
+        }
+
+        public static DocumentEncryptedOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            string _FileName = reader.ReadString();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize[] _Thumbs = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IPhotoSize>());
+            int _DcId = reader.ReadInt32();
+            return new DocumentEncryptedOld { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, FileName = _FileName, MimeType = _MimeType, Size = _Size, Thumbs = _Thumbs, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>document_old#9efc6326</c>.</summary>
+    public sealed record DocumentOld : global::EitaaSharp.Schema.ITLDocument
+    {
+        public const uint TypeId = 0x9EFC6326u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required string FileName { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize[] Thumbs { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteString(FileName);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+            writer.WriteVector(Thumbs, (w, x) => w.WriteObject(x));
+            writer.WriteInt32(DcId);
+        }
+
+        public static DocumentOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            string _FileName = reader.ReadString();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize[] _Thumbs = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IPhotoSize>());
+            int _DcId = reader.ReadInt32();
+            return new DocumentOld { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, FileName = _FileName, MimeType = _MimeType, Size = _Size, Thumbs = _Thumbs, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>documentEncrypted#55555558</c>.</summary>
+    public sealed record DocumentEncrypted : global::EitaaSharp.Schema.IDocument
+    {
+        public const uint TypeId = 0x55555558u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int Date { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize[] Thumbs { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(Date);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+            writer.WriteVector(Thumbs, (w, x) => w.WriteObject(x));
+            writer.WriteInt32(DcId);
+        }
+
+        public static DocumentEncrypted Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _Date = reader.ReadInt32();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize[] _Thumbs = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IPhotoSize>());
+            int _DcId = reader.ReadInt32();
+            return new DocumentEncrypted { Id = _Id, AccessHash = _AccessHash, Date = _Date, MimeType = _MimeType, Size = _Size, Thumbs = _Thumbs, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>inputMediaLiveStream#20a93576</c>.</summary>
+    public sealed record InputMediaLiveStream : global::EitaaSharp.Schema.IInputMedia
+    {
+        public const uint TypeId = 0x20A93576u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            writer.WriteInt32(flags);
+        }
+
+        public static InputMediaLiveStream Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            return new InputMediaLiveStream();
+        }
+    }
+
+    /// <summary>TL <c>updateMessageReactions#154798c3</c>.</summary>
+    public sealed record UpdateMessageReactions : global::EitaaSharp.Schema.IUpdate
+    {
+        public const uint TypeId = 0x154798C3u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IPeer Peer { get; init; }
+        public required int MsgId { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject Reactions { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Peer);
+            writer.WriteInt32(MsgId);
+            writer.WriteObject(Reactions);
+        }
+
+        public static UpdateMessageReactions Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IPeer _Peer = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int _MsgId = reader.ReadInt32();
+            global::EitaaSharp.Tl.ITlObject _Reactions = reader.ReadObject();
+            return new UpdateMessageReactions { Peer = _Peer, MsgId = _MsgId, Reactions = _Reactions };
+        }
+    }
+
+    /// <summary>TL <c>updateEitaaNotification#042795d4</c>.</summary>
+    public sealed record UpdateEitaaNotification : global::EitaaSharp.Schema.IUpdate
+    {
+        public const uint TypeId = 0x042795D4u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public bool Deleted { get; init; }
+        public required string Link { get; init; }
+        public required int ExpireDate { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Deleted) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteString(Link);
+            writer.WriteInt32(ExpireDate);
+            writer.WriteObject(Message);
+        }
+
+        public static UpdateEitaaNotification Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            int _Id = reader.ReadInt32();
+            bool _Deleted = (flags & 0x1) != 0;
+            string _Link = reader.ReadString();
+            int _ExpireDate = reader.ReadInt32();
+            global::EitaaSharp.Tl.ITlObject _Message = reader.ReadObject();
+            return new UpdateEitaaNotification { Id = _Id, Deleted = _Deleted, Link = _Link, ExpireDate = _ExpireDate, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>EitaaNotification_message#81969acd</c>.</summary>
+    public sealed record EitaaNotificationMessage : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x81969ACDu;
+        public uint ConstructorId => TypeId;
+
+        public required string Title { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IPhotoSize? Photo { get; init; }
+        public global::EitaaSharp.Schema.IPhotoSize? Banner { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Photo is not null) flags |= 0x2;
+            if (Banner is not null) flags |= 0x8;
+            writer.WriteInt32(flags);
+            writer.WriteString(Title);
+            writer.WriteString(Message);
+            if (Photo is not null) writer.WriteObject(Photo);
+            if (Banner is not null) writer.WriteObject(Banner);
+        }
+
+        public static EitaaNotificationMessage Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            string _Title = reader.ReadString();
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IPhotoSize? _Photo = (flags & 0x2) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>() : null;
+            global::EitaaSharp.Schema.IPhotoSize? _Banner = (flags & 0x8) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>() : null;
+            return new EitaaNotificationMessage { Title = _Title, Message = _Message, Photo = _Photo, Banner = _Banner };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionSetMessageTTL#a1733aec</c>.</summary>
+    public sealed record DecryptedMessageActionSetMessageTTL : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0xA1733AECu;
+        public uint ConstructorId => TypeId;
+
+        public required int TtlSeconds { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(TtlSeconds);
+        }
+
+        public static DecryptedMessageActionSetMessageTTL Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _TtlSeconds = reader.ReadInt32();
+            return new DecryptedMessageActionSetMessageTTL { TtlSeconds = _TtlSeconds };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionNotifyLayer#f3048883</c>.</summary>
+    public sealed record DecryptedMessageActionNotifyLayer : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0xF3048883u;
+        public uint ConstructorId => TypeId;
+
+        public required int Layer { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Layer);
+        }
+
+        public static DecryptedMessageActionNotifyLayer Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Layer = reader.ReadInt32();
+            return new DecryptedMessageActionNotifyLayer { Layer = _Layer };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionDeleteMessages#65614304</c>.</summary>
+    public sealed record DecryptedMessageActionDeleteMessages : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0x65614304u;
+        public uint ConstructorId => TypeId;
+
+        public required long[] RandomIds { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(RandomIds, (w, x) => w.WriteLong(x));
+        }
+
+        public static DecryptedMessageActionDeleteMessages Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long[] _RandomIds = reader.ReadVector(r => r.ReadLong());
+            return new DecryptedMessageActionDeleteMessages { RandomIds = _RandomIds };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionCommitKey#ec2e0b9b</c>.</summary>
+    public sealed record DecryptedMessageActionCommitKey : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0xEC2E0B9Bu;
+        public uint ConstructorId => TypeId;
+
+        public required long ExchangeId { get; init; }
+        public required long KeyFingerprint { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(ExchangeId);
+            writer.WriteLong(KeyFingerprint);
+        }
+
+        public static DecryptedMessageActionCommitKey Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _ExchangeId = reader.ReadLong();
+            long _KeyFingerprint = reader.ReadLong();
+            return new DecryptedMessageActionCommitKey { ExchangeId = _ExchangeId, KeyFingerprint = _KeyFingerprint };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionAbortKey#dd05ec6b</c>.</summary>
+    public sealed record DecryptedMessageActionAbortKey : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0xDD05EC6Bu;
+        public uint ConstructorId => TypeId;
+
+        public required long ExchangeId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(ExchangeId);
+        }
+
+        public static DecryptedMessageActionAbortKey Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _ExchangeId = reader.ReadLong();
+            return new DecryptedMessageActionAbortKey { ExchangeId = _ExchangeId };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionFlushHistory#6719e45c</c>.</summary>
+    public sealed record DecryptedMessageActionFlushHistory : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0x6719E45Cu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static DecryptedMessageActionFlushHistory Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new DecryptedMessageActionFlushHistory();
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionTyping#ccb27641</c>.</summary>
+    public sealed record DecryptedMessageActionTyping : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0xCCB27641u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.ISendMessageAction Action { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Action);
+        }
+
+        public static DecryptedMessageActionTyping Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.ISendMessageAction _Action = reader.ReadObject<global::EitaaSharp.Schema.ISendMessageAction>();
+            return new DecryptedMessageActionTyping { Action = _Action };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionAcceptKey#6fe1735b</c>.</summary>
+    public sealed record DecryptedMessageActionAcceptKey : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0x6FE1735Bu;
+        public uint ConstructorId => TypeId;
+
+        public required long ExchangeId { get; init; }
+        public required long KeyFingerprint { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(ExchangeId);
+            writer.WriteLong(KeyFingerprint);
+        }
+
+        public static DecryptedMessageActionAcceptKey Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _ExchangeId = reader.ReadLong();
+            long _KeyFingerprint = reader.ReadLong();
+            return new DecryptedMessageActionAcceptKey { ExchangeId = _ExchangeId, KeyFingerprint = _KeyFingerprint };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionReadMessages#0c4f40be</c>.</summary>
+    public sealed record DecryptedMessageActionReadMessages : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0x0C4F40BEu;
+        public uint ConstructorId => TypeId;
+
+        public required long[] RandomIds { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(RandomIds, (w, x) => w.WriteLong(x));
+        }
+
+        public static DecryptedMessageActionReadMessages Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long[] _RandomIds = reader.ReadVector(r => r.ReadLong());
+            return new DecryptedMessageActionReadMessages { RandomIds = _RandomIds };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionResend#511110b0</c>.</summary>
+    public sealed record DecryptedMessageActionResend : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0x511110B0u;
+        public uint ConstructorId => TypeId;
+
+        public required int StartSeqNo { get; init; }
+        public required int EndSeqNo { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(StartSeqNo);
+            writer.WriteInt32(EndSeqNo);
+        }
+
+        public static DecryptedMessageActionResend Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _StartSeqNo = reader.ReadInt32();
+            int _EndSeqNo = reader.ReadInt32();
+            return new DecryptedMessageActionResend { StartSeqNo = _StartSeqNo, EndSeqNo = _EndSeqNo };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionRequestKey#f3c9611b</c>.</summary>
+    public sealed record DecryptedMessageActionRequestKey : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0xF3C9611Bu;
+        public uint ConstructorId => TypeId;
+
+        public required long ExchangeId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(ExchangeId);
+        }
+
+        public static DecryptedMessageActionRequestKey Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _ExchangeId = reader.ReadLong();
+            return new DecryptedMessageActionRequestKey { ExchangeId = _ExchangeId };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionScreenshotMessages#8ac1f475</c>.</summary>
+    public sealed record DecryptedMessageActionScreenshotMessages : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0x8AC1F475u;
+        public uint ConstructorId => TypeId;
+
+        public required long[] RandomIds { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(RandomIds, (w, x) => w.WriteLong(x));
+        }
+
+        public static DecryptedMessageActionScreenshotMessages Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long[] _RandomIds = reader.ReadVector(r => r.ReadLong());
+            return new DecryptedMessageActionScreenshotMessages { RandomIds = _RandomIds };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageActionNoop#a82fdd63</c>.</summary>
+    public sealed record DecryptedMessageActionNoop : global::EitaaSharp.Schema.IDecryptedMessageAction
+    {
+        public const uint TypeId = 0xA82FDD63u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static DecryptedMessageActionNoop Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new DecryptedMessageActionNoop();
+        }
+    }
+
+    /// <summary>TL <c>userProfilePhoto_old#990d1493</c>.</summary>
+    public sealed record UserProfilePhotoOld : global::EitaaSharp.Schema.ITLUserProfilePhoto
+    {
+        public const uint TypeId = 0x990D1493u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IFileLocation PhotoSmall { get; init; }
+        public required global::EitaaSharp.Schema.IFileLocation PhotoBig { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(PhotoSmall);
+            writer.WriteObject(PhotoBig);
+        }
+
+        public static UserProfilePhotoOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IFileLocation _PhotoSmall = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
+            global::EitaaSharp.Schema.IFileLocation _PhotoBig = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
+            return new UserProfilePhotoOld { PhotoSmall = _PhotoSmall, PhotoBig = _PhotoBig };
+        }
+    }
+
+    /// <summary>TL <c>photo_old2#c3838076</c>.</summary>
+    public sealed record PhotoOld2 : global::EitaaSharp.Schema.ITLPhoto
+    {
+        public const uint TypeId = 0xC3838076u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required global::EitaaSharp.Schema.IGeoPoint Geo { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteObject(Geo);
+        }
+
+        public static PhotoOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            global::EitaaSharp.Schema.IGeoPoint _Geo = reader.ReadObject<global::EitaaSharp.Schema.IGeoPoint>();
+            return new PhotoOld2 { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Geo = _Geo };
+        }
+    }
+
+    /// <summary>TL <c>photo_old#22b56751</c>.</summary>
+    public sealed record PhotoOld : global::EitaaSharp.Schema.ITLPhoto
+    {
+        public const uint TypeId = 0x22B56751u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int UserId { get; init; }
+        public required int Date { get; init; }
+        public required string Caption { get; init; }
+        public required global::EitaaSharp.Schema.IGeoPoint Geo { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(UserId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Caption);
+            writer.WriteObject(Geo);
+        }
+
+        public static PhotoOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _UserId = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            string _Caption = reader.ReadString();
+            global::EitaaSharp.Schema.IGeoPoint _Geo = reader.ReadObject<global::EitaaSharp.Schema.IGeoPoint>();
+            return new PhotoOld { Id = _Id, AccessHash = _AccessHash, UserId = _UserId, Date = _Date, Caption = _Caption, Geo = _Geo };
+        }
+    }
+
+    /// <summary>TL <c>encryptedChatRequested_old#fda9a7b7</c>.</summary>
+    public sealed record EncryptedChatRequestedOld : global::EitaaSharp.Schema.ITLEncryptedChatRequested
+    {
+        public const uint TypeId = 0xFDA9A7B7u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int Date { get; init; }
+        public required int AdminId { get; init; }
+        public required int ParticipantId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(AdminId);
+            writer.WriteInt32(ParticipantId);
+        }
+
+        public static EncryptedChatRequestedOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            long _AccessHash = reader.ReadLong();
+            int _Date = reader.ReadInt32();
+            int _AdminId = reader.ReadInt32();
+            int _ParticipantId = reader.ReadInt32();
+            return new EncryptedChatRequestedOld { Id = _Id, AccessHash = _AccessHash, Date = _Date, AdminId = _AdminId, ParticipantId = _ParticipantId };
+        }
+    }
+
+    /// <summary>TL <c>encryptedChat_old#6601d14f</c>.</summary>
+    public sealed record EncryptedChatOld : global::EitaaSharp.Schema.ITLEncryptedChat
+    {
+        public const uint TypeId = 0x6601D14Fu;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int Date { get; init; }
+        public required int AdminId { get; init; }
+        public required int ParticipantId { get; init; }
+        public required long KeyFingerprint { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(AdminId);
+            writer.WriteInt32(ParticipantId);
+            writer.WriteLong(KeyFingerprint);
+        }
+
+        public static EncryptedChatOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            long _AccessHash = reader.ReadLong();
+            int _Date = reader.ReadInt32();
+            int _AdminId = reader.ReadInt32();
+            int _ParticipantId = reader.ReadInt32();
+            long _KeyFingerprint = reader.ReadLong();
+            return new EncryptedChatOld { Id = _Id, AccessHash = _AccessHash, Date = _Date, AdminId = _AdminId, ParticipantId = _ParticipantId, KeyFingerprint = _KeyFingerprint };
+        }
+    }
+
+    /// <summary>TL <c>poll_toDelete#af746786</c>.</summary>
+    public sealed record PollToDelete : global::EitaaSharp.Schema.ITLPoll
+    {
+        public const uint TypeId = 0xAF746786u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public bool Closed { get; init; }
+        public bool PublicVoters { get; init; }
+        public bool MultipleChoice { get; init; }
+        public bool Quiz { get; init; }
+        public required string Question { get; init; }
+        public int? CloseDate { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            int flags = 0;
+            if (Closed) flags |= 0x1;
+            if (PublicVoters) flags |= 0x2;
+            if (MultipleChoice) flags |= 0x4;
+            if (Quiz) flags |= 0x8;
+            if (CloseDate is not null) flags |= 0x10;
+            writer.WriteInt32(flags);
+            writer.WriteString(Question);
+            if (CloseDate is not null) writer.WriteInt32(CloseDate.Value);
+        }
+
+        public static PollToDelete Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            int flags = reader.ReadInt32();
+            bool _Closed = (flags & 0x1) != 0;
+            bool _PublicVoters = (flags & 0x2) != 0;
+            bool _MultipleChoice = (flags & 0x4) != 0;
+            bool _Quiz = (flags & 0x8) != 0;
+            string _Question = reader.ReadString();
+            int? _CloseDate = (flags & 0x10) != 0 ? reader.ReadInt32() : (int?)null;
+            return new PollToDelete { Id = _Id, Closed = _Closed, PublicVoters = _PublicVoters, MultipleChoice = _MultipleChoice, Quiz = _Quiz, Question = _Question, CloseDate = _CloseDate };
+        }
+    }
+
+    /// <summary>TL <c>chatParticipants_old#7841b415</c>.</summary>
+    public sealed record ChatParticipantsOld : global::EitaaSharp.Schema.ITLChatParticipants
+    {
+        public const uint TypeId = 0x7841B415u;
+        public uint ConstructorId => TypeId;
+
+        public required int ChatId { get; init; }
+        public required int AdminId { get; init; }
+        public required int Version { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(ChatId);
+            writer.WriteInt32(AdminId);
+            writer.WriteInt32(Version);
+        }
+
+        public static ChatParticipantsOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _ChatId = reader.ReadInt32();
+            int _AdminId = reader.ReadInt32();
+            int _Version = reader.ReadInt32();
+            return new ChatParticipantsOld { ChatId = _ChatId, AdminId = _AdminId, Version = _Version };
+        }
+    }
+
+    /// <summary>TL <c>chatParticipantsForbidden_old#0fd2bb8a</c>.</summary>
+    public sealed record ChatParticipantsForbiddenOld : global::EitaaSharp.Schema.ITLChatParticipantsForbidden
+    {
+        public const uint TypeId = 0x0FD2BB8Au;
+        public uint ConstructorId => TypeId;
+
+        public required int ChatId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(ChatId);
+        }
+
+        public static ChatParticipantsForbiddenOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _ChatId = reader.ReadInt32();
+            return new ChatParticipantsForbiddenOld { ChatId = _ChatId };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaAudio#57e0a9cb</c>.</summary>
+    public sealed record DecryptedMessageMediaAudio : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0x57E0A9CBu;
+        public uint ConstructorId => TypeId;
+
+        public required int Duration { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Duration);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+        }
+
+        public static DecryptedMessageMediaAudio Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Duration = reader.ReadInt32();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            return new DecryptedMessageMediaAudio { Duration = _Duration, MimeType = _MimeType, Size = _Size };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaGeoPoint#35480a59</c>.</summary>
+    public sealed record DecryptedMessageMediaGeoPoint : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0x35480A59u;
+        public uint ConstructorId => TypeId;
+
+        public required double Lat { get; init; }
+        public required double Long { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteDouble(Lat);
+            writer.WriteDouble(Long);
+        }
+
+        public static DecryptedMessageMediaGeoPoint Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            double _Lat = reader.ReadDouble();
+            double _Long = reader.ReadDouble();
+            return new DecryptedMessageMediaGeoPoint { Lat = _Lat, Long = _Long };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaContact#588a0a97</c>.</summary>
+    public sealed record DecryptedMessageMediaContact : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0x588A0A97u;
+        public uint ConstructorId => TypeId;
+
+        public required string PhoneNumber { get; init; }
+        public required string FirstName { get; init; }
+        public required string LastName { get; init; }
+        public required int UserId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(PhoneNumber);
+            writer.WriteString(FirstName);
+            writer.WriteString(LastName);
+            writer.WriteInt32(UserId);
+        }
+
+        public static DecryptedMessageMediaContact Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _PhoneNumber = reader.ReadString();
+            string _FirstName = reader.ReadString();
+            string _LastName = reader.ReadString();
+            int _UserId = reader.ReadInt32();
+            return new DecryptedMessageMediaContact { PhoneNumber = _PhoneNumber, FirstName = _FirstName, LastName = _LastName, UserId = _UserId };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaEmpty#089f5c4a</c>.</summary>
+    public sealed record DecryptedMessageMediaEmpty : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0x089F5C4Au;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static DecryptedMessageMediaEmpty Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new DecryptedMessageMediaEmpty();
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaDocument#7afe8ae2</c>.</summary>
+    public sealed record DecryptedMessageMediaDocument : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0x7AFE8AE2u;
+        public uint ConstructorId => TypeId;
+
+        public required int ThumbW { get; init; }
+        public required int ThumbH { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+        public required string Caption { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(ThumbW);
+            writer.WriteInt32(ThumbH);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+            writer.WriteString(Caption);
+        }
+
+        public static DecryptedMessageMediaDocument Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _ThumbW = reader.ReadInt32();
+            int _ThumbH = reader.ReadInt32();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            string _Caption = reader.ReadString();
+            return new DecryptedMessageMediaDocument { ThumbW = _ThumbW, ThumbH = _ThumbH, MimeType = _MimeType, Size = _Size, Caption = _Caption };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaWebPage#e50511d8</c>.</summary>
+    public sealed record DecryptedMessageMediaWebPage : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0xE50511D8u;
+        public uint ConstructorId => TypeId;
+
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Url);
+        }
+
+        public static DecryptedMessageMediaWebPage Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Url = reader.ReadString();
+            return new DecryptedMessageMediaWebPage { Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaPhoto#f1fa8d78</c>.</summary>
+    public sealed record DecryptedMessageMediaPhoto : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0xF1FA8D78u;
+        public uint ConstructorId => TypeId;
+
+        public required int ThumbW { get; init; }
+        public required int ThumbH { get; init; }
+        public required int W { get; init; }
+        public required int H { get; init; }
+        public required int Size { get; init; }
+        public required string Caption { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(ThumbW);
+            writer.WriteInt32(ThumbH);
+            writer.WriteInt32(W);
+            writer.WriteInt32(H);
+            writer.WriteInt32(Size);
+            writer.WriteString(Caption);
+        }
+
+        public static DecryptedMessageMediaPhoto Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _ThumbW = reader.ReadInt32();
+            int _ThumbH = reader.ReadInt32();
+            int _W = reader.ReadInt32();
+            int _H = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            string _Caption = reader.ReadString();
+            return new DecryptedMessageMediaPhoto { ThumbW = _ThumbW, ThumbH = _ThumbH, W = _W, H = _H, Size = _Size, Caption = _Caption };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaVideo#970c8c0e</c>.</summary>
+    public sealed record DecryptedMessageMediaVideo : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0x970C8C0Eu;
+        public uint ConstructorId => TypeId;
+
+        public required int ThumbW { get; init; }
+        public required int ThumbH { get; init; }
+        public required int Duration { get; init; }
+        public required string MimeType { get; init; }
+        public required int W { get; init; }
+        public required int H { get; init; }
+        public required int Size { get; init; }
+        public required string Caption { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(ThumbW);
+            writer.WriteInt32(ThumbH);
+            writer.WriteInt32(Duration);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(W);
+            writer.WriteInt32(H);
+            writer.WriteInt32(Size);
+            writer.WriteString(Caption);
+        }
+
+        public static DecryptedMessageMediaVideo Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _ThumbW = reader.ReadInt32();
+            int _ThumbH = reader.ReadInt32();
+            int _Duration = reader.ReadInt32();
+            string _MimeType = reader.ReadString();
+            int _W = reader.ReadInt32();
+            int _H = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            string _Caption = reader.ReadString();
+            return new DecryptedMessageMediaVideo { ThumbW = _ThumbW, ThumbH = _ThumbH, Duration = _Duration, MimeType = _MimeType, W = _W, H = _H, Size = _Size, Caption = _Caption };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaVenue#8a0df56f</c>.</summary>
+    public sealed record DecryptedMessageMediaVenue : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0x8A0DF56Fu;
+        public uint ConstructorId => TypeId;
+
+        public required double Lat { get; init; }
+        public required double Long { get; init; }
+        public required string Title { get; init; }
+        public required string Address { get; init; }
+        public required string Provider { get; init; }
+        public required string VenueId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteDouble(Lat);
+            writer.WriteDouble(Long);
+            writer.WriteString(Title);
+            writer.WriteString(Address);
+            writer.WriteString(Provider);
+            writer.WriteString(VenueId);
+        }
+
+        public static DecryptedMessageMediaVenue Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            double _Lat = reader.ReadDouble();
+            double _Long = reader.ReadDouble();
+            string _Title = reader.ReadString();
+            string _Address = reader.ReadString();
+            string _Provider = reader.ReadString();
+            string _VenueId = reader.ReadString();
+            return new DecryptedMessageMediaVenue { Lat = _Lat, Long = _Long, Title = _Title, Address = _Address, Provider = _Provider, VenueId = _VenueId };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageMediaExternalDocument#fa95b0dd</c>.</summary>
+    public sealed record DecryptedMessageMediaExternalDocument : global::EitaaSharp.Schema.IDecryptedMessageMedia
+    {
+        public const uint TypeId = 0xFA95B0DDu;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required int Date { get; init; }
+        public required string MimeType { get; init; }
+        public required int Size { get; init; }
+        public required global::EitaaSharp.Schema.IPhotoSize Thumb { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteInt32(Date);
+            writer.WriteString(MimeType);
+            writer.WriteInt32(Size);
+            writer.WriteObject(Thumb);
+            writer.WriteInt32(DcId);
+        }
+
+        public static DecryptedMessageMediaExternalDocument Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int _Date = reader.ReadInt32();
+            string _MimeType = reader.ReadString();
+            int _Size = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPhotoSize _Thumb = reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>();
+            int _DcId = reader.ReadInt32();
+            return new DecryptedMessageMediaExternalDocument { Id = _Id, AccessHash = _AccessHash, Date = _Date, MimeType = _MimeType, Size = _Size, Thumb = _Thumb, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>chatForbidden_old#fb0ccc41</c>.</summary>
+    public sealed record ChatForbiddenOld : global::EitaaSharp.Schema.ITLChatForbidden
+    {
+        public const uint TypeId = 0xFB0CCC41u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string Title { get; init; }
+        public required int Date { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(Title);
+            writer.WriteInt32(Date);
+        }
+
+        public static ChatForbiddenOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _Title = reader.ReadString();
+            int _Date = reader.ReadInt32();
+            return new ChatForbiddenOld { Id = _Id, Title = _Title, Date = _Date };
+        }
+    }
+
+    /// <summary>TL <c>chat_old2#7312bc48</c>.</summary>
+    public sealed record ChatOld2 : global::EitaaSharp.Schema.ITLChat
+    {
+        public const uint TypeId = 0x7312BC48u;
+        public uint ConstructorId => TypeId;
+
+        public bool Creator { get; init; }
+        public bool Kicked { get; init; }
+        public bool Left { get; init; }
+        public bool Deactivated { get; init; }
+        public required int Id { get; init; }
+        public required string Title { get; init; }
+        public required global::EitaaSharp.Schema.IChatPhoto Photo { get; init; }
+        public required int ParticipantsCount { get; init; }
+        public required int Date { get; init; }
+        public required int Version { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Creator) flags |= 0x1;
+            if (Kicked) flags |= 0x2;
+            if (Left) flags |= 0x4;
+            if (Deactivated) flags |= 0x20;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteString(Title);
+            writer.WriteObject(Photo);
+            writer.WriteInt32(ParticipantsCount);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(Version);
+        }
+
+        public static ChatOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Creator = (flags & 0x1) != 0;
+            bool _Kicked = (flags & 0x2) != 0;
+            bool _Left = (flags & 0x4) != 0;
+            bool _Deactivated = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            string _Title = reader.ReadString();
+            global::EitaaSharp.Schema.IChatPhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IChatPhoto>();
+            int _ParticipantsCount = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            int _Version = reader.ReadInt32();
+            return new ChatOld2 { Creator = _Creator, Kicked = _Kicked, Left = _Left, Deactivated = _Deactivated, Id = _Id, Title = _Title, Photo = _Photo, ParticipantsCount = _ParticipantsCount, Date = _Date, Version = _Version };
+        }
+    }
+
+    /// <summary>TL <c>report_reason#137d7955</c>.</summary>
+    public sealed record ReportReason : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x137D7955u;
+        public uint ConstructorId => TypeId;
+
+        public bool HasComment { get; init; }
+        public required int SubjectId { get; init; }
+        public required int Id { get; init; }
+        public required string Title { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (HasComment) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(SubjectId);
+            writer.WriteInt32(Id);
+            writer.WriteString(Title);
+        }
+
+        public static ReportReason Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _HasComment = (flags & 0x1) != 0;
+            int _SubjectId = reader.ReadInt32();
+            int _Id = reader.ReadInt32();
+            string _Title = reader.ReadString();
+            return new ReportReason { HasComment = _HasComment, SubjectId = _SubjectId, Id = _Id, Title = _Title };
+        }
+    }
+
+    /// <summary>TL <c>inputUniversalReportReason#da5ac5dd</c>.</summary>
+    public sealed record InputUniversalReportReason : global::EitaaSharp.Schema.IReportReason
+    {
+        public const uint TypeId = 0xDA5AC5DDu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputUniversalReportReason Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputUniversalReportReason();
+        }
+    }
+
+    /// <summary>TL <c>channel_old#678e9587</c>.</summary>
+    public sealed record ChannelOld : global::EitaaSharp.Schema.ITLChannel
+    {
+        public const uint TypeId = 0x678E9587u;
+        public uint ConstructorId => TypeId;
+
+        public bool Creator { get; init; }
+        public bool Kicked { get; init; }
+        public bool Left { get; init; }
+        public bool Moderator { get; init; }
+        public bool Broadcast { get; init; }
+        public bool Verified { get; init; }
+        public bool Megagroup { get; init; }
+        public bool ExplicitContent { get; init; }
+        public required int Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required string Title { get; init; }
+        public string? Username { get; init; }
+        public required global::EitaaSharp.Schema.IChatPhoto Photo { get; init; }
+        public required int Date { get; init; }
+        public required int Version { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Creator) flags |= 0x1;
+            if (Kicked) flags |= 0x2;
+            if (Left) flags |= 0x4;
+            if (Moderator) flags |= 0x10;
+            if (Broadcast) flags |= 0x20;
+            if (Verified) flags |= 0x80;
+            if (Megagroup) flags |= 0x100;
+            if (ExplicitContent) flags |= 0x200;
+            if (Username is not null) flags |= 0x40;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteString(Title);
+            if (Username is not null) writer.WriteString(Username);
+            writer.WriteObject(Photo);
+            writer.WriteInt32(Date);
+            writer.WriteInt32(Version);
+        }
+
+        public static ChannelOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Creator = (flags & 0x1) != 0;
+            bool _Kicked = (flags & 0x2) != 0;
+            bool _Left = (flags & 0x4) != 0;
+            bool _Moderator = (flags & 0x10) != 0;
+            bool _Broadcast = (flags & 0x20) != 0;
+            bool _Verified = (flags & 0x80) != 0;
+            bool _Megagroup = (flags & 0x100) != 0;
+            bool _ExplicitContent = (flags & 0x200) != 0;
+            int _Id = reader.ReadInt32();
+            long _AccessHash = reader.ReadLong();
+            string _Title = reader.ReadString();
+            string? _Username = (flags & 0x40) != 0 ? reader.ReadString() : null;
+            global::EitaaSharp.Schema.IChatPhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IChatPhoto>();
+            int _Date = reader.ReadInt32();
+            int _Version = reader.ReadInt32();
+            return new ChannelOld { Creator = _Creator, Kicked = _Kicked, Left = _Left, Moderator = _Moderator, Broadcast = _Broadcast, Verified = _Verified, Megagroup = _Megagroup, ExplicitContent = _ExplicitContent, Id = _Id, AccessHash = _AccessHash, Title = _Title, Username = _Username, Photo = _Photo, Date = _Date, Version = _Version };
+        }
+    }
+
+    /// <summary>TL <c>chat_old#6e9c9bc7</c>.</summary>
+    public sealed record ChatOld : global::EitaaSharp.Schema.ITLChat
+    {
+        public const uint TypeId = 0x6E9C9BC7u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required string Title { get; init; }
+        public required global::EitaaSharp.Schema.IChatPhoto Photo { get; init; }
+        public required int ParticipantsCount { get; init; }
+        public required int Date { get; init; }
+        public required bool Left { get; init; }
+        public required int Version { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteString(Title);
+            writer.WriteObject(Photo);
+            writer.WriteInt32(ParticipantsCount);
+            writer.WriteInt32(Date);
+            writer.WriteBool(Left);
+            writer.WriteInt32(Version);
+        }
+
+        public static ChatOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            string _Title = reader.ReadString();
+            global::EitaaSharp.Schema.IChatPhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IChatPhoto>();
+            int _ParticipantsCount = reader.ReadInt32();
+            int _Date = reader.ReadInt32();
+            bool _Left = reader.ReadBool();
+            int _Version = reader.ReadInt32();
+            return new ChatOld { Id = _Id, Title = _Title, Photo = _Photo, ParticipantsCount = _ParticipantsCount, Date = _Date, Left = _Left, Version = _Version };
+        }
+    }
+
+    /// <summary>TL <c>stickerSet_old#a7a43b17</c>.</summary>
+    public sealed record StickerSetOld : global::EitaaSharp.Schema.ITLStickerSet
+    {
+        public const uint TypeId = 0xA7A43B17u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required string Title { get; init; }
+        public required string ShortName { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteString(Title);
+            writer.WriteString(ShortName);
+        }
+
+        public static StickerSetOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            string _Title = reader.ReadString();
+            string _ShortName = reader.ReadString();
+            return new StickerSetOld { Id = _Id, AccessHash = _AccessHash, Title = _Title, ShortName = _ShortName };
+        }
+    }
+
+    /// <summary>TL <c>inputMessagesFilterPhotoVideoDocuments#d95e73bb</c>.</summary>
+    public sealed record InputMessagesFilterPhotoVideoDocuments : global::EitaaSharp.Schema.IMessagesFilter
+    {
+        public const uint TypeId = 0xD95E73BBu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputMessagesFilterPhotoVideoDocuments Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputMessagesFilterPhotoVideoDocuments();
+        }
+    }
+
+    /// <summary>TL <c>fileLocationUnavailable#7c596b46</c>.</summary>
+    public sealed record FileLocationUnavailable : global::EitaaSharp.Schema.IFileLocation
+    {
+        public const uint TypeId = 0x7C596B46u;
+        public uint ConstructorId => TypeId;
+
+        public required long VolumeId { get; init; }
+        public required int LocalId { get; init; }
+        public required long Secret { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(VolumeId);
+            writer.WriteInt32(LocalId);
+            writer.WriteLong(Secret);
+        }
+
+        public static FileLocationUnavailable Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _VolumeId = reader.ReadLong();
+            int _LocalId = reader.ReadInt32();
+            long _Secret = reader.ReadLong();
+            return new FileLocationUnavailable { VolumeId = _VolumeId, LocalId = _LocalId, Secret = _Secret };
+        }
+    }
+
+    /// <summary>TL <c>fileEncryptedLocation#55555554</c>.</summary>
+    public sealed record FileEncryptedLocation : global::EitaaSharp.Schema.IFileLocation
+    {
+        public const uint TypeId = 0x55555554u;
+        public uint ConstructorId => TypeId;
+
+        public required int DcId { get; init; }
+        public required long VolumeId { get; init; }
+        public required int LocalId { get; init; }
+        public required long Secret { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(DcId);
+            writer.WriteLong(VolumeId);
+            writer.WriteInt32(LocalId);
+            writer.WriteLong(Secret);
+        }
+
+        public static FileEncryptedLocation Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _DcId = reader.ReadInt32();
+            long _VolumeId = reader.ReadLong();
+            int _LocalId = reader.ReadInt32();
+            long _Secret = reader.ReadLong();
+            return new FileEncryptedLocation { DcId = _DcId, VolumeId = _VolumeId, LocalId = _LocalId, Secret = _Secret };
+        }
+    }
+
+    /// <summary>TL <c>reactionCount#6fb250d1</c>.</summary>
+    public sealed record ReactionCount : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x6FB250D1u;
+        public uint ConstructorId => TypeId;
+
+        public bool Chosen { get; init; }
+        public required string Reaction { get; init; }
+        public required int Count { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Chosen) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteString(Reaction);
+            writer.WriteInt32(Count);
+        }
+
+        public static ReactionCount Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Chosen = (flags & 0x1) != 0;
+            string _Reaction = reader.ReadString();
+            int _Count = reader.ReadInt32();
+            return new ReactionCount { Chosen = _Chosen, Reaction = _Reaction, Count = _Count };
+        }
+    }
+
+    /// <summary>TL <c>decryptedMessageLayer#1be31789</c>.</summary>
+    public sealed record DecryptedMessageLayer : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x1BE31789u;
+        public uint ConstructorId => TypeId;
+
+        public required int Layer { get; init; }
+        public required int InSeqNo { get; init; }
+        public required int OutSeqNo { get; init; }
+        public required global::EitaaSharp.Schema.IDecryptedMessage Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Layer);
+            writer.WriteInt32(InSeqNo);
+            writer.WriteInt32(OutSeqNo);
+            writer.WriteObject(Message);
+        }
+
+        public static DecryptedMessageLayer Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Layer = reader.ReadInt32();
+            int _InSeqNo = reader.ReadInt32();
+            int _OutSeqNo = reader.ReadInt32();
+            global::EitaaSharp.Schema.IDecryptedMessage _Message = reader.ReadObject<global::EitaaSharp.Schema.IDecryptedMessage>();
+            return new DecryptedMessageLayer { Layer = _Layer, InSeqNo = _InSeqNo, OutSeqNo = _OutSeqNo, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>messageService_old2#1d86f70e</c>.</summary>
+    public sealed record MessageServiceOld2 : global::EitaaSharp.Schema.ITLMessageService
+    {
+        public const uint TypeId = 0x1D86F70Eu;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required int Date { get; init; }
+        public required global::EitaaSharp.Schema.IMessageAction Action { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            writer.WriteInt32(Date);
+            writer.WriteObject(Action);
+        }
+
+        public static MessageServiceOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int _Date = reader.ReadInt32();
+            global::EitaaSharp.Schema.IMessageAction _Action = reader.ReadObject<global::EitaaSharp.Schema.IMessageAction>();
+            return new MessageServiceOld2 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, PeerId = _PeerId, Date = _Date, Action = _Action };
+        }
+    }
+
+    /// <summary>TL <c>message_old7#5ba66c13</c>.</summary>
+    public sealed record MessageOld7 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0x5BA66C13u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public int? Date { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IReplyMarkup? ReplyMarkup { get; init; }
+        public int? Views { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (Date is not null) flags |= 0x8;
+            if (ReplyMarkup is not null) flags |= 0x40;
+            if (Views is not null) flags |= 0x400;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            if (Date is not null) writer.WriteInt32(Date.Value);
+            writer.WriteString(Message);
+            if (ReplyMarkup is not null) writer.WriteObject(ReplyMarkup);
+            if (Views is not null) writer.WriteInt32(Views.Value);
+        }
+
+        public static MessageOld7 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            int? _Date = (flags & 0x8) != 0 ? reader.ReadInt32() : (int?)null;
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IReplyMarkup? _ReplyMarkup = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IReplyMarkup>() : null;
+            int? _Views = (flags & 0x400) != 0 ? reader.ReadInt32() : (int?)null;
+            return new MessageOld7 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, Date = _Date, Message = _Message, ReplyMarkup = _ReplyMarkup, Views = _Views };
+        }
+    }
+
+    /// <summary>TL <c>messageForwarded_old2#a367e716</c>.</summary>
+    public sealed record MessageForwardedOld2 : global::EitaaSharp.Schema.IMessage
+    {
+        public const uint TypeId = 0xA367E716u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required int Date { get; init; }
+        public required string Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Message);
+        }
+
+        public static MessageForwardedOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int _Date = reader.ReadInt32();
+            string _Message = reader.ReadString();
+            return new MessageForwardedOld2 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, PeerId = _PeerId, Date = _Date, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>message_layer104_3#9789dac4</c>.</summary>
+    public sealed record MessageLayer1043 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0x9789DAC4u;
+        public uint ConstructorId => TypeId;
+
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public bool EditHide { get; init; }
+        public required int Id { get; init; }
+        public global::EitaaSharp.Schema.IPeer? PeerId { get; init; }
+        public global::EitaaSharp.Schema.IMessageFwdHeader? FwdFrom { get; init; }
+        public int? ViaBotId { get; init; }
+        public int? Date { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IReplyMarkup? ReplyMarkup { get; init; }
+        public int? Views { get; init; }
+        public int? EditDate { get; init; }
+        public required string PostAuthor { get; init; }
+        public long? GroupedId { get; init; }
+        public global::EitaaSharp.Tl.ITlObject? Reactions { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (EditHide) flags |= 0x200000;
+            if (PeerId is not null) flags |= 0x100;
+            if (FwdFrom is not null) flags |= 0x4;
+            if (ViaBotId is not null) flags |= 0x800;
+            if (Date is not null) flags |= 0x8;
+            if (ReplyMarkup is not null) flags |= 0x40;
+            if (Views is not null) flags |= 0x400;
+            if (EditDate is not null) flags |= 0x8000;
+            if (GroupedId is not null) flags |= 0x20000;
+            if (Reactions is not null) flags |= 0x100000;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            if (PeerId is not null) writer.WriteObject(PeerId);
+            if (FwdFrom is not null) writer.WriteObject(FwdFrom);
+            if (ViaBotId is not null) writer.WriteInt32(ViaBotId.Value);
+            if (Date is not null) writer.WriteInt32(Date.Value);
+            writer.WriteString(Message);
+            if (ReplyMarkup is not null) writer.WriteObject(ReplyMarkup);
+            if (Views is not null) writer.WriteInt32(Views.Value);
+            if (EditDate is not null) writer.WriteInt32(EditDate.Value);
+            writer.WriteString(PostAuthor);
+            if (GroupedId is not null) writer.WriteLong(GroupedId.Value);
+            if (Reactions is not null) writer.WriteObject(Reactions);
+        }
+
+        public static MessageLayer1043 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            bool _EditHide = (flags & 0x200000) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer? _PeerId = (flags & 0x100) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPeer>() : null;
+            global::EitaaSharp.Schema.IMessageFwdHeader? _FwdFrom = (flags & 0x4) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IMessageFwdHeader>() : null;
+            int? _ViaBotId = (flags & 0x800) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _Date = (flags & 0x8) != 0 ? reader.ReadInt32() : (int?)null;
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IReplyMarkup? _ReplyMarkup = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IReplyMarkup>() : null;
+            int? _Views = (flags & 0x400) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _EditDate = (flags & 0x8000) != 0 ? reader.ReadInt32() : (int?)null;
+            string _PostAuthor = reader.ReadString();
+            long? _GroupedId = (flags & 0x20000) != 0 ? reader.ReadLong() : (long?)null;
+            global::EitaaSharp.Tl.ITlObject? _Reactions = (flags & 0x100000) != 0 ? reader.ReadObject() : null;
+            return new MessageLayer1043 { Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, EditHide = _EditHide, Id = _Id, PeerId = _PeerId, FwdFrom = _FwdFrom, ViaBotId = _ViaBotId, Date = _Date, Message = _Message, ReplyMarkup = _ReplyMarkup, Views = _Views, EditDate = _EditDate, PostAuthor = _PostAuthor, GroupedId = _GroupedId, Reactions = _Reactions };
+        }
+    }
+
+    /// <summary>TL <c>message_layer104_2#1c9b1027</c>.</summary>
+    public sealed record MessageLayer1042 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0x1C9B1027u;
+        public uint ConstructorId => TypeId;
+
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public bool EditHide { get; init; }
+        public required int Id { get; init; }
+        public global::EitaaSharp.Schema.IPeer? PeerId { get; init; }
+        public global::EitaaSharp.Schema.IMessageFwdHeader? FwdFrom { get; init; }
+        public int? ViaBotId { get; init; }
+        public int? Date { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IReplyMarkup? ReplyMarkup { get; init; }
+        public int? Views { get; init; }
+        public int? EditDate { get; init; }
+        public required string PostAuthor { get; init; }
+        public long? GroupedId { get; init; }
+        public global::EitaaSharp.Tl.ITlObject? Reactions { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (EditHide) flags |= 0x200000;
+            if (PeerId is not null) flags |= 0x100;
+            if (FwdFrom is not null) flags |= 0x4;
+            if (ViaBotId is not null) flags |= 0x800;
+            if (Date is not null) flags |= 0x8;
+            if (ReplyMarkup is not null) flags |= 0x40;
+            if (Views is not null) flags |= 0x400;
+            if (EditDate is not null) flags |= 0x8000;
+            if (GroupedId is not null) flags |= 0x20000;
+            if (Reactions is not null) flags |= 0x100000;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            if (PeerId is not null) writer.WriteObject(PeerId);
+            if (FwdFrom is not null) writer.WriteObject(FwdFrom);
+            if (ViaBotId is not null) writer.WriteInt32(ViaBotId.Value);
+            if (Date is not null) writer.WriteInt32(Date.Value);
+            writer.WriteString(Message);
+            if (ReplyMarkup is not null) writer.WriteObject(ReplyMarkup);
+            if (Views is not null) writer.WriteInt32(Views.Value);
+            if (EditDate is not null) writer.WriteInt32(EditDate.Value);
+            writer.WriteString(PostAuthor);
+            if (GroupedId is not null) writer.WriteLong(GroupedId.Value);
+            if (Reactions is not null) writer.WriteObject(Reactions);
+        }
+
+        public static MessageLayer1042 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            bool _EditHide = (flags & 0x200000) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer? _PeerId = (flags & 0x100) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPeer>() : null;
+            global::EitaaSharp.Schema.IMessageFwdHeader? _FwdFrom = (flags & 0x4) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IMessageFwdHeader>() : null;
+            int? _ViaBotId = (flags & 0x800) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _Date = (flags & 0x8) != 0 ? reader.ReadInt32() : (int?)null;
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IReplyMarkup? _ReplyMarkup = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IReplyMarkup>() : null;
+            int? _Views = (flags & 0x400) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _EditDate = (flags & 0x8000) != 0 ? reader.ReadInt32() : (int?)null;
+            string _PostAuthor = reader.ReadString();
+            long? _GroupedId = (flags & 0x20000) != 0 ? reader.ReadLong() : (long?)null;
+            global::EitaaSharp.Tl.ITlObject? _Reactions = (flags & 0x100000) != 0 ? reader.ReadObject() : null;
+            return new MessageLayer1042 { Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, EditHide = _EditHide, Id = _Id, PeerId = _PeerId, FwdFrom = _FwdFrom, ViaBotId = _ViaBotId, Date = _Date, Message = _Message, ReplyMarkup = _ReplyMarkup, Views = _Views, EditDate = _EditDate, PostAuthor = _PostAuthor, GroupedId = _GroupedId, Reactions = _Reactions };
+        }
+    }
+
+    /// <summary>TL <c>message_old6#2bebfa86</c>.</summary>
+    public sealed record MessageOld6 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0x2BEBFA86u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public int? Date { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IReplyMarkup? ReplyMarkup { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (Date is not null) flags |= 0x8;
+            if (ReplyMarkup is not null) flags |= 0x40;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            if (Date is not null) writer.WriteInt32(Date.Value);
+            writer.WriteString(Message);
+            if (ReplyMarkup is not null) writer.WriteObject(ReplyMarkup);
+        }
+
+        public static MessageOld6 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int? _Date = (flags & 0x8) != 0 ? reader.ReadInt32() : (int?)null;
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IReplyMarkup? _ReplyMarkup = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IReplyMarkup>() : null;
+            return new MessageOld6 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, PeerId = _PeerId, Date = _Date, Message = _Message, ReplyMarkup = _ReplyMarkup };
+        }
+    }
+
+    /// <summary>TL <c>message_old5#f07814c8</c>.</summary>
+    public sealed record MessageOld5 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0xF07814C8u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public int? Date { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IReplyMarkup? ReplyMarkup { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (Date is not null) flags |= 0x8;
+            if (ReplyMarkup is not null) flags |= 0x40;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            if (Date is not null) writer.WriteInt32(Date.Value);
+            writer.WriteString(Message);
+            if (ReplyMarkup is not null) writer.WriteObject(ReplyMarkup);
+        }
+
+        public static MessageOld5 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int? _Date = (flags & 0x8) != 0 ? reader.ReadInt32() : (int?)null;
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IReplyMarkup? _ReplyMarkup = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IReplyMarkup>() : null;
+            return new MessageOld5 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, PeerId = _PeerId, Date = _Date, Message = _Message, ReplyMarkup = _ReplyMarkup };
+        }
+    }
+
+    /// <summary>TL <c>message_old4#c3060325</c>.</summary>
+    public sealed record MessageOld4 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0xC3060325u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public int? Date { get; init; }
+        public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IReplyMarkup? ReplyMarkup { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (Date is not null) flags |= 0x8;
+            if (ReplyMarkup is not null) flags |= 0x40;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            if (Date is not null) writer.WriteInt32(Date.Value);
+            writer.WriteString(Message);
+            if (ReplyMarkup is not null) writer.WriteObject(ReplyMarkup);
+        }
+
+        public static MessageOld4 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int? _Date = (flags & 0x8) != 0 ? reader.ReadInt32() : (int?)null;
+            string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IReplyMarkup? _ReplyMarkup = (flags & 0x40) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IReplyMarkup>() : null;
+            return new MessageOld4 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, PeerId = _PeerId, Date = _Date, Message = _Message, ReplyMarkup = _ReplyMarkup };
+        }
+    }
+
+    /// <summary>TL <c>message_old3#a7ab1991</c>.</summary>
+    public sealed record MessageOld3 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0xA7AB1991u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public int? Date { get; init; }
+        public required string Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (Date is not null) flags |= 0x8;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            if (Date is not null) writer.WriteInt32(Date.Value);
+            writer.WriteString(Message);
+        }
+
+        public static MessageOld3 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int? _Date = (flags & 0x8) != 0 ? reader.ReadInt32() : (int?)null;
+            string _Message = reader.ReadString();
+            return new MessageOld3 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, PeerId = _PeerId, Date = _Date, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>message_old2#567699b3</c>.</summary>
+    public sealed record MessageOld2 : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0x567699B3u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required int Date { get; init; }
+        public required string Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Message);
+        }
+
+        public static MessageOld2 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int _Date = reader.ReadInt32();
+            string _Message = reader.ReadString();
+            return new MessageOld2 { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, PeerId = _PeerId, Date = _Date, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>messageService_old#9f8d60bb</c>.</summary>
+    public sealed record MessageServiceOld : global::EitaaSharp.Schema.ITLMessageService
+    {
+        public const uint TypeId = 0x9F8D60BBu;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required bool Out { get; init; }
+        public required bool Unread { get; init; }
+        public required int Date { get; init; }
+        public required global::EitaaSharp.Schema.IMessageAction Action { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            writer.WriteBool(Out);
+            writer.WriteBool(Unread);
+            writer.WriteInt32(Date);
+            writer.WriteObject(Action);
+        }
+
+        public static MessageServiceOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            bool _Out = reader.ReadBool();
+            bool _Unread = reader.ReadBool();
+            int _Date = reader.ReadInt32();
+            global::EitaaSharp.Schema.IMessageAction _Action = reader.ReadObject<global::EitaaSharp.Schema.IMessageAction>();
+            return new MessageServiceOld { Id = _Id, PeerId = _PeerId, Out = _Out, Unread = _Unread, Date = _Date, Action = _Action };
+        }
+    }
+
+    /// <summary>TL <c>messageForwarded_old#05f46804</c>.</summary>
+    public sealed record MessageForwardedOld : global::EitaaSharp.Schema.ITLMessageForwardedOld2
+    {
+        public const uint TypeId = 0x05F46804u;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required bool Out { get; init; }
+        public required bool Unread { get; init; }
+        public required int Date { get; init; }
+        public required string Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            writer.WriteBool(Out);
+            writer.WriteBool(Unread);
+            writer.WriteInt32(Date);
+            writer.WriteString(Message);
+        }
+
+        public static MessageForwardedOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            bool _Out = reader.ReadBool();
+            bool _Unread = reader.ReadBool();
+            int _Date = reader.ReadInt32();
+            string _Message = reader.ReadString();
+            return new MessageForwardedOld { Id = _Id, PeerId = _PeerId, Out = _Out, Unread = _Unread, Date = _Date, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>message_old#22eb6aba</c>.</summary>
+    public sealed record MessageOld : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0x22EB6ABAu;
+        public uint ConstructorId => TypeId;
+
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required bool Out { get; init; }
+        public required bool Unread { get; init; }
+        public required int Date { get; init; }
+        public required string Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Id);
+            writer.WriteObject(PeerId);
+            writer.WriteBool(Out);
+            writer.WriteBool(Unread);
+            writer.WriteInt32(Date);
+            writer.WriteString(Message);
+        }
+
+        public static MessageOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            bool _Out = reader.ReadBool();
+            bool _Unread = reader.ReadBool();
+            int _Date = reader.ReadInt32();
+            string _Message = reader.ReadString();
+            return new MessageOld { Id = _Id, PeerId = _PeerId, Out = _Out, Unread = _Unread, Date = _Date, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>message_secret#555555fa</c>.</summary>
+    public sealed record MessageSecret : global::EitaaSharp.Schema.ITLMessage
+    {
+        public const uint TypeId = 0x555555FAu;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required int Ttl { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required int Date { get; init; }
+        public required string Message { get; init; }
+        public string? ViaBotName { get; init; }
+        public long? GroupedId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            if (ViaBotName is not null) flags |= 0x800;
+            if (GroupedId is not null) flags |= 0x20000;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteInt32(Ttl);
+            writer.WriteObject(PeerId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Message);
+            if (ViaBotName is not null) writer.WriteString(ViaBotName);
+            if (GroupedId is not null) writer.WriteLong(GroupedId.Value);
+        }
+
+        public static MessageSecret Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            int _Ttl = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int _Date = reader.ReadInt32();
+            string _Message = reader.ReadString();
+            string? _ViaBotName = (flags & 0x800) != 0 ? reader.ReadString() : null;
+            long? _GroupedId = (flags & 0x20000) != 0 ? reader.ReadLong() : (long?)null;
+            return new MessageSecret { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, Ttl = _Ttl, PeerId = _PeerId, Date = _Date, Message = _Message, ViaBotName = _ViaBotName, GroupedId = _GroupedId };
+        }
+    }
+
+    /// <summary>TL <c>message_secret_old#555555f8</c>.</summary>
+    public sealed record MessageSecretOld : global::EitaaSharp.Schema.ITLMessageSecret
+    {
+        public const uint TypeId = 0x555555F8u;
+        public uint ConstructorId => TypeId;
+
+        public bool Unread { get; init; }
+        public bool Out { get; init; }
+        public bool Mentioned { get; init; }
+        public bool MediaUnread { get; init; }
+        public required int Id { get; init; }
+        public required int Ttl { get; init; }
+        public required global::EitaaSharp.Schema.IPeer PeerId { get; init; }
+        public required int Date { get; init; }
+        public required string Message { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Unread) flags |= 0x1;
+            if (Out) flags |= 0x2;
+            if (Mentioned) flags |= 0x10;
+            if (MediaUnread) flags |= 0x20;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteInt32(Ttl);
+            writer.WriteObject(PeerId);
+            writer.WriteInt32(Date);
+            writer.WriteString(Message);
+        }
+
+        public static MessageSecretOld Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Unread = (flags & 0x1) != 0;
+            bool _Out = (flags & 0x2) != 0;
+            bool _Mentioned = (flags & 0x10) != 0;
+            bool _MediaUnread = (flags & 0x20) != 0;
+            int _Id = reader.ReadInt32();
+            int _Ttl = reader.ReadInt32();
+            global::EitaaSharp.Schema.IPeer _PeerId = reader.ReadObject<global::EitaaSharp.Schema.IPeer>();
+            int _Date = reader.ReadInt32();
+            string _Message = reader.ReadString();
+            return new MessageSecretOld { Unread = _Unread, Out = _Out, Mentioned = _Mentioned, MediaUnread = _MediaUnread, Id = _Id, Ttl = _Ttl, PeerId = _PeerId, Date = _Date, Message = _Message };
+        }
+    }
+
+    /// <summary>TL <c>socketPong#247473c7</c>.</summary>
+    public sealed record SocketPong : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x247473C7u;
+        public uint ConstructorId => TypeId;
+
+        public required long MsgId { get; init; }
+        public required long PingId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(MsgId);
+            writer.WriteLong(PingId);
+        }
+
+        public static SocketPong Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _MsgId = reader.ReadLong();
+            long _PingId = reader.ReadLong();
+            return new SocketPong { MsgId = _MsgId, PingId = _PingId };
+        }
+    }
+
+    /// <summary>TL <c>clientRequestAPK#7abe77ee</c>.</summary>
+    public sealed record ClientRequestAPK : global::EitaaSharp.Schema.ITLClientRequest
+    {
+        public const uint TypeId = 0x7ABE77EEu;
+        public uint ConstructorId => TypeId;
+
+        public required string Token { get; init; }
+        public required string Imei { get; init; }
+        public bool IsWifi { get; init; }
+        public bool IsData { get; init; }
+        public bool AppPause { get; init; }
+        public bool ForegreoundConnection { get; init; }
+        public required int Layer { get; init; }
+        public required int BuildVersion { get; init; }
+        public required string Lang { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Token);
+            writer.WriteString(Imei);
+            int flags = 0;
+            if (IsWifi) flags |= 0x2;
+            if (IsData) flags |= 0x4;
+            if (AppPause) flags |= 0x8;
+            if (ForegreoundConnection) flags |= 0x10;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Layer);
+            writer.WriteInt32(BuildVersion);
+            writer.WriteString(Lang);
+        }
+
+        public static ClientRequestAPK Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Token = reader.ReadString();
+            string _Imei = reader.ReadString();
+            int flags = reader.ReadInt32();
+            bool _IsWifi = (flags & 0x2) != 0;
+            bool _IsData = (flags & 0x4) != 0;
+            bool _AppPause = (flags & 0x8) != 0;
+            bool _ForegreoundConnection = (flags & 0x10) != 0;
+            int _Layer = reader.ReadInt32();
+            int _BuildVersion = reader.ReadInt32();
+            string _Lang = reader.ReadString();
+            return new ClientRequestAPK { Token = _Token, Imei = _Imei, IsWifi = _IsWifi, IsData = _IsData, AppPause = _AppPause, ForegreoundConnection = _ForegreoundConnection, Layer = _Layer, BuildVersion = _BuildVersion, Lang = _Lang };
+        }
+    }
+
+    /// <summary>TL <c>clientDebugRequest#7abe77fd</c>.</summary>
+    public sealed record ClientDebugRequest : global::EitaaSharp.Schema.ITLClientRequest
+    {
+        public const uint TypeId = 0x7ABE77FDu;
+        public uint ConstructorId => TypeId;
+
+        public required string Json { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Json);
+        }
+
+        public static ClientDebugRequest Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Json = reader.ReadString();
+            return new ClientDebugRequest { Json = _Json };
+        }
+    }
+
+    /// <summary>TL <c>updateTrends#0f5b9c42</c>.</summary>
+    public sealed record UpdateTrends : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x0F5B9C42u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject[] TrendGroups { get; init; }
+        public required int Date { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(TrendGroups, (w, x) => w.WriteObject(x));
+            writer.WriteInt32(Date);
+        }
+
+        public static UpdateTrends Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Tl.ITlObject[] _TrendGroups = reader.ReadVector(r => r.ReadObject());
+            int _Date = reader.ReadInt32();
+            return new UpdateTrends { TrendGroups = _TrendGroups, Date = _Date };
+        }
+    }
+
+    /// <summary>TL <c>SendAppInfo#61796dea</c>.</summary>
+    public sealed record SendAppInfo : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x61796DEAu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static SendAppInfo Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new SendAppInfo();
+        }
+    }
+
+    /// <summary>TL <c>inputAuthHashLocation#09a5282e</c>.</summary>
+    public sealed record InputAuthHashLocation : global::EitaaSharp.Schema.IInputAuthHash
+    {
+        public const uint TypeId = 0x09A5282Eu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAuthHashLocation Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAuthHashLocation();
+        }
+    }
+
+    /// <summary>TL <c>inputAuthHashTrend#c099a042</c>.</summary>
+    public sealed record InputAuthHashTrend : global::EitaaSharp.Schema.IInputAuthHash
+    {
+        public const uint TypeId = 0xC099A042u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAuthHashTrend Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAuthHashTrend();
+        }
+    }
+
+    /// <summary>TL <c>InputAuthHashAiImage#0e9cda8f</c>.</summary>
+    public sealed record InputAuthHashAiImage : global::EitaaSharp.Schema.IInputAuthHash
+    {
+        public const uint TypeId = 0x0E9CDA8Fu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAuthHashAiImage Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAuthHashAiImage();
+        }
+    }
+
+    /// <summary>TL <c>InputAuthHashAiTextInput#a78ddab4</c>.</summary>
+    public sealed record InputAuthHashAiTextInput : global::EitaaSharp.Schema.IInputAuthHash
+    {
+        public const uint TypeId = 0xA78DDAB4u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAuthHashAiTextInput Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAuthHashAiTextInput();
+        }
+    }
+
+    /// <summary>TL <c>InputAuthHashAiSmartReview#993ab2d8</c>.</summary>
+    public sealed record InputAuthHashAiSmartReview : global::EitaaSharp.Schema.IInputAuthHash
+    {
+        public const uint TypeId = 0x993AB2D8u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAuthHashAiSmartReview Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAuthHashAiSmartReview();
+        }
+    }
+
+    /// <summary>TL <c>inputAuthHashPay#028c73f7</c>.</summary>
+    public sealed record InputAuthHashPay : global::EitaaSharp.Schema.IInputAuthHash
+    {
+        public const uint TypeId = 0x028C73F7u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAuthHashPay Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAuthHashPay();
+        }
+    }
+
+    /// <summary>TL <c>inputAuthHashCallOut#e45ab511</c>.</summary>
+    public sealed record InputAuthHashCallOut : global::EitaaSharp.Schema.IInputAuthHash
+    {
+        public const uint TypeId = 0xE45AB511u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAuthHashCallOut Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAuthHashCallOut();
+        }
+    }
+
+    /// <summary>TL <c>UserPayHash#beafdead</c>.</summary>
+    public sealed record UserPayHash : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xBEAFDEADu;
+        public uint ConstructorId => TypeId;
+
+        public required string Hash { get; init; }
+        public string? VoipHostName { get; init; }
+        public int? VoipPort { get; init; }
+        public string? VoipUserName { get; init; }
+        public string? VoipPassword { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flag = 0;
+            if (VoipHostName is not null) flag |= 0x1;
+            if (VoipPort is not null) flag |= 0x1;
+            if (VoipUserName is not null) flag |= 0x2;
+            if (VoipPassword is not null) flag |= 0x2;
+            writer.WriteInt32(flag);
+            writer.WriteString(Hash);
+            if (VoipHostName is not null) writer.WriteString(VoipHostName);
+            if (VoipPort is not null) writer.WriteInt32(VoipPort.Value);
+            if (VoipUserName is not null) writer.WriteString(VoipUserName);
+            if (VoipPassword is not null) writer.WriteString(VoipPassword);
+        }
+
+        public static UserPayHash Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flag = reader.ReadInt32();
+            string _Hash = reader.ReadString();
+            string? _VoipHostName = (flag & 0x1) != 0 ? reader.ReadString() : null;
+            int? _VoipPort = (flag & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
+            string? _VoipUserName = (flag & 0x2) != 0 ? reader.ReadString() : null;
+            string? _VoipPassword = (flag & 0x2) != 0 ? reader.ReadString() : null;
+            return new UserPayHash { Hash = _Hash, VoipHostName = _VoipHostName, VoipPort = _VoipPort, VoipUserName = _VoipUserName, VoipPassword = _VoipPassword };
+        }
+    }
+
+    /// <summary>TL <c>liveStreamConfig#01946bf5</c>.</summary>
+    public sealed record LiveStreamConfig : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x01946BF5u;
+        public uint ConstructorId => TypeId;
+
+        public bool SendInPrivateChat { get; init; }
+        public bool SendInPublicChannel { get; init; }
+        public bool SendInPrivateChannel { get; init; }
+        public bool SendInSupergroups { get; init; }
+        public bool SendInGroups { get; init; }
+        public required int MaxVideoWidth { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (SendInPrivateChat) flags |= 0x1;
+            if (SendInPublicChannel) flags |= 0x2;
+            if (SendInPrivateChannel) flags |= 0x4;
+            if (SendInSupergroups) flags |= 0x8;
+            if (SendInGroups) flags |= 0x10;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(MaxVideoWidth);
+        }
+
+        public static LiveStreamConfig Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _SendInPrivateChat = (flags & 0x1) != 0;
+            bool _SendInPublicChannel = (flags & 0x2) != 0;
+            bool _SendInPrivateChannel = (flags & 0x4) != 0;
+            bool _SendInSupergroups = (flags & 0x8) != 0;
+            bool _SendInGroups = (flags & 0x10) != 0;
+            int _MaxVideoWidth = reader.ReadInt32();
+            return new LiveStreamConfig { SendInPrivateChat = _SendInPrivateChat, SendInPublicChannel = _SendInPublicChannel, SendInPrivateChannel = _SendInPrivateChannel, SendInSupergroups = _SendInSupergroups, SendInGroups = _SendInGroups, MaxVideoWidth = _MaxVideoWidth };
+        }
+    }
+
+    /// <summary>TL <c>shopCategory#8841dac0</c>.</summary>
+    public sealed record ShopCategory : global::EitaaSharp.Schema.IShopCategory
+    {
+        public const uint TypeId = 0x8841DAC0u;
+        public uint ConstructorId => TypeId;
+
+        public bool DefaultCategory { get; init; }
+        public required int Id { get; init; }
+        public required string Name { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (DefaultCategory) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteString(Name);
+        }
+
+        public static ShopCategory Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _DefaultCategory = (flags & 0x1) != 0;
+            int _Id = reader.ReadInt32();
+            string _Name = reader.ReadString();
+            return new ShopCategory { DefaultCategory = _DefaultCategory, Id = _Id, Name = _Name };
+        }
+    }
+
+    /// <summary>TL <c>mbpUserRegisterInfos#4e397f8c</c>.</summary>
+    public sealed record MbpUserRegisterInfos : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x4E397F8Cu;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject[] MxbRegisterInfos { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            writer.WriteInt32(flags);
+            writer.WriteVector(MxbRegisterInfos, (w, x) => w.WriteObject(x));
+        }
+
+        public static MbpUserRegisterInfos Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            global::EitaaSharp.Tl.ITlObject[] _MxbRegisterInfos = reader.ReadVector(r => r.ReadObject());
+            return new MbpUserRegisterInfos { MxbRegisterInfos = _MxbRegisterInfos };
+        }
+    }
+
+    /// <summary>TL <c>mxbUserRegisterInfo#3296a8b7</c>.</summary>
+    public sealed record MxbUserRegisterInfo : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x3296A8B7u;
+        public uint ConstructorId => TypeId;
+
+        public required string Nickname { get; init; }
+        public int? Avatar { get; init; }
+        public required int MessengerId { get; init; }
+        public required string Phone { get; init; }
+        public required int MxbUserId { get; init; }
+        public int? UserId { get; init; }
+        public int? AccessHash { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Avatar is not null) flags |= 0x2;
+            if (UserId is not null) flags |= 0x1;
+            if (AccessHash is not null) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteString(Nickname);
+            if (Avatar is not null) writer.WriteInt32(Avatar.Value);
+            writer.WriteInt32(MessengerId);
+            writer.WriteString(Phone);
+            writer.WriteInt32(MxbUserId);
+            if (UserId is not null) writer.WriteInt32(UserId.Value);
+            if (AccessHash is not null) writer.WriteInt32(AccessHash.Value);
+        }
+
+        public static MxbUserRegisterInfo Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            string _Nickname = reader.ReadString();
+            int? _Avatar = (flags & 0x2) != 0 ? reader.ReadInt32() : (int?)null;
+            int _MessengerId = reader.ReadInt32();
+            string _Phone = reader.ReadString();
+            int _MxbUserId = reader.ReadInt32();
+            int? _UserId = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _AccessHash = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
+            return new MxbUserRegisterInfo { Nickname = _Nickname, Avatar = _Avatar, MessengerId = _MessengerId, Phone = _Phone, MxbUserId = _MxbUserId, UserId = _UserId, AccessHash = _AccessHash };
+        }
+    }
+
+    /// <summary>TL <c>mxbUser#05d27ff2</c>.</summary>
+    public sealed record MxbUser : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x05D27FF2u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject MxbRegisterInfos { get; init; }
+        public required global::EitaaSharp.Schema.IUser User { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            writer.WriteInt32(flags);
+            writer.WriteObject(MxbRegisterInfos);
+            writer.WriteObject(User);
+        }
+
+        public static MxbUser Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            global::EitaaSharp.Tl.ITlObject _MxbRegisterInfos = reader.ReadObject();
+            global::EitaaSharp.Schema.IUser _User = reader.ReadObject<global::EitaaSharp.Schema.IUser>();
+            return new MxbUser { MxbRegisterInfos = _MxbRegisterInfos, User = _User };
+        }
+    }
+
+    /// <summary>TL <c>ads_mediaViewerAd#3d4e52df</c>.</summary>
+    public sealed record AdsMediaViewerAd : global::EitaaSharp.Schema.IAdsAd
+    {
+        public const uint TypeId = 0x3D4E52DFu;
+        public uint ConstructorId => TypeId;
+
+        public bool IsLtr { get; init; }
+        public required int Id { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject Action { get; init; }
+        public required string Title { get; init; }
+        public required string Message { get; init; }
+        public required int MinDisplayDuration { get; init; }
+        public required int MaxDisplayDuration { get; init; }
+        public required int BetweenDelay { get; init; }
+        public required string Badge { get; init; }
+        public global::EitaaSharp.Tl.ITlObject? BadgeAction { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (IsLtr) flags |= 0x2;
+            if (BadgeAction is not null) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteInt32(Id);
+            writer.WriteObject(Action);
+            writer.WriteString(Title);
+            writer.WriteString(Message);
+            writer.WriteInt32(MinDisplayDuration);
+            writer.WriteInt32(MaxDisplayDuration);
+            writer.WriteInt32(BetweenDelay);
+            writer.WriteString(Badge);
+            if (BadgeAction is not null) writer.WriteObject(BadgeAction);
+        }
+
+        public static AdsMediaViewerAd Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _IsLtr = (flags & 0x2) != 0;
+            int _Id = reader.ReadInt32();
+            global::EitaaSharp.Tl.ITlObject _Action = reader.ReadObject();
+            string _Title = reader.ReadString();
+            string _Message = reader.ReadString();
+            int _MinDisplayDuration = reader.ReadInt32();
+            int _MaxDisplayDuration = reader.ReadInt32();
+            int _BetweenDelay = reader.ReadInt32();
+            string _Badge = reader.ReadString();
+            global::EitaaSharp.Tl.ITlObject? _BadgeAction = (flags & 0x1) != 0 ? reader.ReadObject() : null;
+            return new AdsMediaViewerAd { IsLtr = _IsLtr, Id = _Id, Action = _Action, Title = _Title, Message = _Message, MinDisplayDuration = _MinDisplayDuration, MaxDisplayDuration = _MaxDisplayDuration, BetweenDelay = _BetweenDelay, Badge = _Badge, BadgeAction = _BadgeAction };
+        }
+    }
+
+    /// <summary>TL <c>ads_inputAdsLocationMap#9c277156</c>.</summary>
+    public sealed record AdsInputAdsLocationMap : global::EitaaSharp.Schema.IAdsLocation
+    {
+        public const uint TypeId = 0x9C277156u;
+        public uint ConstructorId => TypeId;
+
+        public required double Lon { get; init; }
+        public required double Lat { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteDouble(Lon);
+            writer.WriteDouble(Lat);
+        }
+
+        public static AdsInputAdsLocationMap Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            double _Lon = reader.ReadDouble();
+            double _Lat = reader.ReadDouble();
+            return new AdsInputAdsLocationMap { Lon = _Lon, Lat = _Lat };
+        }
+    }
+
+    /// <summary>TL <c>inputAdsLocationChannelFloatingButton#327e336d</c>.</summary>
+    public sealed record InputAdsLocationChannelFloatingButton : global::EitaaSharp.Schema.IAdsLocation
+    {
+        public const uint TypeId = 0x327E336Du;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAdsLocationChannelFloatingButton Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAdsLocationChannelFloatingButton();
+        }
+    }
+
+    /// <summary>TL <c>inputAdsLocationChannelPinAd#d5a4658a</c>.</summary>
+    public sealed record InputAdsLocationChannelPinAd : global::EitaaSharp.Schema.IAdsLocation
+    {
+        public const uint TypeId = 0xD5A4658Au;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAdsLocationChannelPinAd Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAdsLocationChannelPinAd();
+        }
+    }
+
+    /// <summary>TL <c>inputAdsLocationDialogSearch#f710908a</c>.</summary>
+    public sealed record InputAdsLocationDialogSearch : global::EitaaSharp.Schema.IAdsLocation
+    {
+        public const uint TypeId = 0xF710908Au;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static InputAdsLocationDialogSearch Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new InputAdsLocationDialogSearch();
+        }
+    }
+
+    /// <summary>TL <c>ads_inputAdsLocationMediaViewer#1dbb462e</c>.</summary>
+    public sealed record AdsInputAdsLocationMediaViewer : global::EitaaSharp.Schema.IAdsLocation
+    {
+        public const uint TypeId = 0x1DBB462Eu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static AdsInputAdsLocationMediaViewer Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new AdsInputAdsLocationMediaViewer();
+        }
+    }
+
+    /// <summary>TL <c>UrlWhiteList#7cf5cad5</c>.</summary>
+    public sealed record UrlWhiteList : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x7CF5CAD5u;
+        public uint ConstructorId => TypeId;
+
+        public required string[] Urls { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(Urls, (w, x) => w.WriteString(x));
+        }
+
+        public static UrlWhiteList Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string[] _Urls = reader.ReadVector(r => r.ReadString());
+            return new UrlWhiteList { Urls = _Urls };
+        }
+    }
+
+    /// <summary>TL <c>Stat_ShopTile#2d74dfa5</c>.</summary>
+    public sealed record StatShopTile : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x2D74DFA5u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static StatShopTile Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new StatShopTile();
+        }
+    }
+
+    /// <summary>TL <c>businessLocation#ac5c1af7</c>.</summary>
+    public sealed record BusinessLocation : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xAC5C1AF7u;
+        public uint ConstructorId => TypeId;
+
+        public global::EitaaSharp.Schema.IGeoPoint? GeoPoint { get; init; }
+        public required string Address { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (GeoPoint is not null) flags |= 0x1;
+            writer.WriteInt32(flags);
+            if (GeoPoint is not null) writer.WriteObject(GeoPoint);
+            writer.WriteString(Address);
+        }
+
+        public static BusinessLocation Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            global::EitaaSharp.Schema.IGeoPoint? _GeoPoint = (flags & 0x1) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IGeoPoint>() : null;
+            string _Address = reader.ReadString();
+            return new BusinessLocation { GeoPoint = _GeoPoint, Address = _Address };
+        }
+    }
+
+    /// <summary>TL <c>attachMenuBot#d90d8dfe</c>.</summary>
+    public sealed record AttachMenuBot : global::EitaaSharp.Schema.IAttachMenuBot
+    {
+        public const uint TypeId = 0xD90D8DFEu;
+        public uint ConstructorId => TypeId;
+
+        public bool Inactive { get; init; }
+        public bool HasSettings { get; init; }
+        public bool RequestWriteAccess { get; init; }
+        public bool ShowInAttachMenu { get; init; }
+        public bool ShowInSideMenu { get; init; }
+        public bool SideMenuDisclaimerNeeded { get; init; }
+        public required long BotId { get; init; }
+        public required string ShortName { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Inactive) flags |= 0x1;
+            if (HasSettings) flags |= 0x2;
+            if (RequestWriteAccess) flags |= 0x4;
+            if (ShowInAttachMenu) flags |= 0x8;
+            if (ShowInSideMenu) flags |= 0x10;
+            if (SideMenuDisclaimerNeeded) flags |= 0x20;
+            writer.WriteInt32(flags);
+            writer.WriteLong(BotId);
+            writer.WriteString(ShortName);
+        }
+
+        public static AttachMenuBot Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Inactive = (flags & 0x1) != 0;
+            bool _HasSettings = (flags & 0x2) != 0;
+            bool _RequestWriteAccess = (flags & 0x4) != 0;
+            bool _ShowInAttachMenu = (flags & 0x8) != 0;
+            bool _ShowInSideMenu = (flags & 0x10) != 0;
+            bool _SideMenuDisclaimerNeeded = (flags & 0x20) != 0;
+            long _BotId = reader.ReadLong();
+            string _ShortName = reader.ReadString();
+            return new AttachMenuBot { Inactive = _Inactive, HasSettings = _HasSettings, RequestWriteAccess = _RequestWriteAccess, ShowInAttachMenu = _ShowInAttachMenu, ShowInSideMenu = _ShowInSideMenu, SideMenuDisclaimerNeeded = _SideMenuDisclaimerNeeded, BotId = _BotId, ShortName = _ShortName };
+        }
+    }
+
+    /// <summary>TL <c>attachMenuBotIconColor#4576f3f0</c>.</summary>
+    public sealed record AttachMenuBotIconColor : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x4576F3F0u;
+        public uint ConstructorId => TypeId;
+
+        public required string Name { get; init; }
+        public required int Color { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Name);
+            writer.WriteInt32(Color);
+        }
+
+        public static AttachMenuBotIconColor Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Name = reader.ReadString();
+            int _Color = reader.ReadInt32();
+            return new AttachMenuBotIconColor { Name = _Name, Color = _Color };
+        }
+    }
+
+    /// <summary>TL <c>attachMenuBotIcon#b2a7386b</c>.</summary>
+    public sealed record AttachMenuBotIcon : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xB2A7386Bu;
+        public uint ConstructorId => TypeId;
+
+        public required string Name { get; init; }
+        public required global::EitaaSharp.Schema.IDocument Icon { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            writer.WriteInt32(flags);
+            writer.WriteString(Name);
+            writer.WriteObject(Icon);
+        }
+
+        public static AttachMenuBotIcon Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            string _Name = reader.ReadString();
+            global::EitaaSharp.Schema.IDocument _Icon = reader.ReadObject<global::EitaaSharp.Schema.IDocument>();
+            return new AttachMenuBotIcon { Name = _Name, Icon = _Icon };
+        }
+    }
+
+    /// <summary>TL <c>attachMenuBots#3c4301c0</c>.</summary>
+    public sealed record AttachMenuBots : global::EitaaSharp.Schema.IAttachMenuBots
+    {
+        public const uint TypeId = 0x3C4301C0u;
+        public uint ConstructorId => TypeId;
+
+        public required long Hash { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Hash);
+        }
+
+        public static AttachMenuBots Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Hash = reader.ReadLong();
+            return new AttachMenuBots { Hash = _Hash };
+        }
+    }
+
+    /// <summary>TL <c>attachMenuBotsNotModified#f1d88a5c</c>.</summary>
+    public sealed record AttachMenuBotsNotModified : global::EitaaSharp.Schema.IAttachMenuBots
+    {
+        public const uint TypeId = 0xF1D88A5Cu;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static AttachMenuBotsNotModified Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new AttachMenuBotsNotModified();
+        }
+    }
+
+    /// <summary>TL <c>inputInvoiceSlug#c326caef</c>.</summary>
+    public sealed record InputInvoiceSlug : global::EitaaSharp.Schema.IInputInvoice
+    {
+        public const uint TypeId = 0xC326CAEFu;
+        public uint ConstructorId => TypeId;
+
+        public required string Slug { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Slug);
+        }
+
+        public static InputInvoiceSlug Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Slug = reader.ReadString();
+            return new InputInvoiceSlug { Slug = _Slug };
+        }
+    }
+
+    /// <summary>TL <c>username#b4073647</c>.</summary>
+    public sealed record Username : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xB4073647u;
+        public uint ConstructorId => TypeId;
+
+        public bool Editable { get; init; }
+        public bool Active { get; init; }
+        public required string UsernameValue { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Editable) flags |= 0x1;
+            if (Active) flags |= 0x2;
+            writer.WriteInt32(flags);
+            writer.WriteString(UsernameValue);
+        }
+
+        public static Username Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Editable = (flags & 0x1) != 0;
+            bool _Active = (flags & 0x2) != 0;
+            string _UsernameValue = reader.ReadString();
+            return new Username { Editable = _Editable, Active = _Active, UsernameValue = _UsernameValue };
+        }
+    }
+
+    /// <summary>TL <c>attachMenuBotsBot#93bf667f</c>.</summary>
+    public sealed record AttachMenuBotsBot : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x93BF667Fu;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IAttachMenuBot Bot { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Bot);
+        }
+
+        public static AttachMenuBotsBot Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IAttachMenuBot _Bot = reader.ReadObject<global::EitaaSharp.Schema.IAttachMenuBot>();
+            return new AttachMenuBotsBot { Bot = _Bot };
+        }
+    }
+
+    /// <summary>TL <c>botAppNotModified#5da674b7</c>.</summary>
+    public sealed record BotAppNotModified : global::EitaaSharp.Schema.IBotApp
+    {
+        public const uint TypeId = 0x5DA674B7u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public static BotAppNotModified Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            return new BotAppNotModified();
+        }
+    }
+
+    /// <summary>TL <c>botApp#95fcd1d6</c>.</summary>
+    public sealed record BotApp : global::EitaaSharp.Schema.IBotApp
+    {
+        public const uint TypeId = 0x95FCD1D6u;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public required string ShortName { get; init; }
+        public required string Title { get; init; }
+        public required string Description { get; init; }
+        public required global::EitaaSharp.Schema.IPhoto Photo { get; init; }
+        public global::EitaaSharp.Schema.IDocument? Document { get; init; }
+        public required long Hash { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Document is not null) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            writer.WriteString(ShortName);
+            writer.WriteString(Title);
+            writer.WriteString(Description);
+            writer.WriteObject(Photo);
+            if (Document is not null) writer.WriteObject(Document);
+            writer.WriteLong(Hash);
+        }
+
+        public static BotApp Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            string _ShortName = reader.ReadString();
+            string _Title = reader.ReadString();
+            string _Description = reader.ReadString();
+            global::EitaaSharp.Schema.IPhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IPhoto>();
+            global::EitaaSharp.Schema.IDocument? _Document = (flags & 0x1) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IDocument>() : null;
+            long _Hash = reader.ReadLong();
+            return new BotApp { Id = _Id, AccessHash = _AccessHash, ShortName = _ShortName, Title = _Title, Description = _Description, Photo = _Photo, Document = _Document, Hash = _Hash };
+        }
+    }
+
+    /// <summary>TL <c>simpleWebViewResultUrl#882f76bb</c>.</summary>
+    public sealed record SimpleWebViewResultUrl : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x882F76BBu;
+        public uint ConstructorId => TypeId;
+
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Url);
+        }
+
+        public static SimpleWebViewResultUrl Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Url = reader.ReadString();
+            return new SimpleWebViewResultUrl { Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>inputBotAppID#a920bd7a</c>.</summary>
+    public sealed record InputBotAppID : global::EitaaSharp.Schema.IInputBotApp
+    {
+        public const uint TypeId = 0xA920BD7Au;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+        }
+
+        public static InputBotAppID Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            return new InputBotAppID { Id = _Id, AccessHash = _AccessHash };
+        }
+    }
+
+    /// <summary>TL <c>inputBotAppShortName#908c0407</c>.</summary>
+    public sealed record InputBotAppShortName : global::EitaaSharp.Schema.IInputBotApp
+    {
+        public const uint TypeId = 0x908C0407u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.IInputUser BotId { get; init; }
+        public required string ShortName { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(BotId);
+            writer.WriteString(ShortName);
+        }
+
+        public static InputBotAppShortName Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            global::EitaaSharp.Schema.IInputUser _BotId = reader.ReadObject<global::EitaaSharp.Schema.IInputUser>();
+            string _ShortName = reader.ReadString();
+            return new InputBotAppShortName { BotId = _BotId, ShortName = _ShortName };
+        }
+    }
+
+    /// <summary>TL <c>appWebViewResultUrl#3c1b4f0d</c>.</summary>
+    public sealed record AppWebViewResultUrl : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x3C1B4F0Du;
+        public uint ConstructorId => TypeId;
+
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Url);
+        }
+
+        public static AppWebViewResultUrl Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Url = reader.ReadString();
+            return new AppWebViewResultUrl { Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>keyboardButtonWebView#13767230</c>.</summary>
+    public sealed record KeyboardButtonWebView : global::EitaaSharp.Schema.IKeyboardButton
+    {
+        public const uint TypeId = 0x13767230u;
+        public uint ConstructorId => TypeId;
+
+        public required string Text { get; init; }
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Text);
+            writer.WriteString(Url);
+        }
+
+        public static KeyboardButtonWebView Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Text = reader.ReadString();
+            string _Url = reader.ReadString();
+            return new KeyboardButtonWebView { Text = _Text, Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>keyboardButtonSimpleWebView#a0c0505c</c>.</summary>
+    public sealed record KeyboardButtonSimpleWebView : global::EitaaSharp.Schema.IKeyboardButton
+    {
+        public const uint TypeId = 0xA0C0505Cu;
+        public uint ConstructorId => TypeId;
+
+        public required string Text { get; init; }
+        public required string Url { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Text);
+            writer.WriteString(Url);
+        }
+
+        public static KeyboardButtonSimpleWebView Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Text = reader.ReadString();
+            string _Url = reader.ReadString();
+            return new KeyboardButtonSimpleWebView { Text = _Text, Url = _Url };
+        }
+    }
+
+    /// <summary>TL <c>crashReport#e8b613fd</c>.</summary>
+    public sealed record CrashReport : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0xE8B613FDu;
+        public uint ConstructorId => TypeId;
+
+        public string? Uri { get; init; }
+        public string? QueryParams { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Uri is not null) flags |= 0x1;
+            if (QueryParams is not null) flags |= 0x2;
+            writer.WriteInt32(flags);
+            if (Uri is not null) writer.WriteString(Uri);
+            if (QueryParams is not null) writer.WriteString(QueryParams);
+        }
+
+        public static CrashReport Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            string? _Uri = (flags & 0x1) != 0 ? reader.ReadString() : null;
+            string? _QueryParams = (flags & 0x2) != 0 ? reader.ReadString() : null;
+            return new CrashReport { Uri = _Uri, QueryParams = _QueryParams };
+        }
+    }
+
+    /// <summary>TL <c>chatPhoto#1c6e1c11</c>.</summary>
+    public sealed record ChatPhoto : global::EitaaSharp.Schema.IChatPhoto
+    {
+        public const uint TypeId = 0x1C6E1C11u;
+        public uint ConstructorId => TypeId;
+
+        public bool HasVideo { get; init; }
+        public required long PhotoId { get; init; }
+        public byte[]? StrippedThumb { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (HasVideo) flags |= 0x1;
+            if (StrippedThumb is not null) flags |= 0x2;
+            writer.WriteInt32(flags);
+            writer.WriteLong(PhotoId);
+            if (StrippedThumb is not null) writer.WriteBytes(StrippedThumb);
+            writer.WriteInt32(DcId);
+        }
+
+        public static ChatPhoto Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _HasVideo = (flags & 0x1) != 0;
+            long _PhotoId = reader.ReadLong();
+            byte[]? _StrippedThumb = (flags & 0x2) != 0 ? reader.ReadBytes() : null;
+            int _DcId = reader.ReadInt32();
+            return new ChatPhoto { HasVideo = _HasVideo, PhotoId = _PhotoId, StrippedThumb = _StrippedThumb, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>userProfilePhoto#82d1f706</c>.</summary>
+    public sealed record UserProfilePhoto : global::EitaaSharp.Schema.IUserProfilePhoto
+    {
+        public const uint TypeId = 0x82D1F706u;
+        public uint ConstructorId => TypeId;
+
+        public bool HasVideo { get; init; }
+        public required long PhotoId { get; init; }
+        public byte[]? StrippedThumb { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (HasVideo) flags |= 0x1;
+            if (StrippedThumb is not null) flags |= 0x2;
+            writer.WriteInt32(flags);
+            writer.WriteLong(PhotoId);
+            if (StrippedThumb is not null) writer.WriteBytes(StrippedThumb);
+            writer.WriteInt32(DcId);
+        }
+
+        public static UserProfilePhoto Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _HasVideo = (flags & 0x1) != 0;
+            long _PhotoId = reader.ReadLong();
+            byte[]? _StrippedThumb = (flags & 0x2) != 0 ? reader.ReadBytes() : null;
+            int _DcId = reader.ReadInt32();
+            return new UserProfilePhoto { HasVideo = _HasVideo, PhotoId = _PhotoId, StrippedThumb = _StrippedThumb, DcId = _DcId };
+        }
+    }
+
+    /// <summary>TL <c>sendMessageEmojiInteraction#25972bcb</c>.</summary>
+    public sealed record SendMessageEmojiInteraction : global::EitaaSharp.Schema.ISendMessageAction
+    {
+        public const uint TypeId = 0x25972BCBu;
+        public uint ConstructorId => TypeId;
+
+        public required string Emoticon { get; init; }
+        public required int MsgId { get; init; }
+        public required global::EitaaSharp.Schema.IDataJSON Interaction { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Emoticon);
+            writer.WriteInt32(MsgId);
+            writer.WriteObject(Interaction);
+        }
+
+        public static SendMessageEmojiInteraction Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Emoticon = reader.ReadString();
+            int _MsgId = reader.ReadInt32();
+            global::EitaaSharp.Schema.IDataJSON _Interaction = reader.ReadObject<global::EitaaSharp.Schema.IDataJSON>();
+            return new SendMessageEmojiInteraction { Emoticon = _Emoticon, MsgId = _MsgId, Interaction = _Interaction };
+        }
+    }
+
+    /// <summary>TL <c>messageMediaLiveStream#ec697934</c>.</summary>
+    public sealed record MessageMediaLiveStream : global::EitaaSharp.Schema.IMessageMedia
+    {
+        public const uint TypeId = 0xEC697934u;
+        public uint ConstructorId => TypeId;
+
+        public bool FromSelf { get; init; }
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+        public int? TotalViewers { get; init; }
+        public required global::EitaaSharp.Schema.ILiveStreamState State { get; init; }
+        public global::EitaaSharp.Schema.IPhotoSize[]? Thumbs { get; init; }
+        public global::EitaaSharp.Schema.IGeoPoint? Geo { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (FromSelf) flags |= 0x2;
+            if (TotalViewers is not null) flags |= 0x1;
+            if (Thumbs is not null) flags |= 0x4;
+            if (Geo is not null) flags |= 0x8;
+            writer.WriteInt32(flags);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+            if (TotalViewers is not null) writer.WriteInt32(TotalViewers.Value);
+            writer.WriteObject(State);
+            if (Thumbs is not null) writer.WriteVector(Thumbs, (w, x) => w.WriteObject(x));
+            if (Geo is not null) writer.WriteObject(Geo);
+        }
+
+        public static MessageMediaLiveStream Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _FromSelf = (flags & 0x2) != 0;
+            long _Id = reader.ReadLong();
+            long _AccessHash = reader.ReadLong();
+            int? _TotalViewers = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
+            global::EitaaSharp.Schema.ILiveStreamState _State = reader.ReadObject<global::EitaaSharp.Schema.ILiveStreamState>();
+            global::EitaaSharp.Schema.IPhotoSize[]? _Thumbs = (flags & 0x4) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IPhotoSize>()) : null;
+            global::EitaaSharp.Schema.IGeoPoint? _Geo = (flags & 0x8) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IGeoPoint>() : null;
+            return new MessageMediaLiveStream { FromSelf = _FromSelf, Id = _Id, AccessHash = _AccessHash, TotalViewers = _TotalViewers, State = _State, Thumbs = _Thumbs, Geo = _Geo };
+        }
+    }
+
+    /// <summary>TL <c>inputGeoPoint#f3b7acc9</c>.</summary>
+    public sealed record InputGeoPoint : global::EitaaSharp.Schema.IInputGeoPoint
+    {
+        public const uint TypeId = 0xF3B7ACC9u;
+        public uint ConstructorId => TypeId;
+
+        public required double Lat { get; init; }
+        public required double Long { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteDouble(Lat);
+            writer.WriteDouble(Long);
+        }
+
+        public static InputGeoPoint Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            double _Lat = reader.ReadDouble();
+            double _Long = reader.ReadDouble();
+            return new InputGeoPoint { Lat = _Lat, Long = _Long };
+        }
+    }
+
+    /// <summary>TL <c>botInfo#8f300b57</c>.</summary>
+    public sealed record BotInfo : global::EitaaSharp.Schema.IBotInfo
+    {
+        public const uint TypeId = 0x8F300B57u;
+        public uint ConstructorId => TypeId;
+
+        public long? UserId { get; init; }
+        public string? Description { get; init; }
+        public global::EitaaSharp.Schema.IPhoto? DescriptionPhoto { get; init; }
+        public global::EitaaSharp.Schema.IDocument? DescriptionDocument { get; init; }
+        public global::EitaaSharp.Schema.IBotCommand[]? Commands { get; init; }
+        public global::EitaaSharp.Schema.IBotMenuButton? MenuButton { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (UserId is not null) flags |= 0x1;
+            if (Description is not null) flags |= 0x2;
+            if (DescriptionPhoto is not null) flags |= 0x10;
+            if (DescriptionDocument is not null) flags |= 0x20;
+            if (Commands is not null) flags |= 0x4;
+            if (MenuButton is not null) flags |= 0x8;
+            writer.WriteInt32(flags);
+            if (UserId is not null) writer.WriteLong(UserId.Value);
+            if (Description is not null) writer.WriteString(Description);
+            if (DescriptionPhoto is not null) writer.WriteObject(DescriptionPhoto);
+            if (DescriptionDocument is not null) writer.WriteObject(DescriptionDocument);
+            if (Commands is not null) writer.WriteVector(Commands, (w, x) => w.WriteObject(x));
+            if (MenuButton is not null) writer.WriteObject(MenuButton);
+        }
+
+        public static BotInfo Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            long? _UserId = (flags & 0x1) != 0 ? reader.ReadLong() : (long?)null;
+            string? _Description = (flags & 0x2) != 0 ? reader.ReadString() : null;
+            global::EitaaSharp.Schema.IPhoto? _DescriptionPhoto = (flags & 0x10) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPhoto>() : null;
+            global::EitaaSharp.Schema.IDocument? _DescriptionDocument = (flags & 0x20) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IDocument>() : null;
+            global::EitaaSharp.Schema.IBotCommand[]? _Commands = (flags & 0x4) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IBotCommand>()) : null;
+            global::EitaaSharp.Schema.IBotMenuButton? _MenuButton = (flags & 0x8) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IBotMenuButton>() : null;
+            return new BotInfo { UserId = _UserId, Description = _Description, DescriptionPhoto = _DescriptionPhoto, DescriptionDocument = _DescriptionDocument, Commands = _Commands, MenuButton = _MenuButton };
+        }
+    }
+
+    /// <summary>TL <c>exportedMessageLink#1f486803</c>.</summary>
+    public sealed record ExportedMessageLink : global::EitaaSharp.Schema.IExportedMessageLink
+    {
+        public const uint TypeId = 0x1F486803u;
+        public uint ConstructorId => TypeId;
+
+        public required string Link { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Link);
+        }
+
+        public static ExportedMessageLink Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Link = reader.ReadString();
+            return new ExportedMessageLink { Link = _Link };
+        }
+    }
+
+    /// <summary>TL <c>channel#c6d14312</c>.</summary>
+    public sealed record Channel : global::EitaaSharp.Schema.IChat
+    {
+        public const uint TypeId = 0xC6D14312u;
+        public uint ConstructorId => TypeId;
+
+        public bool Creator { get; init; }
+        public bool Left { get; init; }
+        public bool Broadcast { get; init; }
+        public bool Verified { get; init; }
+        public bool Megagroup { get; init; }
+        public bool Restricted { get; init; }
+        public bool Signatures { get; init; }
+        public bool Min { get; init; }
+        public bool HasLink { get; init; }
+        public bool HasGeo { get; init; }
+        public bool SlowmodeEnabled { get; init; }
+        public bool CallActive { get; init; }
+        public bool CallNotEmpty { get; init; }
+        public bool Gigagroup { get; init; }
+        public bool Noforwards { get; init; }
+        public bool Trusty { get; init; }
+        public bool Fake { get; init; }
+        public bool Shop { get; init; }
+        public bool SponsoredMessage { get; init; }
+        public bool BadgeRedColor { get; init; }
+        public required long Id { get; init; }
+        public long? AccessHash { get; init; }
+        public required string Title { get; init; }
+        public string? Username { get; init; }
+        public required global::EitaaSharp.Schema.IChatPhoto Photo { get; init; }
+        public required int Date { get; init; }
+        public global::EitaaSharp.Schema.IRestrictionReason[]? RestrictionReason { get; init; }
+        public global::EitaaSharp.Schema.IChatAdminRights? AdminRights { get; init; }
+        public global::EitaaSharp.Schema.IChatBannedRights? BannedRights { get; init; }
+        public global::EitaaSharp.Schema.IChatBannedRights? DefaultBannedRights { get; init; }
+        public int? ParticipantsCount { get; init; }
+        public int? LiveStreamMsgId { get; init; }
+        public string? BadgeName { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (Creator) flags |= 0x1;
+            if (Left) flags |= 0x4;
+            if (Broadcast) flags |= 0x20;
+            if (Verified) flags |= 0x80;
+            if (Megagroup) flags |= 0x100;
+            if (Restricted) flags |= 0x200;
+            if (Signatures) flags |= 0x800;
+            if (Min) flags |= 0x1000;
+            if (HasLink) flags |= 0x100000;
+            if (HasGeo) flags |= 0x200000;
+            if (SlowmodeEnabled) flags |= 0x400000;
+            if (CallActive) flags |= 0x800000;
+            if (CallNotEmpty) flags |= 0x1000000;
+            if (Gigagroup) flags |= 0x4000000;
+            if (Noforwards) flags |= 0x8000000;
+            if (AccessHash is not null) flags |= 0x2000;
+            if (Username is not null) flags |= 0x40;
+            if (RestrictionReason is not null) flags |= 0x200;
+            if (AdminRights is not null) flags |= 0x4000;
+            if (BannedRights is not null) flags |= 0x8000;
+            if (DefaultBannedRights is not null) flags |= 0x40000;
+            if (ParticipantsCount is not null) flags |= 0x20000;
+            if (LiveStreamMsgId is not null) flags |= 0x20000000;
+            writer.WriteInt32(flags);
+            int eFlags = 0;
+            if (Trusty) eFlags |= 0x1;
+            if (Fake) eFlags |= 0x2;
+            if (Shop) eFlags |= 0x4;
+            if (SponsoredMessage) eFlags |= 0x8;
+            if (BadgeRedColor) eFlags |= 0x20;
+            if (BadgeName is not null) eFlags |= 0x10;
+            writer.WriteInt32(eFlags);
+            writer.WriteLong(Id);
+            if (AccessHash is not null) writer.WriteLong(AccessHash.Value);
+            writer.WriteString(Title);
+            if (Username is not null) writer.WriteString(Username);
+            writer.WriteObject(Photo);
+            writer.WriteInt32(Date);
+            if (RestrictionReason is not null) writer.WriteVector(RestrictionReason, (w, x) => w.WriteObject(x));
+            if (AdminRights is not null) writer.WriteObject(AdminRights);
+            if (BannedRights is not null) writer.WriteObject(BannedRights);
+            if (DefaultBannedRights is not null) writer.WriteObject(DefaultBannedRights);
+            if (ParticipantsCount is not null) writer.WriteInt32(ParticipantsCount.Value);
+            if (LiveStreamMsgId is not null) writer.WriteInt32(LiveStreamMsgId.Value);
+            if (BadgeName is not null) writer.WriteString(BadgeName);
+        }
+
+        public static Channel Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _Creator = (flags & 0x1) != 0;
+            bool _Left = (flags & 0x4) != 0;
+            bool _Broadcast = (flags & 0x20) != 0;
+            bool _Verified = (flags & 0x80) != 0;
+            bool _Megagroup = (flags & 0x100) != 0;
+            bool _Restricted = (flags & 0x200) != 0;
+            bool _Signatures = (flags & 0x800) != 0;
+            bool _Min = (flags & 0x1000) != 0;
+            bool _HasLink = (flags & 0x100000) != 0;
+            bool _HasGeo = (flags & 0x200000) != 0;
+            bool _SlowmodeEnabled = (flags & 0x400000) != 0;
+            bool _CallActive = (flags & 0x800000) != 0;
+            bool _CallNotEmpty = (flags & 0x1000000) != 0;
+            bool _Gigagroup = (flags & 0x4000000) != 0;
+            bool _Noforwards = (flags & 0x8000000) != 0;
+            int eFlags = reader.ReadInt32();
+            bool _Trusty = (eFlags & 0x1) != 0;
+            bool _Fake = (eFlags & 0x2) != 0;
+            bool _Shop = (eFlags & 0x4) != 0;
+            bool _SponsoredMessage = (eFlags & 0x8) != 0;
+            bool _BadgeRedColor = (eFlags & 0x20) != 0;
+            long _Id = reader.ReadLong();
+            long? _AccessHash = (flags & 0x2000) != 0 ? reader.ReadLong() : (long?)null;
+            string _Title = reader.ReadString();
+            string? _Username = (flags & 0x40) != 0 ? reader.ReadString() : null;
+            global::EitaaSharp.Schema.IChatPhoto _Photo = reader.ReadObject<global::EitaaSharp.Schema.IChatPhoto>();
+            int _Date = reader.ReadInt32();
+            global::EitaaSharp.Schema.IRestrictionReason[]? _RestrictionReason = (flags & 0x200) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IRestrictionReason>()) : null;
+            global::EitaaSharp.Schema.IChatAdminRights? _AdminRights = (flags & 0x4000) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IChatAdminRights>() : null;
+            global::EitaaSharp.Schema.IChatBannedRights? _BannedRights = (flags & 0x8000) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IChatBannedRights>() : null;
+            global::EitaaSharp.Schema.IChatBannedRights? _DefaultBannedRights = (flags & 0x40000) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IChatBannedRights>() : null;
+            int? _ParticipantsCount = (flags & 0x20000) != 0 ? reader.ReadInt32() : (int?)null;
+            int? _LiveStreamMsgId = (flags & 0x20000000) != 0 ? reader.ReadInt32() : (int?)null;
+            string? _BadgeName = (eFlags & 0x10) != 0 ? reader.ReadString() : null;
+            return new Channel { Creator = _Creator, Left = _Left, Broadcast = _Broadcast, Verified = _Verified, Megagroup = _Megagroup, Restricted = _Restricted, Signatures = _Signatures, Min = _Min, HasLink = _HasLink, HasGeo = _HasGeo, SlowmodeEnabled = _SlowmodeEnabled, CallActive = _CallActive, CallNotEmpty = _CallNotEmpty, Gigagroup = _Gigagroup, Noforwards = _Noforwards, Trusty = _Trusty, Fake = _Fake, Shop = _Shop, SponsoredMessage = _SponsoredMessage, BadgeRedColor = _BadgeRedColor, Id = _Id, AccessHash = _AccessHash, Title = _Title, Username = _Username, Photo = _Photo, Date = _Date, RestrictionReason = _RestrictionReason, AdminRights = _AdminRights, BannedRights = _BannedRights, DefaultBannedRights = _DefaultBannedRights, ParticipantsCount = _ParticipantsCount, LiveStreamMsgId = _LiveStreamMsgId, BadgeName = _BadgeName };
+        }
+    }
+
     /// <summary>TL <c>invokeAfterMsg#cb9f372d</c>.</summary>
     public sealed record InvokeAfterMsg : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject>
     {
@@ -21590,6 +26695,365 @@ namespace EitaaSharp.Schema
             => reader.ReadObject<global::EitaaSharp.Schema.IStatReportAdActionPerformed>();
     }
 
+    /// <summary>TL <c>Live_getMedia#4731a7ba</c>.</summary>
+    public sealed record LiveGetMedia_4731A7BA : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IMessageMedia>
+    {
+        public const uint TypeId = 0x4731A7BAu;
+        public uint ConstructorId => TypeId;
+
+        public required long Id { get; init; }
+        public required long AccessHash { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            writer.WriteInt32(flags);
+            writer.WriteLong(Id);
+            writer.WriteLong(AccessHash);
+        }
+
+        public global::EitaaSharp.Schema.IMessageMedia ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.IMessageMedia>();
+    }
+
+    /// <summary>TL <c>report_getReasons#2f36238a</c>.</summary>
+    public sealed record ReportGetReasons : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject[]>
+    {
+        public const uint TypeId = 0x2F36238Au;
+        public uint ConstructorId => TypeId;
+
+        public required string Lang { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Lang);
+        }
+
+        public global::EitaaSharp.Tl.ITlObject[] ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadVector(r => r.ReadObject());
+    }
+
+    /// <summary>TL <c>twoStep_sendCode#b1db1e33</c>.</summary>
+    public sealed record TwoStepSendCode : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ITLObject>
+    {
+        public const uint TypeId = 0xB1DB1E33u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public global::EitaaSharp.Schema.ITLObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.ITLObject>();
+    }
+
+    /// <summary>TL <c>twoStep_verifyCode#57adaa15</c>.</summary>
+    public sealed record TwoStepVerifyCode : global::EitaaSharp.Tl.ITlMethod<bool>
+    {
+        public const uint TypeId = 0x57ADAA15u;
+        public uint ConstructorId => TypeId;
+
+        public required string PhoneCodeHash { get; init; }
+        public required string PhoneCode { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(PhoneCodeHash);
+            writer.WriteString(PhoneCode);
+        }
+
+        public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadBool();
+    }
+
+    /// <summary>TL <c>socketPing#4a1e44ec</c>.</summary>
+    public sealed record SocketPing : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ITLObject>
+    {
+        public const uint TypeId = 0x4A1E44ECu;
+        public uint ConstructorId => TypeId;
+
+        public required long PingId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteLong(PingId);
+        }
+
+        public global::EitaaSharp.Schema.ITLObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.ITLObject>();
+    }
+
+    /// <summary>TL <c>get_trends#0f5b91b9</c>.</summary>
+    public sealed record GetTrends : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ITLObject>
+    {
+        public const uint TypeId = 0x0F5B91B9u;
+        public uint ConstructorId => TypeId;
+
+        public required string Lang { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Lang);
+        }
+
+        public global::EitaaSharp.Schema.ITLObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.ITLObject>();
+    }
+
+    /// <summary>TL <c>GetAuthHash#d16eddd3</c>.</summary>
+    public sealed record GetAuthHash : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject>
+    {
+        public const uint TypeId = 0xD16EDDD3u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject Location { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            writer.WriteInt32(flags);
+            writer.WriteObject(Location);
+        }
+
+        public global::EitaaSharp.Tl.ITlObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject();
+    }
+
+    /// <summary>TL <c>shop_getCategories#7a3e975d</c>.</summary>
+    public sealed record ShopGetCategories : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IShopCategory[]>
+    {
+        public const uint TypeId = 0x7A3E975Du;
+        public uint ConstructorId => TypeId;
+
+        public required string Lang { get; init; }
+        public required int ParentCategoryId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Lang);
+            writer.WriteInt32(ParentCategoryId);
+        }
+
+        public global::EitaaSharp.Schema.IShopCategory[] ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IShopCategory>());
+    }
+
+    /// <summary>TL <c>shop_getMessages#a227f798</c>.</summary>
+    public sealed record ShopGetMessages : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.Messages.IMessages>
+    {
+        public const uint TypeId = 0xA227F798u;
+        public uint ConstructorId => TypeId;
+
+        public global::EitaaSharp.Tl.ITlObject[]? CategoriesId { get; init; }
+        public string? Q { get; init; }
+        public required int OffsetDate { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject OffsetPeer { get; init; }
+        public required int OffsetId { get; init; }
+        public required int Limit { get; init; }
+        public required int Seed { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (CategoriesId is not null) flags |= 0x1;
+            if (Q is not null) flags |= 0x2;
+            writer.WriteInt32(flags);
+            if (CategoriesId is not null) writer.WriteVector(CategoriesId, (w, x) => w.WriteObject(x));
+            if (Q is not null) writer.WriteString(Q);
+            writer.WriteInt32(OffsetDate);
+            writer.WriteObject(OffsetPeer);
+            writer.WriteInt32(OffsetId);
+            writer.WriteInt32(Limit);
+            writer.WriteInt32(Seed);
+        }
+
+        public global::EitaaSharp.Schema.Messages.IMessages ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.Messages.IMessages>();
+    }
+
+    /// <summary>TL <c>mxpGetUserRegisterInfo#b04e6b8c</c>.</summary>
+    public sealed record MxpGetUserRegisterInfo : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject>
+    {
+        public const uint TypeId = 0xB04E6B8Cu;
+        public uint ConstructorId => TypeId;
+
+        public required string Phone { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Phone);
+        }
+
+        public global::EitaaSharp.Tl.ITlObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject();
+    }
+
+    /// <summary>TL <c>mxbCreateUser#bef5af68</c>.</summary>
+    public sealed record MxbCreateUser : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject>
+    {
+        public const uint TypeId = 0xBEF5AF68u;
+        public uint ConstructorId => TypeId;
+
+        public required string Phone { get; init; }
+        public required int MessengerId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Phone);
+            writer.WriteInt32(MessengerId);
+        }
+
+        public global::EitaaSharp.Tl.ITlObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject();
+    }
+
+    /// <summary>TL <c>mxbRegisterSelf#560fb312</c>.</summary>
+    public sealed record MxbRegisterSelf : global::EitaaSharp.Tl.ITlMethod<bool>
+    {
+        public const uint TypeId = 0x560FB312u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            writer.WriteInt32(flags);
+        }
+
+        public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadBool();
+    }
+
+    /// <summary>TL <c>shop_exploreMessages#ea6e7ecf</c>.</summary>
+    public sealed record ShopExploreMessages : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.Messages.IMessages>
+    {
+        public const uint TypeId = 0xEA6E7ECFu;
+        public uint ConstructorId => TypeId;
+
+        public global::EitaaSharp.Tl.ITlObject[]? CategoriesId { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject Peer { get; init; }
+        public required int MsgId { get; init; }
+        public required int OffsetDate { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject OffsetPeer { get; init; }
+        public required int OffsetId { get; init; }
+        public required int Limit { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (CategoriesId is not null) flags |= 0x1;
+            writer.WriteInt32(flags);
+            if (CategoriesId is not null) writer.WriteVector(CategoriesId, (w, x) => w.WriteObject(x));
+            writer.WriteObject(Peer);
+            writer.WriteInt32(MsgId);
+            writer.WriteInt32(OffsetDate);
+            writer.WriteObject(OffsetPeer);
+            writer.WriteInt32(OffsetId);
+            writer.WriteInt32(Limit);
+        }
+
+        public global::EitaaSharp.Schema.Messages.IMessages ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.Messages.IMessages>();
+    }
+
+    /// <summary>TL <c>ads_MapAction#f7fa6386</c>.</summary>
+    public sealed record AdsMapAction : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject>
+    {
+        public const uint TypeId = 0xF7FA6386u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public global::EitaaSharp.Tl.ITlObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject();
+    }
+
+    /// <summary>TL <c>ads_simpleAd#927a9d63</c>.</summary>
+    public sealed record AdsSimpleAd : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IAdsAd>
+    {
+        public const uint TypeId = 0x927A9D63u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public global::EitaaSharp.Schema.IAdsAd ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.IAdsAd>();
+    }
+
+    /// <summary>TL <c>getUrlWhiteList#1bfda8e0</c>.</summary>
+    public sealed record GetUrlWhiteList : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ITLObject>
+    {
+        public const uint TypeId = 0x1BFDA8E0u;
+        public uint ConstructorId => TypeId;
+
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+        }
+
+        public global::EitaaSharp.Schema.ITLObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.ITLObject>();
+    }
+
+    /// <summary>TL <c>stat_reportShopTileView#3c8a8aca</c>.</summary>
+    public sealed record StatReportShopTileView : global::EitaaSharp.Tl.ITlMethod<bool>
+    {
+        public const uint TypeId = 0x3C8A8ACAu;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject[] ShopTiles { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(ShopTiles, (w, x) => w.WriteObject(x));
+        }
+
+        public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadBool();
+    }
+
+    /// <summary>TL <c>stat_reportAdView#9e97e2a9</c>.</summary>
+    public sealed record StatReportAdView : global::EitaaSharp.Tl.ITlMethod<bool>
+    {
+        public const uint TypeId = 0x9E97E2A9u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject[] StatAds { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteVector(StatAds, (w, x) => w.WriteObject(x));
+        }
+
+        public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadBool();
+    }
+
     /// <summary>TL boxed type <c>future_salt</c>.</summary>
     public interface IFutureSalt : global::EitaaSharp.Tl.ITlObject { }
 
@@ -21676,9 +27140,6 @@ namespace EitaaSharp.Schema
 
     /// <summary>TL boxed type <c>RestrictionReason</c>.</summary>
     public interface IRestrictionReason : global::EitaaSharp.Tl.ITlObject { }
-
-    /// <summary>TL boxed type <c>FileLocation</c>.</summary>
-    public interface IFileLocation : global::EitaaSharp.Tl.ITlObject { }
 
     /// <summary>TL boxed type <c>Chat</c>.</summary>
     public interface IChat : global::EitaaSharp.Tl.ITlObject { }
@@ -21986,9 +27447,6 @@ namespace EitaaSharp.Schema
     /// <summary>TL boxed type <c>InlineBotSwitchPM</c>.</summary>
     public interface IInlineBotSwitchPM : global::EitaaSharp.Tl.ITlObject { }
 
-    /// <summary>TL boxed type <c>ExportedMessageLink</c>.</summary>
-    public interface IExportedMessageLink : global::EitaaSharp.Tl.ITlObject { }
-
     /// <summary>TL boxed type <c>TopPeer</c>.</summary>
     public interface ITopPeer : global::EitaaSharp.Tl.ITlObject { }
 
@@ -22253,6 +27711,9 @@ namespace EitaaSharp.Schema
     /// <summary>TL boxed type <c>LiveGetMedia</c>.</summary>
     public interface ILiveGetMedia : global::EitaaSharp.Tl.ITlObject { }
 
+    /// <summary>TL boxed type <c>FileLocation</c>.</summary>
+    public interface IFileLocation : global::EitaaSharp.Tl.ITlObject { }
+
     /// <summary>TL boxed type <c>LiveStreamState</c>.</summary>
     public interface ILiveStreamState : global::EitaaSharp.Tl.ITlObject { }
 
@@ -22273,6 +27734,168 @@ namespace EitaaSharp.Schema
 
     /// <summary>TL boxed type <c>EitaaAppInfo</c>.</summary>
     public interface IEitaaAppInfo : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_documentAttributeAudio</c>.</summary>
+    public interface ITLDocumentAttributeAudio : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_documentAttributeSticker</c>.</summary>
+    public interface ITLDocumentAttributeSticker : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TLObject</c>.</summary>
+    public interface ITLObject : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>ContactLink_layer101</c>.</summary>
+    public interface IContactLinkLayer101 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_sendMessageUploadVideoAction</c>.</summary>
+    public interface ITLSendMessageUploadVideoAction : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_sendMessageUploadAudioAction</c>.</summary>
+    public interface ITLSendMessageUploadAudioAction : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_sendMessageUploadDocumentAction</c>.</summary>
+    public interface ITLSendMessageUploadDocumentAction : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_sendMessageUploadPhotoAction</c>.</summary>
+    public interface ITLSendMessageUploadPhotoAction : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_messageMediaUnsupported</c>.</summary>
+    public interface ITLMessageMediaUnsupported : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_messageMediaPhoto</c>.</summary>
+    public interface ITLMessageMediaPhoto : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_messageMediaVideo_layer45</c>.</summary>
+    public interface ITLMessageMediaVideoLayer45 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_messageMediaDocument</c>.</summary>
+    public interface ITLMessageMediaDocument : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_audio_layer45</c>.</summary>
+    public interface ITLAudioLayer45 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>BotMenuButton</c>.</summary>
+    public interface IBotMenuButton : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_channelFull</c>.</summary>
+    public interface ITLChannelFull : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_webPage</c>.</summary>
+    public interface ITLWebPage : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_userContact_old2</c>.</summary>
+    public interface ITLUserContactOld2 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>InputReplyTo</c>.</summary>
+    public interface IInputReplyTo : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_userSelf_old3</c>.</summary>
+    public interface ITLUserSelfOld3 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_userRequest_old2</c>.</summary>
+    public interface ITLUserRequestOld2 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_userForeign_old2</c>.</summary>
+    public interface ITLUserForeignOld2 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_userDeleted_old2</c>.</summary>
+    public interface ITLUserDeletedOld2 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_user</c>.</summary>
+    public interface ITLUser : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>DecryptedMessageAction</c>.</summary>
+    public interface IDecryptedMessageAction : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_messageActionChatAddUser</c>.</summary>
+    public interface ITLMessageActionChatAddUser : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>DecryptedMessage</c>.</summary>
+    public interface IDecryptedMessage : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>DecryptedMessageMedia</c>.</summary>
+    public interface IDecryptedMessageMedia : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_video_layer45</c>.</summary>
+    public interface ITLVideoLayer45 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_document</c>.</summary>
+    public interface ITLDocument : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_userProfilePhoto</c>.</summary>
+    public interface ITLUserProfilePhoto : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_photo</c>.</summary>
+    public interface ITLPhoto : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_encryptedChatRequested</c>.</summary>
+    public interface ITLEncryptedChatRequested : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_encryptedChat</c>.</summary>
+    public interface ITLEncryptedChat : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_poll</c>.</summary>
+    public interface ITLPoll : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_chatParticipants</c>.</summary>
+    public interface ITLChatParticipants : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_chatParticipantsForbidden</c>.</summary>
+    public interface ITLChatParticipantsForbidden : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_chatForbidden</c>.</summary>
+    public interface ITLChatForbidden : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_chat</c>.</summary>
+    public interface ITLChat : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_channel</c>.</summary>
+    public interface ITLChannel : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_stickerSet</c>.</summary>
+    public interface ITLStickerSet : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_channels_getParticipants</c>.</summary>
+    public interface ITLChannelsGetParticipants : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_messageService</c>.</summary>
+    public interface ITLMessageService : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_message</c>.</summary>
+    public interface ITLMessage : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_messageForwarded_old2</c>.</summary>
+    public interface ITLMessageForwardedOld2 : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_message_secret</c>.</summary>
+    public interface ITLMessageSecret : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>TL_clientRequest</c>.</summary>
+    public interface ITLClientRequest : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>InputAuthHash</c>.</summary>
+    public interface IInputAuthHash : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>ShopCategory</c>.</summary>
+    public interface IShopCategory : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>AttachMenuBot</c>.</summary>
+    public interface IAttachMenuBot : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>AttachMenuBots</c>.</summary>
+    public interface IAttachMenuBots : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>InputInvoice</c>.</summary>
+    public interface IInputInvoice : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>BotApp</c>.</summary>
+    public interface IBotApp : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>InputBotApp</c>.</summary>
+    public interface IInputBotApp : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>ExportedMessageLink</c>.</summary>
+    public interface IExportedMessageLink : global::EitaaSharp.Tl.ITlObject { }
 
     /// <summary>TL boxed type <c>EitaaRefreshToken</c>.</summary>
     public interface IEitaaRefreshToken : global::EitaaSharp.Tl.ITlObject { }

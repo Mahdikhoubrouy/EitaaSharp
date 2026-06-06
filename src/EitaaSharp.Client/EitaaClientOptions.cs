@@ -47,8 +47,11 @@ public sealed class EitaaClientOptions
     /// <summary>The TL layer advertised in the envelope. Matches the current Eitaa Android client (137).</summary>
     public int Layer { get; init; } = 137;
 
-    /// <summary>The HTTPS endpoint. Defaults to the production Eitaa gateway.</summary>
-    public string Endpoint { get; init; } = Transport.HttpEitaaTransport.DefaultEndpoint;
+    /// <summary>
+    /// A single HTTPS endpoint to use. When null (the default), the client load-balances and fails
+    /// over across the official Eitaa datacenter-1 host pool (<see cref="Transport.HttpEitaaTransport.DefaultHosts"/>).
+    /// </summary>
+    public string? Endpoint { get; init; }
 
     /// <summary>Per-request timeout.</summary>
     public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(30);

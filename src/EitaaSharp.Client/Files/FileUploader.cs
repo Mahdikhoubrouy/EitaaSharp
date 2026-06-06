@@ -22,10 +22,22 @@ public sealed class FileUploader
 
     /// <summary>Uploads the bytes of a file on disk.</summary>
     public async Task<IInputFile> UploadAsync(string path, CancellationToken cancellationToken = default)
+        => await UploadAsync(InputFileSource.FromPath(path), cancellationToken).ConfigureAwait(false);
+
+    /// <summary>Uploads from any <see cref="InputFileSource"/> — a path, stream, or byte array.</summary>
+    public async Task<IInputFile> UploadAsync(InputFileSource source, CancellationToken cancellationToken = default)
     {
-        await using var stream = System.IO.File.OpenRead(path);
-        return await UploadAsync(stream, Path.GetFileName(path), stream.Length, cancellationToken)
-            .ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(source);
+        var (stream, size, ownsStream) = source.Open();
+        try
+        {
+            return await UploadAsync(stream, source.FileName, size, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            if (ownsStream)
+                await stream.DisposeAsync().ConfigureAwait(false);
+        }
     }
 
     /// <summary>Uploads a stream. The length must be known (seekable stream or explicit <paramref name="size"/>).</summary>

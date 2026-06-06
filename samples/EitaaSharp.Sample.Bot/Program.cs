@@ -116,15 +116,14 @@ static async Task HandleCommandAsync(
             break;
 
         case "/photo":
-            // Show the "uploading photo…" indicator, then send a freshly generated image.
+            // Show the "uploading photo…" indicator, then send a freshly generated image —
+            // straight from memory, no temp file (InputFileSource.FromBytes).
             await client.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto, ct);
-            string path = Path.Combine(Path.GetTempPath(), $"eitaa-bot-{message.Id}.png");
-            await File.WriteAllBytesAsync(path, Png.Gradient(480, 270), ct);
-            try
-            {
-                await client.SendPhotoAsync(message.Chat.Id, path, caption: "Here's a freshly rendered gradient 🎨", cancellationToken: ct);
-            }
-            finally { try { File.Delete(path); } catch { /* best effort */ } }
+            await client.SendPhotoAsync(
+                message.Chat.Id,
+                InputFileSource.FromBytes(Png.Gradient(480, 270), "gradient.png"),
+                caption: "Here's a freshly rendered gradient 🎨",
+                cancellationToken: ct);
             break;
 
         case "/help":

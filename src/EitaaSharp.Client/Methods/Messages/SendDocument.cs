@@ -19,7 +19,7 @@ public sealed partial class EitaaClient
         CancellationToken cancellationToken = default)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var file = await Uploads.UploadAsync(document, cancellationToken).ConfigureAwait(false);
+        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(document, ct), cancellationToken).ConfigureAwait(false);
         var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,

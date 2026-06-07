@@ -24,7 +24,7 @@ public sealed partial class EitaaClient
         string mimeType = "audio/mpeg", CancellationToken cancellationToken = default)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var file = await Uploads.UploadAsync(audio, cancellationToken).ConfigureAwait(false);
+        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(audio, ct), cancellationToken).ConfigureAwait(false);
         var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,

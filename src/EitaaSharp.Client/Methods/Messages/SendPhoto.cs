@@ -17,7 +17,7 @@ public sealed partial class EitaaClient
         ChatId chat, InputFileSource photo, string caption = "", CancellationToken cancellationToken = default)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var file = await Uploads.UploadAsync(photo, cancellationToken).ConfigureAwait(false);
+        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(photo, ct), cancellationToken).ConfigureAwait(false);
         var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,

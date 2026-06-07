@@ -2636,6 +2636,33 @@
       "type": "PhotoSize"
     },
     {
+      "id": 2009052699,
+      "predicate": "photoSize",
+      "params": [
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "location",
+          "type": "FileLocation"
+        },
+        {
+          "name": "w",
+          "type": "int"
+        },
+        {
+          "name": "h",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "type": "PhotoSize"
+    },
+    {
       "id": 1976012384,
       "predicate": "photoSize",
       "params": [
@@ -17105,33 +17132,6 @@
         {
           "name": "bytes",
           "type": "bytes"
-        }
-      ],
-      "type": "PhotoSize"
-    },
-    {
-      "id": 2009052699,
-      "predicate": "photoSize",
-      "params": [
-        {
-          "name": "type",
-          "type": "string"
-        },
-        {
-          "name": "location",
-          "type": "FileLocation"
-        },
-        {
-          "name": "w",
-          "type": "int"
-        },
-        {
-          "name": "h",
-          "type": "int"
-        },
-        {
-          "name": "size",
-          "type": "int"
         }
       ],
       "type": "PhotoSize"

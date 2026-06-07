@@ -3566,8 +3566,41 @@ namespace EitaaSharp.Schema
         }
     }
 
-    /// <summary>TL <c>photoSize#75c78e60</c>.</summary>
+    /// <summary>TL <c>photoSize#77bfb61b</c>.</summary>
     public sealed record PhotoSize : global::EitaaSharp.Schema.IPhotoSize
+    {
+        public const uint TypeId = 0x77BFB61Bu;
+        public uint ConstructorId => TypeId;
+
+        public required string Type { get; init; }
+        public required global::EitaaSharp.Schema.IFileLocation Location { get; init; }
+        public required int W { get; init; }
+        public required int H { get; init; }
+        public required int Size { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Type);
+            writer.WriteObject(Location);
+            writer.WriteInt32(W);
+            writer.WriteInt32(H);
+            writer.WriteInt32(Size);
+        }
+
+        public static PhotoSize Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Type = reader.ReadString();
+            global::EitaaSharp.Schema.IFileLocation _Location = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
+            int _W = reader.ReadInt32();
+            int _H = reader.ReadInt32();
+            int _Size = reader.ReadInt32();
+            return new PhotoSize { Type = _Type, Location = _Location, W = _W, H = _H, Size = _Size };
+        }
+    }
+
+    /// <summary>TL <c>photoSize#75c78e60</c>.</summary>
+    public sealed record PhotoSize_75C78E60 : global::EitaaSharp.Schema.IPhotoSize
     {
         public const uint TypeId = 0x75C78E60u;
         public uint ConstructorId => TypeId;
@@ -3586,13 +3619,13 @@ namespace EitaaSharp.Schema
             writer.WriteInt32(Size);
         }
 
-        public static PhotoSize Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        public static PhotoSize_75C78E60 Deserialize(global::EitaaSharp.Tl.TlReader reader)
         {
             string _Type = reader.ReadString();
             int _W = reader.ReadInt32();
             int _H = reader.ReadInt32();
             int _Size = reader.ReadInt32();
-            return new PhotoSize { Type = _Type, W = _W, H = _H, Size = _Size };
+            return new PhotoSize_75C78E60 { Type = _Type, W = _W, H = _H, Size = _Size };
         }
     }
 
@@ -20640,39 +20673,6 @@ namespace EitaaSharp.Schema
         }
     }
 
-    /// <summary>TL <c>photoSize#77bfb61b</c>.</summary>
-    public sealed record PhotoSize_77BFB61B : global::EitaaSharp.Schema.IPhotoSize
-    {
-        public const uint TypeId = 0x77BFB61Bu;
-        public uint ConstructorId => TypeId;
-
-        public required string Type { get; init; }
-        public required global::EitaaSharp.Schema.IFileLocation Location { get; init; }
-        public required int W { get; init; }
-        public required int H { get; init; }
-        public required int Size { get; init; }
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-            writer.WriteString(Type);
-            writer.WriteObject(Location);
-            writer.WriteInt32(W);
-            writer.WriteInt32(H);
-            writer.WriteInt32(Size);
-        }
-
-        public static PhotoSize_77BFB61B Deserialize(global::EitaaSharp.Tl.TlReader reader)
-        {
-            string _Type = reader.ReadString();
-            global::EitaaSharp.Schema.IFileLocation _Location = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
-            int _W = reader.ReadInt32();
-            int _H = reader.ReadInt32();
-            int _Size = reader.ReadInt32();
-            return new PhotoSize_77BFB61B { Type = _Type, Location = _Location, W = _W, H = _H, Size = _Size };
-        }
-    }
-
     /// <summary>TL <c>liveStreamStateInit#b4b1559e</c>.</summary>
     public sealed record LiveStreamStateInit : global::EitaaSharp.Schema.ILiveStreamState
     {
@@ -27376,6 +27376,9 @@ namespace EitaaSharp.Schema
     /// <summary>TL boxed type <c>VideoSize</c>.</summary>
     public interface IVideoSize : global::EitaaSharp.Tl.ITlObject { }
 
+    /// <summary>TL boxed type <c>FileLocation</c>.</summary>
+    public interface IFileLocation : global::EitaaSharp.Tl.ITlObject { }
+
     /// <summary>TL boxed type <c>InputNotifyPeer</c>.</summary>
     public interface IInputNotifyPeer : global::EitaaSharp.Tl.ITlObject { }
 
@@ -27834,9 +27837,6 @@ namespace EitaaSharp.Schema
 
     /// <summary>TL boxed type <c>LiveGetMedia</c>.</summary>
     public interface ILiveGetMedia : global::EitaaSharp.Tl.ITlObject { }
-
-    /// <summary>TL boxed type <c>FileLocation</c>.</summary>
-    public interface IFileLocation : global::EitaaSharp.Tl.ITlObject { }
 
     /// <summary>TL boxed type <c>LiveStreamState</c>.</summary>
     public interface ILiveStreamState : global::EitaaSharp.Tl.ITlObject { }

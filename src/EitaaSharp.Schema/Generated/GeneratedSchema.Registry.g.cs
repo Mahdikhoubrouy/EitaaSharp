@@ -191,7 +191,8 @@ namespace EitaaSharp.Schema
                 registry.Register(0x2331B22Du, global::EitaaSharp.Schema.PhotoEmpty.Deserialize);
                 registry.Register(0xFB197A65u, global::EitaaSharp.Schema.Photo.Deserialize);
                 registry.Register(0x0E17E23Cu, global::EitaaSharp.Schema.PhotoSizeEmpty.Deserialize);
-                registry.Register(0x75C78E60u, global::EitaaSharp.Schema.PhotoSize.Deserialize);
+                registry.Register(0x77BFB61Bu, global::EitaaSharp.Schema.PhotoSize.Deserialize);
+                registry.Register(0x75C78E60u, global::EitaaSharp.Schema.PhotoSize_75C78E60.Deserialize);
                 registry.Register(0x021E1AD6u, global::EitaaSharp.Schema.PhotoCachedSize.Deserialize);
                 registry.Register(0xE0B0BC2Eu, global::EitaaSharp.Schema.PhotoStrippedSize.Deserialize);
                 registry.Register(0xFA3EFB95u, global::EitaaSharp.Schema.PhotoSizeProgressive.Deserialize);
@@ -986,7 +987,6 @@ namespace EitaaSharp.Schema
                 registry.Register(0xBC7FC6CDu, global::EitaaSharp.Schema.FileLocationToBeDeprecated.Deserialize);
                 registry.Register(0x53D69076u, global::EitaaSharp.Schema.FileLocation.Deserialize);
                 registry.Register(0xE9A734FAu, global::EitaaSharp.Schema.PhotoCachedSize_E9A734FA.Deserialize);
-                registry.Register(0x77BFB61Bu, global::EitaaSharp.Schema.PhotoSize_77BFB61B.Deserialize);
                 registry.Register(0xB4B1559Eu, global::EitaaSharp.Schema.LiveStreamStateInit.Deserialize);
                 registry.Register(0xBB5B5DF5u, global::EitaaSharp.Schema.LiveStreamStateBroadcasting.Deserialize);
                 registry.Register(0xB84D15ABu, global::EitaaSharp.Schema.LiveStreamStateEnded.Deserialize);

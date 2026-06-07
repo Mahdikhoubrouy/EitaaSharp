@@ -12,7 +12,7 @@ public sealed partial class EitaaClient
     {
         var location = LocationFor(message.Media)
             ?? throw new InvalidOperationException("This message has no downloadable photo/document.");
-        return await Downloads.DownloadAsync(location, cancellationToken).ConfigureAwait(false);
+        return await WithRefreshRetryAsync(ct => Downloads.DownloadAsync(location, ct), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Downloads a message's photo or document to a file path.</summary>
@@ -21,7 +21,11 @@ public sealed partial class EitaaClient
         var location = LocationFor(message.Media)
             ?? throw new InvalidOperationException("This message has no downloadable photo/document.");
         await using var file = System.IO.File.Create(destinationPath);
-        await Downloads.DownloadAsync(location, file, cancellationToken).ConfigureAwait(false);
+        await WithRefreshRetryAsync(async ct =>
+        {
+            await Downloads.DownloadAsync(location, file, ct).ConfigureAwait(false);
+            return true;
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     private static Schema.IInputFileLocation? LocationFor(Schema.IMessageMedia? media) => media switch

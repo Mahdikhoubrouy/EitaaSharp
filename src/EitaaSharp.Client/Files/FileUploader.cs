@@ -85,13 +85,13 @@ public sealed class FileUploader
                     FileTotalParts = totalParts,
                     Bytes = chunk,
                     TotalFileSize = length,
-                }, cancellationToken).ConfigureAwait(false)
+                }, cancellationToken, Transport.ConnectionKind.Upload).ConfigureAwait(false)
                 : await _rpc.CallAsync(new Upload.SaveFilePart
                 {
                     FileId = fileId,
                     FilePart = partIndex,
                     Bytes = chunk,
-                }, cancellationToken).ConfigureAwait(false);
+                }, cancellationToken, Transport.ConnectionKind.Upload).ConfigureAwait(false);
 
             if (!ok)
                 throw new InvalidOperationException($"Server rejected file part {partIndex} of {fileName}.");

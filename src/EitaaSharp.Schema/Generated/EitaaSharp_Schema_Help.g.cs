@@ -558,6 +558,30 @@ namespace EitaaSharp.Schema.Help
         }
     }
 
+    /// <summary>TL <c>help.additionalUpdateLinks#9fc45a14</c>.</summary>
+    public sealed record AdditionalUpdateLinks : global::EitaaSharp.Schema.ITLObject
+    {
+        public const uint TypeId = 0x9FC45A14u;
+        public uint ConstructorId => TypeId;
+
+        public required string Url { get; init; }
+        public required string Title { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Url);
+            writer.WriteString(Title);
+        }
+
+        public static AdditionalUpdateLinks Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Url = reader.ReadString();
+            string _Title = reader.ReadString();
+            return new AdditionalUpdateLinks { Url = _Url, Title = _Title };
+        }
+    }
+
     /// <summary>TL <c>help.getConfig#c4f9186b</c>.</summary>
     public sealed record GetConfig : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IConfig>
     {
@@ -764,22 +788,6 @@ namespace EitaaSharp.Schema.Help
             => reader.ReadObject<global::EitaaSharp.Schema.Help.IDeepLinkInfo>();
     }
 
-    /// <summary>TL <c>help.getAppConfig#98914110</c>.</summary>
-    public sealed record GetAppConfig : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IJSONValue>
-    {
-        public const uint TypeId = 0x98914110u;
-        public uint ConstructorId => TypeId;
-
-
-        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
-        {
-            writer.WriteUInt32(TypeId);
-        }
-
-        public global::EitaaSharp.Schema.IJSONValue ReadResult(global::EitaaSharp.Tl.TlReader reader)
-            => reader.ReadObject<global::EitaaSharp.Schema.IJSONValue>();
-    }
-
     /// <summary>TL <c>help.saveAppLog#6f02f748</c>.</summary>
     public sealed record SaveAppLog : global::EitaaSharp.Tl.ITlMethod<bool>
     {
@@ -944,6 +952,24 @@ namespace EitaaSharp.Schema.Help
 
         public global::EitaaSharp.Schema.Help.ICountriesList ReadResult(global::EitaaSharp.Tl.TlReader reader)
             => reader.ReadObject<global::EitaaSharp.Schema.Help.ICountriesList>();
+    }
+
+    /// <summary>TL <c>help.getAppConfig#27fbbdb6</c>.</summary>
+    public sealed record GetAppConfig : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IJSONValue>
+    {
+        public const uint TypeId = 0x27FBBDB6u;
+        public uint ConstructorId => TypeId;
+
+        public required int Date { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteInt32(Date);
+        }
+
+        public global::EitaaSharp.Schema.IJSONValue ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.IJSONValue>();
     }
 
     /// <summary>TL boxed type <c>help.TermsOfService</c>.</summary>

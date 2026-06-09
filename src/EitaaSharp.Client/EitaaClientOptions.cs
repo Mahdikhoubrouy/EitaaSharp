@@ -31,8 +31,8 @@ public sealed class EitaaClientOptions
     /// </summary>
     public Func<EitaaClient, CancellationToken, Task<bool>>? TokenRefreshHandler { get; init; }
 
-    /// <summary>The TL layer advertised in the envelope. Matches the JS client (133).</summary>
-    public int Layer { get; init; } = 133;
+    /// <summary>The TL layer advertised in the envelope. Matches the current Eitaa Android client (137).</summary>
+    public int Layer { get; init; } = 137;
 
     /// <summary>The HTTPS endpoint. Defaults to the production Eitaa gateway.</summary>
     public string Endpoint { get; init; } = Transport.HttpEitaaTransport.DefaultEndpoint;

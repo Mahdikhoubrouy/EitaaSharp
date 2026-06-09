@@ -61,6 +61,47 @@ public class GoldenByteTests
     }
 
     [Fact]
+    public void Channel_DualBitmask_RoundTrips()
+    {
+        // Eitaa's `channel` carries a SECOND bitmask `eFlags` after `flags`. This proves
+        // both flag fields are serialized/parsed independently and in the right order.
+        GeneratedSchema.RegisterAll();
+
+        var original = new Channel
+        {
+            Megagroup = true,           // flags.8
+            Restricted = false,
+            Id = 123456789L,
+            AccessHash = 9876543210L,    // flags.13
+            Title = "Eitaa Channel",
+            Username = "eitaa_channel", // flags.6
+            Photo = new ChatPhotoEmpty(),
+            Date = 1700000000,
+            ParticipantsCount = 4200,    // flags.17
+            Trusty = true,               // eFlags.0
+            Shop = true,                 // eFlags.2
+            BadgeName = "verified-shop", // eFlags.4
+        };
+
+        var w = new TlWriter();
+        original.Serialize(w);
+        var parsed = new TlReader(w.ToArray()).ReadObject<Channel>();
+
+        Assert.Equal(123456789L, parsed.Id);
+        Assert.Equal(9876543210L, parsed.AccessHash);
+        Assert.Equal("Eitaa Channel", parsed.Title);
+        Assert.Equal("eitaa_channel", parsed.Username);
+        Assert.Equal(4200, parsed.ParticipantsCount);
+        Assert.True(parsed.Megagroup);
+        Assert.False(parsed.Creator);
+        // second bitmask (eFlags) survives independently
+        Assert.True(parsed.Trusty);
+        Assert.True(parsed.Shop);
+        Assert.False(parsed.Fake);
+        Assert.Equal("verified-shop", parsed.BadgeName);
+    }
+
+    [Fact]
     public void AuthSentCode_RoundTrips_ThroughRegistry()
     {
         GeneratedSchema.RegisterAll();

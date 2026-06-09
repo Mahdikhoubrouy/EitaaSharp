@@ -12,6 +12,7 @@ namespace EitaaSharp.Schema.Auth
         public required string PhoneCodeHash { get; init; }
         public global::EitaaSharp.Schema.Auth.ICodeType? NextType { get; init; }
         public int? Timeout { get; init; }
+        public string? Message { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
@@ -19,11 +20,13 @@ namespace EitaaSharp.Schema.Auth
             int flags = 0;
             if (NextType is not null) flags |= 0x2;
             if (Timeout is not null) flags |= 0x4;
+            if (Message is not null) flags |= 0x100;
             writer.WriteInt32(flags);
             writer.WriteObject(Type);
             writer.WriteString(PhoneCodeHash);
             if (NextType is not null) writer.WriteObject(NextType);
             if (Timeout is not null) writer.WriteInt32(Timeout.Value);
+            if (Message is not null) writer.WriteString(Message);
         }
 
         public static SentCode Deserialize(global::EitaaSharp.Tl.TlReader reader)
@@ -33,7 +36,8 @@ namespace EitaaSharp.Schema.Auth
             string _PhoneCodeHash = reader.ReadString();
             global::EitaaSharp.Schema.Auth.ICodeType? _NextType = (flags & 0x2) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.Auth.ICodeType>() : null;
             int? _Timeout = (flags & 0x4) != 0 ? reader.ReadInt32() : (int?)null;
-            return new SentCode { Type = _Type, PhoneCodeHash = _PhoneCodeHash, NextType = _NextType, Timeout = _Timeout };
+            string? _Message = (flags & 0x100) != 0 ? reader.ReadString() : null;
+            return new SentCode { Type = _Type, PhoneCodeHash = _PhoneCodeHash, NextType = _NextType, Timeout = _Timeout, Message = _Message };
         }
     }
 
@@ -44,14 +48,17 @@ namespace EitaaSharp.Schema.Auth
         public uint ConstructorId => TypeId;
 
         public required string Token { get; init; }
+        public int? TmpSessions { get; init; }
         public required global::EitaaSharp.Schema.IUser User { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
             writer.WriteUInt32(TypeId);
             int flags = 0;
+            if (TmpSessions is not null) flags |= 0x1;
             writer.WriteInt32(flags);
             writer.WriteString(Token);
+            if (TmpSessions is not null) writer.WriteInt32(TmpSessions.Value);
             writer.WriteObject(User);
         }
 
@@ -59,8 +66,9 @@ namespace EitaaSharp.Schema.Auth
         {
             int flags = reader.ReadInt32();
             string _Token = reader.ReadString();
+            int? _TmpSessions = (flags & 0x1) != 0 ? reader.ReadInt32() : (int?)null;
             global::EitaaSharp.Schema.IUser _User = reader.ReadObject<global::EitaaSharp.Schema.IUser>();
-            return new Authorization { Token = _Token, User = _User };
+            return new Authorization { Token = _Token, TmpSessions = _TmpSessions, User = _User };
         }
     }
 

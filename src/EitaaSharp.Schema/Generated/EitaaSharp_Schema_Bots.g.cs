@@ -104,4 +104,62 @@ namespace EitaaSharp.Schema.Bots
             => reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IBotCommand>());
     }
 
+    /// <summary>TL <c>bots.canSendMessage#1359f4e6</c>.</summary>
+    public sealed record CanSendMessage : global::EitaaSharp.Tl.ITlMethod<bool>
+    {
+        public const uint TypeId = 0x1359F4E6u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject Bot { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Bot);
+        }
+
+        public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadBool();
+    }
+
+    /// <summary>TL <c>bots.allowSendMessage#f132e3ef</c>.</summary>
+    public sealed record AllowSendMessage : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.IUpdates>
+    {
+        public const uint TypeId = 0xF132E3EFu;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject Bot { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Bot);
+        }
+
+        public global::EitaaSharp.Schema.IUpdates ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.IUpdates>();
+    }
+
+    /// <summary>TL <c>bots.invokeWebViewCustomMethod#087fc5e7</c>.</summary>
+    public sealed record InvokeWebViewCustomMethod : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.ITLObject>
+    {
+        public const uint TypeId = 0x087FC5E7u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Tl.ITlObject Bot { get; init; }
+        public required string CustomMethod { get; init; }
+        public required global::EitaaSharp.Tl.ITlObject Params { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(Bot);
+            writer.WriteString(CustomMethod);
+            writer.WriteObject(Params);
+        }
+
+        public global::EitaaSharp.Schema.ITLObject ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.ITLObject>();
+    }
+
 }

@@ -87,4 +87,37 @@ public class FileTests
         Assert.Equal(FileDownloader.ChunkSize + 100, result.Length);
         Assert.Equal(2, transport.Calls);
     }
+
+    [Fact]
+    public async Task Upload_FromBytes_UsesFileNameAndUploads()
+    {
+        var transport = new ScriptedTransport(_ => BoolTrue());
+        var uploader = new FileUploader(new EitaaRpc(transport, "tok", "imei"));
+
+        var input = await uploader.UploadAsync(InputFileSource.FromBytes(new byte[] { 1, 2, 3 }, "note.txt"));
+
+        var file = Assert.IsType<InputFile>(input);
+        Assert.Equal("note.txt", file.Name);
+        Assert.Equal(1, file.Parts);
+        Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task Upload_FromStream_UsesFileName()
+    {
+        var transport = new ScriptedTransport(_ => BoolTrue());
+        var uploader = new FileUploader(new EitaaRpc(transport, "tok", "imei"));
+
+        using var ms = new MemoryStream(new byte[] { 4, 5, 6, 7 });
+        var input = await uploader.UploadAsync(InputFileSource.FromStream(ms, "clip.mp4"));
+
+        Assert.Equal("clip.mp4", Assert.IsType<InputFile>(input).Name);
+    }
+
+    [Fact]
+    public void InputFileSource_ImplicitFromPath_TakesFileName()
+    {
+        InputFileSource source = "/some/dir/picture.png"; // implicit string -> path
+        Assert.Equal("picture.png", source.FileName);
+    }
 }

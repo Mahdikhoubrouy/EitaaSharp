@@ -22,10 +22,22 @@ public sealed class FileUploader
 
     /// <summary>Uploads the bytes of a file on disk.</summary>
     public async Task<IInputFile> UploadAsync(string path, CancellationToken cancellationToken = default)
+        => await UploadAsync(InputFileSource.FromPath(path), cancellationToken).ConfigureAwait(false);
+
+    /// <summary>Uploads from any <see cref="InputFileSource"/> — a path, stream, or byte array.</summary>
+    public async Task<IInputFile> UploadAsync(InputFileSource source, CancellationToken cancellationToken = default)
     {
-        await using var stream = System.IO.File.OpenRead(path);
-        return await UploadAsync(stream, Path.GetFileName(path), stream.Length, cancellationToken)
-            .ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(source);
+        var (stream, size, ownsStream) = source.Open();
+        try
+        {
+            return await UploadAsync(stream, source.FileName, size, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            if (ownsStream)
+                await stream.DisposeAsync().ConfigureAwait(false);
+        }
     }
 
     /// <summary>Uploads a stream. The length must be known (seekable stream or explicit <paramref name="size"/>).</summary>
@@ -62,6 +74,9 @@ public sealed class FileUploader
             var chunk = read == PartSize ? part : part[..read];
             md5?.AppendData(chunk);
 
+            // Eitaa's saveBigFilePart always carries the total file size (flags.1) — unlike upstream
+            // Telegram — but saveFilePart (no peer) is the plain 3-field call: writing extra bytes
+            // after `bytes` desyncs the request (server: INVALID_CONSTRUCTOR).
             bool ok = isBig
                 ? await _rpc.CallAsync(new Upload.SaveBigFilePart
                 {
@@ -69,13 +84,14 @@ public sealed class FileUploader
                     FilePart = partIndex,
                     FileTotalParts = totalParts,
                     Bytes = chunk,
-                }, cancellationToken).ConfigureAwait(false)
+                    TotalFileSize = length,
+                }, cancellationToken, Transport.ConnectionKind.Upload).ConfigureAwait(false)
                 : await _rpc.CallAsync(new Upload.SaveFilePart
                 {
                     FileId = fileId,
                     FilePart = partIndex,
                     Bytes = chunk,
-                }, cancellationToken).ConfigureAwait(false);
+                }, cancellationToken, Transport.ConnectionKind.Upload).ConfigureAwait(false);
 
             if (!ok)
                 throw new InvalidOperationException($"Server rejected file part {partIndex} of {fileName}.");

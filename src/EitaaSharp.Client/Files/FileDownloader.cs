@@ -42,7 +42,7 @@ public sealed class FileDownloader
                 Location = location,
                 Offset = offset,
                 Limit = ChunkSize,
-            }, cancellationToken).ConfigureAwait(false);
+            }, cancellationToken, Transport.ConnectionKind.Download).ConfigureAwait(false);
 
             if (result is not Upload.File file)
                 throw new NotSupportedException(

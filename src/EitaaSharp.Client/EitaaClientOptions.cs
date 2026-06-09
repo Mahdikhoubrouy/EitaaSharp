@@ -31,11 +31,27 @@ public sealed class EitaaClientOptions
     /// </summary>
     public Func<EitaaClient, CancellationToken, Task<bool>>? TokenRefreshHandler { get; init; }
 
+    /// <summary>
+    /// When <c>true</c> (the default) and no <see cref="TokenRefreshHandler"/> is supplied, the client
+    /// refreshes an expired token automatically via <c>eitaaRefreshToken</c> and retries the call —
+    /// the same behaviour as the official Android client. Set <c>false</c> to surface the error instead.
+    /// </summary>
+    public bool AutoRefreshToken { get; init; } = true;
+
+    /// <summary>
+    /// Optional device descriptor sent with the automatic token refresh. A neutral EitaaSharp
+    /// descriptor is used when null.
+    /// </summary>
+    public EitaaSharp.Schema.Mt.IEitaaAppInfo? AppInfo { get; init; }
+
     /// <summary>The TL layer advertised in the envelope. Matches the current Eitaa Android client (137).</summary>
     public int Layer { get; init; } = 137;
 
-    /// <summary>The HTTPS endpoint. Defaults to the production Eitaa gateway.</summary>
-    public string Endpoint { get; init; } = Transport.HttpEitaaTransport.DefaultEndpoint;
+    /// <summary>
+    /// A single HTTPS endpoint to use. When null (the default), the client load-balances and fails
+    /// over across the official Eitaa datacenter-1 host pool (<see cref="Transport.HttpEitaaTransport.DefaultHosts"/>).
+    /// </summary>
+    public string? Endpoint { get; init; }
 
     /// <summary>Per-request timeout.</summary>
     public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(30);

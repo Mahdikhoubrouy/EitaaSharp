@@ -1,6 +1,7 @@
 using EitaaSharp.Schema;
 using EitaaSharp.Tl;
 using Auth = EitaaSharp.Schema.Auth;
+using Upload = EitaaSharp.Schema.Upload;
 
 namespace EitaaSharp.Tl.Tests;
 
@@ -99,6 +100,70 @@ public class GoldenByteTests
         Assert.True(parsed.Shop);
         Assert.False(parsed.Fake);
         Assert.Equal("verified-shop", parsed.BadgeName);
+    }
+
+    [Fact]
+    public void User_TripleBitmask_RoundTrips()
+    {
+        // The Eitaa layer-137 server sends user id -321753653 (TL_user_layer135), which carries
+        // THREE bitmask fields — flags / flags2 / eFlags — plus the mini-app presence bits.
+        // This is the constructor that previously threw "No TL type registered".
+        GeneratedSchema.RegisterAll();
+
+        var original = new User
+        {
+            Bot = true,                 // flags.14 (coupled with bot_info_version)
+            BotInfoVersion = 3,          // flags.14
+            Id = 555000111L,
+            AccessHash = 12345678901L,   // flags.0
+            FirstName = "Mini",          // flags.1
+            Username = "miniapp_bot",    // flags.3
+            MiniApp = true,              // eFlags.0
+            MiniAppGeo = true,           // eFlags.4
+            BadgeName = "official",      // eFlags.1
+            BotActiveUsers = 9001,       // flags2.12
+        };
+
+        var w = new TlWriter();
+        original.Serialize(w);
+        var parsed = new TlReader(w.ToArray()).ReadObject<User>();
+
+        Assert.Equal(555000111L, parsed.Id);
+        Assert.Equal(12345678901L, parsed.AccessHash);
+        Assert.Equal("Mini", parsed.FirstName);
+        Assert.Equal("miniapp_bot", parsed.Username);
+        Assert.True(parsed.Bot);
+        // the second & third bitmasks survive independently
+        Assert.True(parsed.MiniApp);
+        Assert.True(parsed.MiniAppGeo);
+        Assert.False(parsed.Self);
+        Assert.Equal("official", parsed.BadgeName);
+        Assert.Equal(9001, parsed.BotActiveUsers);
+    }
+
+    [Fact]
+    public void SaveFilePart_IsThreeFields_NoTrailingBytes()
+    {
+        // Eitaa's upload.saveFilePart (no peer) is the plain 3-field call: file_id, file_part, bytes.
+        // Writing extra trailing bytes (a flags int + totalFileSize) made the server answer
+        // INVALID_CONSTRUCTOR — the request desynced. This asserts nothing follows `bytes`.
+        var w = new TlWriter();
+        new Upload.SaveFilePart
+        {
+            FileId = 7,
+            FilePart = 0,
+            Bytes = new byte[] { 1, 2, 3 },
+        }.Serialize(w);
+
+        var bytes = w.ToArray();
+        var r = new TlReader(bytes);
+        r.ReadInt32();                                   // constructor id
+        Assert.Equal(7L, r.ReadLong());                  // file_id
+        Assert.Equal(0, r.ReadInt32());                  // file_part
+        Assert.Equal(new byte[] { 1, 2, 3 }, r.ReadBytes());
+        // constructor(4) + file_id(8) + file_part(4) + bytes(1 len + 3 data + 0 pad = 4) = 20 bytes,
+        // nothing more.
+        Assert.Equal(20, bytes.Length);
     }
 
     [Fact]

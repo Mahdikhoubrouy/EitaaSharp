@@ -45,11 +45,13 @@ public sealed class EitaaRpc
     }
 
     /// <summary>Calls a TL method and returns its strongly-typed result.</summary>
+    /// <param name="kind">Which datacenter connection to route over (upload/download/generic).</param>
     public async Task<TResult> CallAsync<TResult>(
         ITlMethod<TResult> method,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        Transport.ConnectionKind kind = Transport.ConnectionKind.Generic)
     {
-        byte[] response = await SendAsync(method, cancellationToken).ConfigureAwait(false);
+        byte[] response = await SendAsync(method, kind, cancellationToken).ConfigureAwait(false);
         ThrowIfError(response);
 
         var reader = new TlReader(response, _registry);
@@ -59,15 +61,16 @@ public sealed class EitaaRpc
     /// <summary>Calls a method and returns the raw deserialized boxed object (throws on <c>rpc_error</c>).</summary>
     public async Task<ITlObject> CallObjectAsync(
         ITlObject method,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        Transport.ConnectionKind kind = Transport.ConnectionKind.Generic)
     {
-        byte[] response = await SendAsync(method, cancellationToken).ConfigureAwait(false);
+        byte[] response = await SendAsync(method, kind, cancellationToken).ConfigureAwait(false);
         ThrowIfError(response);
 
         return new TlReader(response, _registry).ReadObject();
     }
 
-    private async Task<byte[]> SendAsync(ITlObject method, CancellationToken cancellationToken)
+    private async Task<byte[]> SendAsync(ITlObject method, Transport.ConnectionKind kind, CancellationToken cancellationToken)
     {
         var inner = new TlWriter();
         method.Serialize(inner);
@@ -84,7 +87,7 @@ public sealed class EitaaRpc
         envelope.Serialize(outer);
 
         return await _transport
-            .SendAsync(outer.ToArray(), cancellationToken)
+            .SendAsync(outer.ToArray(), kind, cancellationToken)
             .ConfigureAwait(false);
     }
 

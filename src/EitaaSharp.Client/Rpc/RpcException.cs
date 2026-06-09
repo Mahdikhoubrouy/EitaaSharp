@@ -42,6 +42,13 @@ public partial class RpcException : Exception
     /// <summary>True for <c>FLOOD_WAIT_x</c> errors; <see cref="Parameter"/> holds the seconds to wait.</summary>
     public bool IsFloodWait => ErrorType == "FLOOD_WAIT";
 
+    /// <summary>
+    /// True when Eitaa answered <c>INVALID_CONSTRUCTOR</c> — i.e. the server does not implement the
+    /// method that was sent (e.g. <c>messages.setTyping</c>). The official client silently ignores
+    /// these, so they are safe to swallow for fire-and-forget calls.
+    /// </summary>
+    public bool IsInvalidConstructor => ErrorType == "INVALID_CONSTRUCTOR";
+
     [GeneratedRegex(@"\d+$")]
     private static partial Regex TrailingNumber();
 }

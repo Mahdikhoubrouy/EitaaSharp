@@ -956,6 +956,8 @@ namespace EitaaSharp.Schema.Mt
         public required string Token { get; init; }
         public required int Expire { get; init; }
         public required int Date { get; init; }
+        public required long MsgId { get; init; }
+        public required string SocketToken { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
@@ -963,6 +965,8 @@ namespace EitaaSharp.Schema.Mt
             writer.WriteString(Token);
             writer.WriteInt32(Expire);
             writer.WriteInt32(Date);
+            writer.WriteLong(MsgId);
+            writer.WriteString(SocketToken);
         }
 
         public static EitaaUpdatesToken Deserialize(global::EitaaSharp.Tl.TlReader reader)
@@ -970,7 +974,9 @@ namespace EitaaSharp.Schema.Mt
             string _Token = reader.ReadString();
             int _Expire = reader.ReadInt32();
             int _Date = reader.ReadInt32();
-            return new EitaaUpdatesToken { Token = _Token, Expire = _Expire, Date = _Date };
+            long _MsgId = reader.ReadLong();
+            string _SocketToken = reader.ReadString();
+            return new EitaaUpdatesToken { Token = _Token, Expire = _Expire, Date = _Date, MsgId = _MsgId, SocketToken = _SocketToken };
         }
     }
 
@@ -1421,6 +1427,24 @@ namespace EitaaSharp.Schema.Mt
 
         public global::EitaaSharp.Schema.Mt.IEitaaTokenUpdating ReadResult(global::EitaaSharp.Tl.TlReader reader)
             => reader.ReadObject<global::EitaaSharp.Schema.Mt.IEitaaTokenUpdating>();
+    }
+
+    /// <summary>TL <c>mt.eitaaRefreshToken#dc452369</c>.</summary>
+    public sealed record EitaaRefreshToken : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Schema.Mt.IEitaaUpdatesToken>
+    {
+        public const uint TypeId = 0xDC452369u;
+        public uint ConstructorId => TypeId;
+
+        public required global::EitaaSharp.Schema.Mt.IEitaaAppInfo AppInfo { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteObject(AppInfo);
+        }
+
+        public global::EitaaSharp.Schema.Mt.IEitaaUpdatesToken ReadResult(global::EitaaSharp.Tl.TlReader reader)
+            => reader.ReadObject<global::EitaaSharp.Schema.Mt.IEitaaUpdatesToken>();
     }
 
     /// <summary>TL boxed type <c>mt.ResPQ</c>.</summary>

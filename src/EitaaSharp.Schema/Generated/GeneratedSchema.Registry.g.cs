@@ -121,7 +121,7 @@ namespace EitaaSharp.Schema
                 registry.Register(0xB3CEA0E4u, global::EitaaSharp.Schema.Storage.FileMp4.Deserialize);
                 registry.Register(0x1081464Cu, global::EitaaSharp.Schema.Storage.FileWebp.Deserialize);
                 registry.Register(0xD3BC4B7Au, global::EitaaSharp.Schema.UserEmpty.Deserialize);
-                registry.Register(0x3FF6ECB0u, global::EitaaSharp.Schema.User.Deserialize);
+                registry.Register(0xECD26DCBu, global::EitaaSharp.Schema.User.Deserialize);
                 registry.Register(0x4F11BAE1u, global::EitaaSharp.Schema.UserProfilePhotoEmpty.Deserialize);
                 registry.Register(0x09D05049u, global::EitaaSharp.Schema.UserStatusEmpty.Deserialize);
                 registry.Register(0xEDB93949u, global::EitaaSharp.Schema.UserStatusOnline.Deserialize);
@@ -191,7 +191,8 @@ namespace EitaaSharp.Schema
                 registry.Register(0x2331B22Du, global::EitaaSharp.Schema.PhotoEmpty.Deserialize);
                 registry.Register(0xFB197A65u, global::EitaaSharp.Schema.Photo.Deserialize);
                 registry.Register(0x0E17E23Cu, global::EitaaSharp.Schema.PhotoSizeEmpty.Deserialize);
-                registry.Register(0x75C78E60u, global::EitaaSharp.Schema.PhotoSize.Deserialize);
+                registry.Register(0x77BFB61Bu, global::EitaaSharp.Schema.PhotoSize.Deserialize);
+                registry.Register(0x75C78E60u, global::EitaaSharp.Schema.PhotoSize_75C78E60.Deserialize);
                 registry.Register(0x021E1AD6u, global::EitaaSharp.Schema.PhotoCachedSize.Deserialize);
                 registry.Register(0xE0B0BC2Eu, global::EitaaSharp.Schema.PhotoStrippedSize.Deserialize);
                 registry.Register(0xFA3EFB95u, global::EitaaSharp.Schema.PhotoSizeProgressive.Deserialize);
@@ -986,7 +987,6 @@ namespace EitaaSharp.Schema
                 registry.Register(0xBC7FC6CDu, global::EitaaSharp.Schema.FileLocationToBeDeprecated.Deserialize);
                 registry.Register(0x53D69076u, global::EitaaSharp.Schema.FileLocation.Deserialize);
                 registry.Register(0xE9A734FAu, global::EitaaSharp.Schema.PhotoCachedSize_E9A734FA.Deserialize);
-                registry.Register(0x77BFB61Bu, global::EitaaSharp.Schema.PhotoSize_77BFB61B.Deserialize);
                 registry.Register(0xB4B1559Eu, global::EitaaSharp.Schema.LiveStreamStateInit.Deserialize);
                 registry.Register(0xBB5B5DF5u, global::EitaaSharp.Schema.LiveStreamStateBroadcasting.Deserialize);
                 registry.Register(0xB84D15ABu, global::EitaaSharp.Schema.LiveStreamStateEnded.Deserialize);
@@ -1179,9 +1179,10 @@ namespace EitaaSharp.Schema
                 registry.Register(0x8F300B57u, global::EitaaSharp.Schema.BotInfo.Deserialize);
                 registry.Register(0x1F486803u, global::EitaaSharp.Schema.ExportedMessageLink.Deserialize);
                 registry.Register(0xC6D14312u, global::EitaaSharp.Schema.Channel.Deserialize);
+                registry.Register(0x3FF6ECB0u, global::EitaaSharp.Schema.UserWeb.Deserialize);
                 if (registry == global::EitaaSharp.Tl.TlRegistry.Default) _registered = true;
             }
         }
-        public const int ConstructorCount = 1165;
+        public const int ConstructorCount = 1166;
     }
 }

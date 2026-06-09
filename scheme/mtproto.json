@@ -657,6 +657,14 @@
         {
           "name": "date",
           "type": "int"
+        },
+        {
+          "name": "msg_id",
+          "type": "long"
+        },
+        {
+          "name": "socket_token",
+          "type": "string"
         }
       ],
       "type": "EitaaUpdatesToken"
@@ -997,6 +1005,17 @@
       "method": "eitaaTokenUpdating",
       "params": [],
       "type": "EitaaTokenUpdating"
+    },
+    {
+      "id": -599448727,
+      "method": "eitaaRefreshToken",
+      "params": [
+        {
+          "name": "app_info",
+          "type": "EitaaAppInfo"
+        }
+      ],
+      "type": "EitaaUpdatesToken"
     }
   ]
 }

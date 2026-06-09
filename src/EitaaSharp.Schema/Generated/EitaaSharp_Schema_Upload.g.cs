@@ -146,8 +146,6 @@ namespace EitaaSharp.Schema.Upload
         public required long FileId { get; init; }
         public required int FilePart { get; init; }
         public required byte[] Bytes { get; init; }
-        public global::EitaaSharp.Schema.IPeer? Peer { get; init; }
-        public long? TotalFileSize { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
@@ -155,12 +153,6 @@ namespace EitaaSharp.Schema.Upload
             writer.WriteLong(FileId);
             writer.WriteInt32(FilePart);
             writer.WriteBytes(Bytes);
-            int flags = 0;
-            if (Peer is not null) flags |= 0x1;
-            if (TotalFileSize is not null) flags |= 0x2;
-            writer.WriteInt32(flags);
-            if (Peer is not null) writer.WriteObject(Peer);
-            if (TotalFileSize is not null) writer.WriteLong(TotalFileSize.Value);
         }
 
         public bool ReadResult(global::EitaaSharp.Tl.TlReader reader)

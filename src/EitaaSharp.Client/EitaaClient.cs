@@ -30,6 +30,7 @@ public sealed partial class EitaaClient : IDisposable
     private readonly IDisposable? _ownedTransport;
     private readonly EitaaRpc _rpc;
     private readonly IEitaaSession _session;
+    private readonly global::EitaaSharp.Schema.Mt.IEitaaAppInfo? _appInfo;
     private readonly PeerResolver _peers;
     private readonly UpdateDispatcher _dispatcher = new();
     private FileUploader? _uploads;
@@ -92,7 +93,11 @@ public sealed partial class EitaaClient : IDisposable
         _ownedTransport = transport;
         _rpc = new EitaaRpc(transport, _session, options.Layer);
         _peers = new PeerResolver(_session);
-        TokenRefreshHandler = options.TokenRefreshHandler;
+        _appInfo = options.AppInfo;
+        // Mirror the Android client: refresh the token automatically on expiry unless the caller
+        // supplied their own handler (or explicitly disabled it).
+        TokenRefreshHandler = options.TokenRefreshHandler
+            ?? (options.AutoRefreshToken ? DefaultTokenRefreshAsync : null);
         ApiId = options.ApiId;
         ApiHash = options.ApiHash;
     }

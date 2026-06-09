@@ -45,6 +45,8 @@ public sealed class EitaaRpc
     }
 
     /// <summary>Calls a TL method and returns its strongly-typed result.</summary>
+    /// <param name="method">The TL method to invoke.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
     /// <param name="kind">Which datacenter connection to route over (upload/download/generic).</param>
     public async Task<TResult> CallAsync<TResult>(
         ITlMethod<TResult> method,
@@ -59,6 +61,9 @@ public sealed class EitaaRpc
     }
 
     /// <summary>Calls a method and returns the raw deserialized boxed object (throws on <c>rpc_error</c>).</summary>
+    /// <param name="method">The TL method to invoke.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <param name="kind">Which datacenter connection to route over (upload/download/generic).</param>
     public async Task<ITlObject> CallObjectAsync(
         ITlObject method,
         CancellationToken cancellationToken = default,

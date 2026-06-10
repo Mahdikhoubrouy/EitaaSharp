@@ -44,6 +44,19 @@ public sealed class EitaaClientOptions
     /// </summary>
     public EitaaSharp.Schema.Mt.IEitaaAppInfo? AppInfo { get; init; }
 
+    /// <summary>
+    /// When <c>true</c> (the default), a <c>FLOOD_WAIT_x</c> error is handled by waiting the requested
+    /// number of seconds and retrying automatically (up to <see cref="MaxFloodWaitSeconds"/>). Set
+    /// <c>false</c> to surface the <see cref="Rpc.RpcException"/> instead.
+    /// </summary>
+    public bool AutoFloodWait { get; init; } = true;
+
+    /// <summary>
+    /// The longest <c>FLOOD_WAIT</c> the client waits out automatically. A longer wait is surfaced as an
+    /// error so the caller can decide. Default 60 seconds.
+    /// </summary>
+    public int MaxFloodWaitSeconds { get; init; } = 60;
+
     /// <summary>The TL layer advertised in the envelope. Matches the current Eitaa Android client (137).</summary>
     public int Layer { get; init; } = 137;
 

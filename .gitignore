@@ -19,3 +19,6 @@ eitaa.session.json
 eitaa-android-source
 # Decompiled Android source (reference only, large)
 eitaa-android-source/
+
+# Stray archives
+*.zip

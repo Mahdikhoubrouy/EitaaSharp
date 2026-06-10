@@ -9,11 +9,18 @@
 
     <!-- Package defaults; library projects opt in with IsPackable=true -->
     <IsPackable>false</IsPackable>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>EitaaSharp contributors</Authors>
-    <Description>Strongly-typed C# client for the Eitaa messenger (TL/MTProto-style protocol).</Description>
+    <Company>EitaaSharp</Company>
+    <Product>EitaaSharp</Product>
+    <Description>Strongly-typed, Pyrogram-style C# SDK for the Eitaa messenger (TL/MTProto-style protocol, layer 137).</Description>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/alik0211/mtproto-core</RepositoryUrl>
+    <PackageTags>eitaa;messenger;tl;mtproto;client;bot</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/Mahdikhoubrouy/EitaaSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Mahdikhoubrouy/EitaaSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>

@@ -21,10 +21,10 @@ public sealed partial class EitaaClient
     public async Task<Message> SendAudioAsync(
         ChatId chat, InputFileSource audio, string caption = "",
         int duration = 0, string? title = null, string? performer = null, bool voice = false,
-        string mimeType = "audio/mpeg", CancellationToken cancellationToken = default)
+        string mimeType = "audio/mpeg", CancellationToken cancellationToken = default, IProgress<long>? progress = null)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(audio, ct), cancellationToken).ConfigureAwait(false);
+        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(audio, ct, progress), cancellationToken).ConfigureAwait(false);
         var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,

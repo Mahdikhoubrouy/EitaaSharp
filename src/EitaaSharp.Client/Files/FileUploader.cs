@@ -25,13 +25,15 @@ public sealed class FileUploader
         => await UploadAsync(InputFileSource.FromPath(path), cancellationToken).ConfigureAwait(false);
 
     /// <summary>Uploads from any <see cref="InputFileSource"/> — a path, stream, or byte array.</summary>
-    public async Task<IInputFile> UploadAsync(InputFileSource source, CancellationToken cancellationToken = default)
+    /// <param name="progress">Optional callback reporting cumulative bytes uploaded.</param>
+    public async Task<IInputFile> UploadAsync(
+        InputFileSource source, CancellationToken cancellationToken = default, IProgress<long>? progress = null)
     {
         ArgumentNullException.ThrowIfNull(source);
         var (stream, size, ownsStream) = source.Open();
         try
         {
-            return await UploadAsync(stream, source.FileName, size, cancellationToken).ConfigureAwait(false);
+            return await UploadAsync(stream, source.FileName, size, cancellationToken, progress).ConfigureAwait(false);
         }
         finally
         {
@@ -41,8 +43,10 @@ public sealed class FileUploader
     }
 
     /// <summary>Uploads a stream. The length must be known (seekable stream or explicit <paramref name="size"/>).</summary>
+    /// <param name="progress">Optional callback reporting cumulative bytes uploaded.</param>
     public async Task<IInputFile> UploadAsync(
-        Stream content, string fileName, long? size = null, CancellationToken cancellationToken = default)
+        Stream content, string fileName, long? size = null, CancellationToken cancellationToken = default,
+        IProgress<long>? progress = null)
     {
         ArgumentNullException.ThrowIfNull(content);
 
@@ -97,6 +101,7 @@ public sealed class FileUploader
                 throw new InvalidOperationException($"Server rejected file part {partIndex} of {fileName}.");
 
             partIndex++;
+            progress?.Report(Math.Min((long)partIndex * PartSize, length));
             if (read < PartSize)
                 break;
         }

@@ -16,10 +16,10 @@ public sealed partial class EitaaClient
     /// <returns>The sent <see cref="Message"/>.</returns>
     public async Task<Message> SendDocumentAsync(
         ChatId chat, InputFileSource document, string caption = "", string mimeType = "application/octet-stream",
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default, IProgress<long>? progress = null)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(document, ct), cancellationToken).ConfigureAwait(false);
+        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(document, ct, progress), cancellationToken).ConfigureAwait(false);
         var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,

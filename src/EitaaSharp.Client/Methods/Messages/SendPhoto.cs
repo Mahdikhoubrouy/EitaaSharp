@@ -14,10 +14,11 @@ public sealed partial class EitaaClient
     /// <param name="cancellationToken">Cancels the upload and send.</param>
     /// <returns>The sent <see cref="Message"/>.</returns>
     public async Task<Message> SendPhotoAsync(
-        ChatId chat, InputFileSource photo, string caption = "", CancellationToken cancellationToken = default)
+        ChatId chat, InputFileSource photo, string caption = "", CancellationToken cancellationToken = default,
+        IProgress<long>? progress = null)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(photo, ct), cancellationToken).ConfigureAwait(false);
+        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(photo, ct, progress), cancellationToken).ConfigureAwait(false);
         var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,

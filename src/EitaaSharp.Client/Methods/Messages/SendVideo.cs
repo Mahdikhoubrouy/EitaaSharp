@@ -20,10 +20,10 @@ public sealed partial class EitaaClient
     public async Task<Message> SendVideoAsync(
         ChatId chat, InputFileSource video, string caption = "",
         int duration = 0, int width = 0, int height = 0, string mimeType = "video/mp4",
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default, IProgress<long>? progress = null)
     {
         var peer = await ResolvePeerAsync(chat, cancellationToken).ConfigureAwait(false);
-        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(video, ct), cancellationToken).ConfigureAwait(false);
+        var file = await WithRefreshRetryAsync(ct => Uploads.UploadAsync(video, ct, progress), cancellationToken).ConfigureAwait(false);
         var updates = await CallAsync(new Messages.SendMedia
         {
             Peer = peer,

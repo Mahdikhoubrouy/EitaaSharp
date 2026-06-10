@@ -19,17 +19,23 @@ public sealed class FileDownloader
     public FileDownloader(EitaaRpc rpc) => _rpc = rpc;
 
     /// <summary>Downloads the whole file into memory.</summary>
+    /// <param name="progress">Optional callback reporting cumulative bytes downloaded.</param>
+    /// <param name="expectedSize">The file size, when known, so the loop stops exactly at EOF.</param>
     public async Task<byte[]> DownloadAsync(
-        IInputFileLocation location, CancellationToken cancellationToken = default)
+        IInputFileLocation location, CancellationToken cancellationToken = default, IProgress<long>? progress = null,
+        long? expectedSize = null)
     {
         using var output = new MemoryStream();
-        await DownloadAsync(location, output, cancellationToken).ConfigureAwait(false);
+        await DownloadAsync(location, output, cancellationToken, progress, expectedSize).ConfigureAwait(false);
         return output.ToArray();
     }
 
     /// <summary>Streams the file into <paramref name="destination"/>.</summary>
+    /// <param name="progress">Optional callback reporting cumulative bytes downloaded.</param>
+    /// <param name="expectedSize">The file size, when known, so the loop stops exactly at EOF.</param>
     public async Task DownloadAsync(
-        IInputFileLocation location, Stream destination, CancellationToken cancellationToken = default)
+        IInputFileLocation location, Stream destination, CancellationToken cancellationToken = default,
+        IProgress<long>? progress = null, long? expectedSize = null)
     {
         ArgumentNullException.ThrowIfNull(location);
         ArgumentNullException.ThrowIfNull(destination);
@@ -53,8 +59,14 @@ public sealed class FileDownloader
 
             await destination.WriteAsync(file.Bytes, cancellationToken).ConfigureAwait(false);
             offset += file.Bytes.Length;
+            progress?.Report(offset);
 
             if (file.Bytes.Length < ChunkSize)
+                break;
+
+            // A file whose size is an exact multiple of the chunk size would otherwise trigger one
+            // more getFile past EOF, which the server rejects with RETRY_LIMIT. Stop at the known size.
+            if (expectedSize is { } size && offset >= size)
                 break;
         }
     }

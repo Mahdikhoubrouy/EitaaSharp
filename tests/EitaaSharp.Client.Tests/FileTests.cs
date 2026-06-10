@@ -120,4 +120,50 @@ public class FileTests
         InputFileSource source = "/some/dir/picture.png"; // implicit string -> path
         Assert.Equal("picture.png", source.FileName);
     }
+
+    private sealed class SyncProgress : IProgress<long>
+    {
+        public List<long> Reports { get; } = new();
+        public void Report(long value) => Reports.Add(value);
+    }
+
+    [Fact]
+    public async Task Upload_ReportsCumulativeProgress_EndingAtFileSize()
+    {
+        var data = new byte[FileUploader.PartSize + 100]; // 2 parts
+        var uploader = new FileUploader(new EitaaRpc(new ScriptedTransport(_ => BoolTrue()), "tok", "imei"));
+        var progress = new SyncProgress();
+
+        await uploader.UploadAsync(InputFileSource.FromBytes(data, "x.bin"), default, progress);
+
+        Assert.Equal(2, progress.Reports.Count);
+        Assert.Equal(FileUploader.PartSize, progress.Reports[0]); // after part 0
+        Assert.Equal(data.Length, progress.Reports[^1]);          // clamped to the true size
+    }
+
+    [Fact]
+    public async Task Download_ReportsCumulativeProgress()
+    {
+        byte[] full = Serialize(new Upload.File
+        {
+            Type = new Storage.FileUnknown(),
+            Mtime = 0,
+            Bytes = new byte[FileDownloader.ChunkSize],
+        });
+        byte[] tail = Serialize(new Upload.File
+        {
+            Type = new Storage.FileUnknown(),
+            Mtime = 0,
+            Bytes = new byte[100],
+        });
+
+        var rpc = new EitaaRpc(new ScriptedTransport(call => call == 0 ? full : tail), "tok", "imei");
+        var downloader = new FileDownloader(rpc);
+        var progress = new SyncProgress();
+
+        var location = new InputFileLocation { VolumeId = 1, LocalId = 2, Secret = 3, FileReference = [] };
+        await downloader.DownloadAsync(location, default, progress);
+
+        Assert.Equal(new long[] { FileDownloader.ChunkSize, FileDownloader.ChunkSize + 100 }, progress.Reports);
+    }
 }

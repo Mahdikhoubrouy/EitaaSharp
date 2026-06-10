@@ -31,6 +31,8 @@ public sealed partial class EitaaClient : IDisposable
     private readonly EitaaRpc _rpc;
     private readonly IEitaaSession _session;
     private readonly global::EitaaSharp.Schema.Mt.IEitaaAppInfo? _appInfo;
+    private readonly bool _autoFloodWait = true;
+    private readonly int _maxFloodWaitSeconds = 60;
     private readonly PeerResolver _peers;
     private readonly UpdateDispatcher _dispatcher = new();
     private FileUploader? _uploads;
@@ -94,6 +96,8 @@ public sealed partial class EitaaClient : IDisposable
         _rpc = new EitaaRpc(transport, _session, options.Layer);
         _peers = new PeerResolver(_session);
         _appInfo = options.AppInfo;
+        _autoFloodWait = options.AutoFloodWait;
+        _maxFloodWaitSeconds = options.MaxFloodWaitSeconds;
         // Mirror the Android client: refresh the token automatically on expiry unless the caller
         // supplied their own handler (or explicitly disabled it).
         TokenRefreshHandler = options.TokenRefreshHandler
@@ -139,23 +143,36 @@ public sealed partial class EitaaClient : IDisposable
     }
 
     /// <summary>
-    /// Runs <paramref name="action"/>; if it throws <see cref="SessionExpiredException"/> and a
-    /// <see cref="TokenRefreshHandler"/> is configured, refreshes the token and retries exactly once.
+    /// Runs <paramref name="action"/> with the client's resilience policies: an expired session is
+    /// refreshed once (via <see cref="TokenRefreshHandler"/>) and retried, and a <c>FLOOD_WAIT_x</c>
+    /// (when <see cref="EitaaClientOptions.AutoFloodWait"/> is on) is waited out and retried, as long
+    /// as the wait stays within <see cref="EitaaClientOptions.MaxFloodWaitSeconds"/>.
     /// </summary>
     private async Task<T> WithRefreshRetryAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken cancellationToken)
     {
-        try
+        const int maxFloodRetries = 10;
+        bool refreshed = false;
+        int floodRetries = 0;
+        while (true)
         {
-            return await action(cancellationToken).ConfigureAwait(false);
-        }
-        catch (SessionExpiredException) when (TokenRefreshHandler is not null)
-        {
-            bool refreshed = await TokenRefreshHandler(this, cancellationToken).ConfigureAwait(false);
-            if (!refreshed)
-                throw;
-
-            // Token refreshed and stored in the session; retry the original call once.
-            return await action(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return await action(cancellationToken).ConfigureAwait(false);
+            }
+            catch (SessionExpiredException) when (!refreshed && TokenRefreshHandler is not null)
+            {
+                refreshed = true;
+                if (!await TokenRefreshHandler(this, cancellationToken).ConfigureAwait(false))
+                    throw;
+                // token refreshed + stored in the session — loop to retry the original call.
+            }
+            catch (RpcException ex) when (_autoFloodWait && ex.IsFloodWait && floodRetries < maxFloodRetries
+                                          && ex.Parameter is int seconds && seconds <= _maxFloodWaitSeconds)
+            {
+                floodRetries++;
+                // Respect the server's cooldown (+1s margin) and retry.
+                await Task.Delay(TimeSpan.FromSeconds(seconds + 1), cancellationToken).ConfigureAwait(false);
+            }
         }
     }
 

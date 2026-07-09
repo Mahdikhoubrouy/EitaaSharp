@@ -21715,6 +21715,37 @@
         }
       ],
       "type": "EitaaNotification_button"
+    },
+    {
+      "id": -770990276,
+      "predicate": "chatPhoto_layer126",
+      "type": "ChatPhoto",
+      "params": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "has_video",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "photo_id",
+          "type": "long"
+        },
+        {
+          "name": "photo_small",
+          "type": "FileLocation"
+        },
+        {
+          "name": "photo_big",
+          "type": "FileLocation"
+        },
+        {
+          "name": "dc_id",
+          "type": "int"
+        }
+      ]
     }
   ],
   "methods": [

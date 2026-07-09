@@ -71,6 +71,10 @@ public sealed class Message
     public Task<byte[]> DownloadAsync(CancellationToken cancellationToken = default)
         => _client.DownloadMediaAsync(this, cancellationToken);
 
+    /// <summary>Reacts to this message with an emoji, or removes the reaction when <paramref name="emoji"/> is null.</summary>
+    public Task ReactAsync(string? emoji, CancellationToken cancellationToken = default)
+        => _client.SendReactionAsync(Chat.Id, Id, emoji, cancellationToken);
+
     /// <summary>True if this message has a downloadable photo or document.</summary>
     public bool HasMedia => Media is Schema.MessageMediaPhoto or Schema.MessageMediaDocument;
 

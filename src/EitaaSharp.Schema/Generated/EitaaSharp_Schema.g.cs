@@ -21062,7 +21062,7 @@ namespace EitaaSharp.Schema
     }
 
     /// <summary>TL <c>messageUserReaction#d267dcbc</c>.</summary>
-    public sealed record MessageUserReaction : global::EitaaSharp.Schema.ITLObject
+    public sealed record MessageUserReaction : global::EitaaSharp.Schema.IMessageUserReaction
     {
         public const uint TypeId = 0xD267DCBCu;
         public uint ConstructorId => TypeId;
@@ -21338,6 +21338,8 @@ namespace EitaaSharp.Schema
         public uint ConstructorId => TypeId;
 
         public required int Count { get; init; }
+        public required global::EitaaSharp.Schema.IMessageUserReaction[] Reactions { get; init; }
+        public required global::EitaaSharp.Schema.IUser[] Users { get; init; }
         public string? NextOffset { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
@@ -21347,6 +21349,8 @@ namespace EitaaSharp.Schema
             if (NextOffset is not null) flags |= 0x1;
             writer.WriteInt32(flags);
             writer.WriteInt32(Count);
+            writer.WriteVector(Reactions, (w, x) => w.WriteObject(x));
+            writer.WriteVector(Users, (w, x) => w.WriteObject(x));
             if (NextOffset is not null) writer.WriteString(NextOffset);
         }
 
@@ -21354,8 +21358,10 @@ namespace EitaaSharp.Schema
         {
             int flags = reader.ReadInt32();
             int _Count = reader.ReadInt32();
+            global::EitaaSharp.Schema.IMessageUserReaction[] _Reactions = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IMessageUserReaction>());
+            global::EitaaSharp.Schema.IUser[] _Users = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IUser>());
             string? _NextOffset = (flags & 0x1) != 0 ? reader.ReadString() : null;
-            return new MessageReactionsList { Count = _Count, NextOffset = _NextOffset };
+            return new MessageReactionsList { Count = _Count, Reactions = _Reactions, Users = _Users, NextOffset = _NextOffset };
         }
     }
 
@@ -22509,6 +22515,7 @@ namespace EitaaSharp.Schema
         public uint ConstructorId => TypeId;
 
         public bool Min { get; init; }
+        public required global::EitaaSharp.Schema.IReactionCount[] Results { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
@@ -22516,13 +22523,15 @@ namespace EitaaSharp.Schema
             int flags = 0;
             if (Min) flags |= 0x1;
             writer.WriteInt32(flags);
+            writer.WriteVector(Results, (w, x) => w.WriteObject(x));
         }
 
         public static MessageReactions Deserialize(global::EitaaSharp.Tl.TlReader reader)
         {
             int flags = reader.ReadInt32();
             bool _Min = (flags & 0x1) != 0;
-            return new MessageReactions { Min = _Min };
+            global::EitaaSharp.Schema.IReactionCount[] _Results = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IReactionCount>());
+            return new MessageReactions { Min = _Min, Results = _Results };
         }
     }
 
@@ -22915,18 +22924,19 @@ namespace EitaaSharp.Schema
 
         public required int Id { get; init; }
         public bool Deleted { get; init; }
-        public required string Link { get; init; }
+        public string? Link { get; init; }
         public required int ExpireDate { get; init; }
-        public required global::EitaaSharp.Tl.ITlObject Message { get; init; }
+        public required global::EitaaSharp.Schema.IEitaaNotificationMessage Message { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
             writer.WriteUInt32(TypeId);
             int flags = 0;
             if (Deleted) flags |= 0x1;
+            if (Link is not null) flags |= 0x2;
             writer.WriteInt32(flags);
             writer.WriteInt32(Id);
-            writer.WriteString(Link);
+            if (Link is not null) writer.WriteString(Link);
             writer.WriteInt32(ExpireDate);
             writer.WriteObject(Message);
         }
@@ -22936,34 +22946,40 @@ namespace EitaaSharp.Schema
             int flags = reader.ReadInt32();
             int _Id = reader.ReadInt32();
             bool _Deleted = (flags & 0x1) != 0;
-            string _Link = reader.ReadString();
+            string? _Link = (flags & 0x2) != 0 ? reader.ReadString() : null;
             int _ExpireDate = reader.ReadInt32();
-            global::EitaaSharp.Tl.ITlObject _Message = reader.ReadObject();
+            global::EitaaSharp.Schema.IEitaaNotificationMessage _Message = reader.ReadObject<global::EitaaSharp.Schema.IEitaaNotificationMessage>();
             return new UpdateEitaaNotification { Id = _Id, Deleted = _Deleted, Link = _Link, ExpireDate = _ExpireDate, Message = _Message };
         }
     }
 
     /// <summary>TL <c>EitaaNotification_message#81969acd</c>.</summary>
-    public sealed record EitaaNotificationMessage : global::EitaaSharp.Schema.ITLObject
+    public sealed record EitaaNotificationMessage : global::EitaaSharp.Schema.IEitaaNotificationMessage
     {
         public const uint TypeId = 0x81969ACDu;
         public uint ConstructorId => TypeId;
 
         public required string Title { get; init; }
         public required string Message { get; init; }
+        public global::EitaaSharp.Schema.IMessageEntity[]? Entity { get; init; }
         public global::EitaaSharp.Schema.IPhotoSize? Photo { get; init; }
+        public global::EitaaSharp.Schema.IEitaaNotificationButton[]? Button { get; init; }
         public global::EitaaSharp.Schema.IPhotoSize? Banner { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
             writer.WriteUInt32(TypeId);
             int flags = 0;
+            if (Entity is not null) flags |= 0x1;
             if (Photo is not null) flags |= 0x2;
+            if (Button is not null) flags |= 0x4;
             if (Banner is not null) flags |= 0x8;
             writer.WriteInt32(flags);
             writer.WriteString(Title);
             writer.WriteString(Message);
+            if (Entity is not null) writer.WriteVector(Entity, (w, x) => w.WriteObject(x));
             if (Photo is not null) writer.WriteObject(Photo);
+            if (Button is not null) writer.WriteVector(Button, (w, x) => w.WriteObject(x));
             if (Banner is not null) writer.WriteObject(Banner);
         }
 
@@ -22972,9 +22988,11 @@ namespace EitaaSharp.Schema
             int flags = reader.ReadInt32();
             string _Title = reader.ReadString();
             string _Message = reader.ReadString();
+            global::EitaaSharp.Schema.IMessageEntity[]? _Entity = (flags & 0x1) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IMessageEntity>()) : null;
             global::EitaaSharp.Schema.IPhotoSize? _Photo = (flags & 0x2) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>() : null;
+            global::EitaaSharp.Schema.IEitaaNotificationButton[]? _Button = (flags & 0x4) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IEitaaNotificationButton>()) : null;
             global::EitaaSharp.Schema.IPhotoSize? _Banner = (flags & 0x8) != 0 ? reader.ReadObject<global::EitaaSharp.Schema.IPhotoSize>() : null;
-            return new EitaaNotificationMessage { Title = _Title, Message = _Message, Photo = _Photo, Banner = _Banner };
+            return new EitaaNotificationMessage { Title = _Title, Message = _Message, Entity = _Entity, Photo = _Photo, Button = _Button, Banner = _Banner };
         }
     }
 
@@ -24154,7 +24172,7 @@ namespace EitaaSharp.Schema
     }
 
     /// <summary>TL <c>reactionCount#6fb250d1</c>.</summary>
-    public sealed record ReactionCount : global::EitaaSharp.Schema.ITLObject
+    public sealed record ReactionCount : global::EitaaSharp.Schema.IReactionCount
     {
         public const uint TypeId = 0x6FB250D1u;
         public uint ConstructorId => TypeId;
@@ -25658,6 +25676,8 @@ namespace EitaaSharp.Schema
         public bool SideMenuDisclaimerNeeded { get; init; }
         public required long BotId { get; init; }
         public required string ShortName { get; init; }
+        public required global::EitaaSharp.Schema.IAttachMenuPeerType[] PeerTypes { get; init; }
+        public required global::EitaaSharp.Schema.IAttachMenuBotIcon[] Icons { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
@@ -25672,6 +25692,8 @@ namespace EitaaSharp.Schema
             writer.WriteInt32(flags);
             writer.WriteLong(BotId);
             writer.WriteString(ShortName);
+            writer.WriteVector(PeerTypes, (w, x) => w.WriteObject(x));
+            writer.WriteVector(Icons, (w, x) => w.WriteObject(x));
         }
 
         public static AttachMenuBot Deserialize(global::EitaaSharp.Tl.TlReader reader)
@@ -25685,12 +25707,14 @@ namespace EitaaSharp.Schema
             bool _SideMenuDisclaimerNeeded = (flags & 0x20) != 0;
             long _BotId = reader.ReadLong();
             string _ShortName = reader.ReadString();
-            return new AttachMenuBot { Inactive = _Inactive, HasSettings = _HasSettings, RequestWriteAccess = _RequestWriteAccess, ShowInAttachMenu = _ShowInAttachMenu, ShowInSideMenu = _ShowInSideMenu, SideMenuDisclaimerNeeded = _SideMenuDisclaimerNeeded, BotId = _BotId, ShortName = _ShortName };
+            global::EitaaSharp.Schema.IAttachMenuPeerType[] _PeerTypes = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IAttachMenuPeerType>());
+            global::EitaaSharp.Schema.IAttachMenuBotIcon[] _Icons = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IAttachMenuBotIcon>());
+            return new AttachMenuBot { Inactive = _Inactive, HasSettings = _HasSettings, RequestWriteAccess = _RequestWriteAccess, ShowInAttachMenu = _ShowInAttachMenu, ShowInSideMenu = _ShowInSideMenu, SideMenuDisclaimerNeeded = _SideMenuDisclaimerNeeded, BotId = _BotId, ShortName = _ShortName, PeerTypes = _PeerTypes, Icons = _Icons };
         }
     }
 
     /// <summary>TL <c>attachMenuBotIconColor#4576f3f0</c>.</summary>
-    public sealed record AttachMenuBotIconColor : global::EitaaSharp.Schema.ITLObject
+    public sealed record AttachMenuBotIconColor : global::EitaaSharp.Schema.IAttachMenuBotIconColor
     {
         public const uint TypeId = 0x4576F3F0u;
         public uint ConstructorId => TypeId;
@@ -25714,21 +25738,24 @@ namespace EitaaSharp.Schema
     }
 
     /// <summary>TL <c>attachMenuBotIcon#b2a7386b</c>.</summary>
-    public sealed record AttachMenuBotIcon : global::EitaaSharp.Schema.ITLObject
+    public sealed record AttachMenuBotIcon : global::EitaaSharp.Schema.IAttachMenuBotIcon
     {
         public const uint TypeId = 0xB2A7386Bu;
         public uint ConstructorId => TypeId;
 
         public required string Name { get; init; }
         public required global::EitaaSharp.Schema.IDocument Icon { get; init; }
+        public global::EitaaSharp.Schema.IAttachMenuBotIconColor[]? Colors { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
             writer.WriteUInt32(TypeId);
             int flags = 0;
+            if (Colors is not null) flags |= 0x1;
             writer.WriteInt32(flags);
             writer.WriteString(Name);
             writer.WriteObject(Icon);
+            if (Colors is not null) writer.WriteVector(Colors, (w, x) => w.WriteObject(x));
         }
 
         public static AttachMenuBotIcon Deserialize(global::EitaaSharp.Tl.TlReader reader)
@@ -25736,7 +25763,8 @@ namespace EitaaSharp.Schema
             int flags = reader.ReadInt32();
             string _Name = reader.ReadString();
             global::EitaaSharp.Schema.IDocument _Icon = reader.ReadObject<global::EitaaSharp.Schema.IDocument>();
-            return new AttachMenuBotIcon { Name = _Name, Icon = _Icon };
+            global::EitaaSharp.Schema.IAttachMenuBotIconColor[]? _Colors = (flags & 0x1) != 0 ? reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IAttachMenuBotIconColor>()) : null;
+            return new AttachMenuBotIcon { Name = _Name, Icon = _Icon, Colors = _Colors };
         }
     }
 
@@ -25747,17 +25775,23 @@ namespace EitaaSharp.Schema
         public uint ConstructorId => TypeId;
 
         public required long Hash { get; init; }
+        public required global::EitaaSharp.Schema.IAttachMenuBot[] Bots { get; init; }
+        public required global::EitaaSharp.Schema.IUser[] Users { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
             writer.WriteUInt32(TypeId);
             writer.WriteLong(Hash);
+            writer.WriteVector(Bots, (w, x) => w.WriteObject(x));
+            writer.WriteVector(Users, (w, x) => w.WriteObject(x));
         }
 
         public static AttachMenuBots Deserialize(global::EitaaSharp.Tl.TlReader reader)
         {
             long _Hash = reader.ReadLong();
-            return new AttachMenuBots { Hash = _Hash };
+            global::EitaaSharp.Schema.IAttachMenuBot[] _Bots = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IAttachMenuBot>());
+            global::EitaaSharp.Schema.IUser[] _Users = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IUser>());
+            return new AttachMenuBots { Hash = _Hash, Bots = _Bots, Users = _Users };
         }
     }
 
@@ -25837,17 +25871,20 @@ namespace EitaaSharp.Schema
         public uint ConstructorId => TypeId;
 
         public required global::EitaaSharp.Schema.IAttachMenuBot Bot { get; init; }
+        public required global::EitaaSharp.Schema.IUser[] Users { get; init; }
 
         public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
         {
             writer.WriteUInt32(TypeId);
             writer.WriteObject(Bot);
+            writer.WriteVector(Users, (w, x) => w.WriteObject(x));
         }
 
         public static AttachMenuBotsBot Deserialize(global::EitaaSharp.Tl.TlReader reader)
         {
             global::EitaaSharp.Schema.IAttachMenuBot _Bot = reader.ReadObject<global::EitaaSharp.Schema.IAttachMenuBot>();
-            return new AttachMenuBotsBot { Bot = _Bot };
+            global::EitaaSharp.Schema.IUser[] _Users = reader.ReadVector(r => r.ReadObject<global::EitaaSharp.Schema.IUser>());
+            return new AttachMenuBotsBot { Bot = _Bot, Users = _Users };
         }
     }
 
@@ -26554,6 +26591,30 @@ namespace EitaaSharp.Schema
             string? _BotInlinePlaceholder = (flags & 0x80000) != 0 ? reader.ReadString() : null;
             string? _LangCode = (flags & 0x400000) != 0 ? reader.ReadString() : null;
             return new UserWeb { Self = _Self, Contact = _Contact, MutualContact = _MutualContact, Deleted = _Deleted, Bot = _Bot, BotChatHistory = _BotChatHistory, BotNochats = _BotNochats, Verified = _Verified, Restricted = _Restricted, Min = _Min, BotInlineGeo = _BotInlineGeo, Support = _Support, Scam = _Scam, ApplyMinPhoto = _ApplyMinPhoto, Fake = _Fake, Id = _Id, AccessHash = _AccessHash, FirstName = _FirstName, LastName = _LastName, Username = _Username, Phone = _Phone, Photo = _Photo, Status = _Status, BotInfoVersion = _BotInfoVersion, RestrictionReason = _RestrictionReason, BotInlinePlaceholder = _BotInlinePlaceholder, LangCode = _LangCode };
+        }
+    }
+
+    /// <summary>TL <c>EitaaNotification_button#768aa558</c>.</summary>
+    public sealed record EitaaNotificationButton : global::EitaaSharp.Schema.IEitaaNotificationButton
+    {
+        public const uint TypeId = 0x768AA558u;
+        public uint ConstructorId => TypeId;
+
+        public required string Url { get; init; }
+        public required string ButtonText { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            writer.WriteString(Url);
+            writer.WriteString(ButtonText);
+        }
+
+        public static EitaaNotificationButton Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            string _Url = reader.ReadString();
+            string _ButtonText = reader.ReadString();
+            return new EitaaNotificationButton { Url = _Url, ButtonText = _ButtonText };
         }
     }
 
@@ -27865,6 +27926,9 @@ namespace EitaaSharp.Schema
     /// <summary>TL boxed type <c>TL_documentAttributeSticker</c>.</summary>
     public interface ITLDocumentAttributeSticker : global::EitaaSharp.Tl.ITlObject { }
 
+    /// <summary>TL boxed type <c>MessageUserReaction</c>.</summary>
+    public interface IMessageUserReaction : global::EitaaSharp.Tl.ITlObject { }
+
     /// <summary>TL boxed type <c>TLObject</c>.</summary>
     public interface ITLObject : global::EitaaSharp.Tl.ITlObject { }
 
@@ -27940,11 +28004,20 @@ namespace EitaaSharp.Schema
     /// <summary>TL boxed type <c>DecryptedMessageMedia</c>.</summary>
     public interface IDecryptedMessageMedia : global::EitaaSharp.Tl.ITlObject { }
 
+    /// <summary>TL boxed type <c>ReactionCount</c>.</summary>
+    public interface IReactionCount : global::EitaaSharp.Tl.ITlObject { }
+
     /// <summary>TL boxed type <c>TL_video_layer45</c>.</summary>
     public interface ITLVideoLayer45 : global::EitaaSharp.Tl.ITlObject { }
 
     /// <summary>TL boxed type <c>TL_document</c>.</summary>
     public interface ITLDocument : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>EitaaNotification_message</c>.</summary>
+    public interface IEitaaNotificationMessage : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>EitaaNotification_button</c>.</summary>
+    public interface IEitaaNotificationButton : global::EitaaSharp.Tl.ITlObject { }
 
     /// <summary>TL boxed type <c>TL_userProfilePhoto</c>.</summary>
     public interface ITLUserProfilePhoto : global::EitaaSharp.Tl.ITlObject { }
@@ -28005,6 +28078,15 @@ namespace EitaaSharp.Schema
 
     /// <summary>TL boxed type <c>AttachMenuBot</c>.</summary>
     public interface IAttachMenuBot : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>AttachMenuPeerType</c>.</summary>
+    public interface IAttachMenuPeerType : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>AttachMenuBotIcon</c>.</summary>
+    public interface IAttachMenuBotIcon : global::EitaaSharp.Tl.ITlObject { }
+
+    /// <summary>TL boxed type <c>AttachMenuBotIconColor</c>.</summary>
+    public interface IAttachMenuBotIconColor : global::EitaaSharp.Tl.ITlObject { }
 
     /// <summary>TL boxed type <c>AttachMenuBots</c>.</summary>
     public interface IAttachMenuBots : global::EitaaSharp.Tl.ITlObject { }

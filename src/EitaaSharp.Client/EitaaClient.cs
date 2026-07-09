@@ -73,6 +73,22 @@ public sealed partial class EitaaClient : IDisposable
     /// </summary>
     public Func<EitaaClient, CancellationToken, Task<bool>>? TokenRefreshHandler { get; set; }
 
+    /// <summary>
+    /// When <c>true</c> (the default), a response that cannot be deserialized throws a
+    /// <see cref="Tl.TlException"/>. When <c>false</c>, <c>CallAsync</c>/<c>CallObjectAsync</c> instead
+    /// invoke <see cref="OnDeserializeError"/> and return <c>default</c>. Initialized from
+    /// <see cref="EitaaClientOptions.ThrowOnDeserializeError"/>; settable at runtime.
+    /// </summary>
+    public bool ThrowOnDeserializeError { get; set; } = true;
+
+    /// <summary>
+    /// Invoked when a response cannot be deserialized (an unknown/unmodeled TL constructor) and
+    /// <see cref="ThrowOnDeserializeError"/> is <c>false</c>. The offending call then returns
+    /// <c>default</c> instead of throwing. Use it to log the actionable breadcrumb carried by
+    /// <see cref="Tl.TlDeserializeException"/>. Leave <c>null</c> to ignore.
+    /// </summary>
+    public Action<Exception>? OnDeserializeError { get; set; }
+
     /// <summary>Raised after a successful sign-in/sign-up.</summary>
     public event EventHandler<Auth.IAuthorization>? Authorized;
 
@@ -105,6 +121,7 @@ public sealed partial class EitaaClient : IDisposable
         _appInfo = options.AppInfo;
         _autoFloodWait = options.AutoFloodWait;
         _maxFloodWaitSeconds = options.MaxFloodWaitSeconds;
+        ThrowOnDeserializeError = options.ThrowOnDeserializeError;
         // Mirror the Android client: refresh the token automatically on expiry unless the caller
         // supplied their own handler (or explicitly disabled it).
         TokenRefreshHandler = options.TokenRefreshHandler
@@ -152,6 +169,11 @@ public sealed partial class EitaaClient : IDisposable
             _unsupportedMethods.TryAdd(method.GetType(), 0);
             return default!;
         }
+        catch (TlException ex) when (!ThrowOnDeserializeError)
+        {
+            OnDeserializeError?.Invoke(ex);
+            return default!;
+        }
     }
 
     /// <summary>Calls any TL method and returns the raw deserialized object (with the same auto-refresh + eitaaNoSend behavior).</summary>
@@ -167,6 +189,11 @@ public sealed partial class EitaaClient : IDisposable
         catch (RpcException ex) when (ex.IsInvalidConstructor)
         {
             _unsupportedMethods.TryAdd(method.GetType(), 0);
+            return default!;
+        }
+        catch (TlException ex) when (!ThrowOnDeserializeError)
+        {
+            OnDeserializeError?.Invoke(ex);
             return default!;
         }
         OnResult(result);

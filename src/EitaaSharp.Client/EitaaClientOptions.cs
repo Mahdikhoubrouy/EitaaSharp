@@ -61,6 +61,14 @@ public sealed class EitaaClientOptions
     public int Layer { get; init; } = 137;
 
     /// <summary>
+    /// When <c>true</c> (the default), a response that cannot be deserialized (an unknown/unmodeled TL
+    /// constructor) throws a <see cref="Tl.TlException"/> from <c>CallAsync</c>/<c>CallObjectAsync</c>.
+    /// Set <c>false</c> to instead invoke <see cref="EitaaClient.OnDeserializeError"/> and return
+    /// <c>default</c> — the same resilience the update receive loop already has, for every call.
+    /// </summary>
+    public bool ThrowOnDeserializeError { get; init; } = true;
+
+    /// <summary>
     /// A single HTTPS endpoint to use. When null (the default), the client load-balances and fails
     /// over across the official Eitaa datacenter-1 host pool (<see cref="Transport.HttpEitaaTransport.DefaultHosts"/>).
     /// </summary>

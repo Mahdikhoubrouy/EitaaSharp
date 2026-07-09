@@ -72,7 +72,10 @@ public sealed class EitaaRpc
         byte[] response = await SendAsync(method, kind, cancellationToken).ConfigureAwait(false);
         ThrowIfError(response);
 
-        return new TlReader(response, _registry).ReadObject();
+        // Tolerate an unmodeled top-level response: return UnknownConstructor (id + raw bytes) rather
+        // than throwing, so an unknown whole-response type is observable instead of fatal. Nested
+        // unknowns still throw. CallAsync<T> stays strict because it must cast to a concrete result.
+        return new TlReader(response, _registry, tolerateUnknownTopLevel: true).ReadObject();
     }
 
     private async Task<byte[]> SendAsync(ITlObject method, Transport.ConnectionKind kind, CancellationToken cancellationToken)

@@ -521,7 +521,11 @@ public sealed class Emitter
         sb.AppendLine("            {");
         sb.AppendLine("                if (registry == global::EitaaSharp.Tl.TlRegistry.Default && _registered) return;");
         foreach (var (id, fullName) in _registrations)
-            sb.AppendLine($"                registry.Register(0x{id:X8}u, {fullName}.Deserialize);");
+        {
+            // Short, readable type name (drops the global::EitaaSharp.Schema. prefix) for error breadcrumbs.
+            var shortName = fullName.Replace("global::EitaaSharp.Schema.", "");
+            sb.AppendLine($"                registry.Register(0x{id:X8}u, {fullName}.Deserialize, \"{shortName}\");");
+        }
         sb.AppendLine("                if (registry == global::EitaaSharp.Tl.TlRegistry.Default) _registered = true;");
         sb.AppendLine("            }");
         sb.AppendLine("        }");

@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Linq;
 using System.Text;
 
 namespace EitaaSharp.Tl;
@@ -12,12 +13,27 @@ public sealed class TlReader
     private readonly byte[] _buffer;
     private int _position;
     private readonly TlRegistry _registry;
+    private readonly bool _tolerateUnknownTopLevel;
 
-    public TlReader(byte[] buffer, TlRegistry? registry = null)
+    // Depth of the current ReadObject nesting (0 = the outermost/top-level object) and the chain of
+    // constructor ids the reader is currently inside, used to build an error breadcrumb.
+    private int _depth;
+    private readonly Stack<uint> _typeStack = new();
+
+    /// <param name="buffer">The wire bytes to read.</param>
+    /// <param name="registry">Constructor registry to dispatch on (defaults to <see cref="TlRegistry.Default"/>).</param>
+    /// <param name="tolerateUnknownTopLevel">
+    /// When <c>true</c>, an unknown <b>top-level</b> constructor id yields an
+    /// <see cref="UnknownConstructor"/> (capturing the id and remaining bytes) instead of throwing.
+    /// Nested unknowns still throw (they are positionally unrecoverable). Defaults to <c>false</c> so
+    /// strict paths (e.g. golden-byte tests) keep the throwing behaviour.
+    /// </param>
+    public TlReader(byte[] buffer, TlRegistry? registry = null, bool tolerateUnknownTopLevel = false)
     {
         _buffer = buffer;
         _position = 0;
         _registry = registry ?? TlRegistry.Default;
+        _tolerateUnknownTopLevel = tolerateUnknownTopLevel;
     }
 
     public int Position => _position;
@@ -97,15 +113,50 @@ public sealed class TlReader
     /// <summary>Reads a boxed object: dispatches on the constructor id via the registry.</summary>
     public ITlObject ReadObject()
     {
+        int idOffset = _position;
         uint id = ReadConstructorId();
 
         if (id == GzipPackedId)
         {
             byte[] inflated = GzipInflate(ReadBytes());
-            return new TlReader(inflated, _registry).ReadObject();
+            // Preserve tolerance across the gzip boundary: the inflated object is still "top-level".
+            return new TlReader(inflated, _registry, _tolerateUnknownTopLevel).ReadObject();
         }
 
-        return _registry.Create(id, this);
+        if (!_registry.TryGet(id, out var factory))
+        {
+            // Recoverable only at the top level, where the unknown body is simply the rest of the
+            // buffer and no later fields depend on it. A nested unknown is positionally unrecoverable.
+            if (_tolerateUnknownTopLevel && _depth == 0)
+                return new UnknownConstructor(id, ReadRawBytes(Remaining));
+
+            throw new TlDeserializeException(id, idOffset, BuildTypePath());
+        }
+
+        _depth++;
+        _typeStack.Push(id);
+        try
+        {
+            return factory(this);
+        }
+        finally
+        {
+            _typeStack.Pop();
+            _depth--;
+        }
+    }
+
+    /// <summary>Builds an outermost-first, arrow-separated breadcrumb of the types currently being read.</summary>
+    private string? BuildTypePath()
+    {
+        if (_typeStack.Count == 0)
+            return null;
+
+        // Stack enumerates top (innermost) first — reverse for outermost-first reading order.
+        var names = _typeStack
+            .Reverse()
+            .Select(id => _registry.GetName(id) ?? $"0x{id:X8}");
+        return string.Join(" → ", names);
     }
 
     private static byte[] GzipInflate(byte[] compressed)

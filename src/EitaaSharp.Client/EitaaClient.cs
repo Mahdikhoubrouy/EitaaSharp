@@ -110,9 +110,15 @@ public sealed partial class EitaaClient : IDisposable
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        _session = options.Session ?? new MemorySession(
-            options.Imei ?? throw new ArgumentException("Imei or Session is required", nameof(options)),
-            options.Token);
+        if (options.Session is not null && options.SessionString is not null)
+            throw new ArgumentException("Set either Session or SessionString, not both.", nameof(options));
+
+        _session = options.Session
+            ?? (options.SessionString is { } s
+                ? MemorySession.FromString(s)
+                : new MemorySession(
+                    options.Imei ?? throw new ArgumentException("Session, SessionString, or Imei is required", nameof(options)),
+                    options.Token));
 
         var transport = new HttpEitaaTransport(options.Endpoint, timeout: options.Timeout, maxRetries: options.MaxRetries);
         _ownedTransport = transport;
@@ -261,6 +267,29 @@ public sealed partial class EitaaClient : IDisposable
 
         Authorized?.Invoke(this, auth);
     }
+
+    /// <summary>
+    /// Exports the current session to a portable Base64 session string (see
+    /// <see cref="Session.SessionString"/>) — store it in a database, an environment variable, or a
+    /// secret store and reconstruct the client later via <see cref="EitaaClientOptions.SessionString"/>.
+    /// The string contains the account token, so treat it as a secret (never log it).
+    /// </summary>
+    /// <param name="includePeers">When <c>true</c> (the default), includes the learned peer-access-hash cache.</param>
+    /// <returns>A Base64 session string.</returns>
+    public string ExportSessionString(bool includePeers = true)
+        => _session is MemorySession ms
+            ? ms.ExportString(includePeers)
+            // A custom IEitaaSession can't expose its peer cache through the interface — export the
+            // token/imei/login fields only (still a fully usable session; the cache rebuilds from updates).
+            : SessionString.Serialize(
+                new SessionData
+                {
+                    Token = _session.Token,
+                    Imei = _session.Imei,
+                    PhoneNumber = _session.PhoneNumber,
+                    PhoneCodeHash = _session.PhoneCodeHash,
+                },
+                includePeers: false);
 
     public void Dispose() => _ownedTransport?.Dispose();
 }

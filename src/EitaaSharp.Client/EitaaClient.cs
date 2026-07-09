@@ -33,6 +33,13 @@ public sealed partial class EitaaClient : IDisposable
     private readonly global::EitaaSharp.Schema.Mt.IEitaaAppInfo? _appInfo;
     private readonly bool _autoFloodWait = true;
     private readonly int _maxFloodWaitSeconds = 60;
+
+    // Methods the server serves only over the official client's socket (they answer INVALID_CONSTRUCTOR
+    // over HTTP) — skipped from then on, mirroring the web client's `eitaaNoSend` list. Seeded with
+    // messages.setTyping; grown automatically the first time any method is rejected this way.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<Type, byte> _unsupportedMethods =
+        new(new[] { new KeyValuePair<Type, byte>(typeof(global::EitaaSharp.Schema.Messages.SetTyping), (byte)0) });
+
     private readonly PeerResolver _peers;
     private readonly UpdateDispatcher _dispatcher = new();
     private FileUploader? _uploads;
@@ -124,20 +131,44 @@ public sealed partial class EitaaClient : IDisposable
 
     /// <summary>
     /// Calls any TL method and returns its typed result. Any <see cref="IUpdates"/> result is
-    /// dispatched to update events. If the session expired and <see cref="TokenRefreshHandler"/>
-    /// is set, the token is refreshed and the call is retried once.
+    /// dispatched to update events, an expired token is refreshed and the call retried, and a
+    /// <c>FLOOD_WAIT</c> is waited out. A method the server answers with <c>INVALID_CONSTRUCTOR</c>
+    /// (i.e. it is served only over the official client's socket, like <c>messages.setTyping</c>) is
+    /// remembered and skipped from then on, returning <c>default</c> — mirroring the web client's
+    /// <c>eitaaNoSend</c> list.
     /// </summary>
     public async Task<TResult> CallAsync<TResult>(ITlMethod<TResult> method, CancellationToken cancellationToken = default)
     {
-        var result = await WithRefreshRetryAsync(ct => _rpc.CallAsync(method, ct), cancellationToken).ConfigureAwait(false);
-        OnResult(result);
-        return result;
+        if (_unsupportedMethods.ContainsKey(method.GetType()))
+            return default!;
+        try
+        {
+            var result = await WithRefreshRetryAsync(ct => _rpc.CallAsync(method, ct), cancellationToken).ConfigureAwait(false);
+            OnResult(result);
+            return result;
+        }
+        catch (RpcException ex) when (ex.IsInvalidConstructor)
+        {
+            _unsupportedMethods.TryAdd(method.GetType(), 0);
+            return default!;
+        }
     }
 
-    /// <summary>Calls any TL method and returns the raw deserialized object (with the same auto-refresh behavior).</summary>
+    /// <summary>Calls any TL method and returns the raw deserialized object (with the same auto-refresh + eitaaNoSend behavior).</summary>
     public async Task<ITlObject> CallObjectAsync(ITlObject method, CancellationToken cancellationToken = default)
     {
-        var result = await WithRefreshRetryAsync(ct => _rpc.CallObjectAsync(method, ct), cancellationToken).ConfigureAwait(false);
+        if (_unsupportedMethods.ContainsKey(method.GetType()))
+            return default!;
+        ITlObject result;
+        try
+        {
+            result = await WithRefreshRetryAsync(ct => _rpc.CallObjectAsync(method, ct), cancellationToken).ConfigureAwait(false);
+        }
+        catch (RpcException ex) when (ex.IsInvalidConstructor)
+        {
+            _unsupportedMethods.TryAdd(method.GetType(), 0);
+            return default!;
+        }
         OnResult(result);
         return result;
     }

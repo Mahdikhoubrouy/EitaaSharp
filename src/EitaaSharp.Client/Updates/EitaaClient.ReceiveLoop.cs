@@ -8,6 +8,9 @@ namespace EitaaSharp.Client;
 public sealed partial class EitaaClient
 {
     private readonly List<Func<Message, Task>> _messageHandlers = new();
+    private readonly List<Func<Message, Task>> _editedHandlers = new();
+    private readonly List<Func<DeletedMessages, Task>> _deletedHandlers = new();
+    private readonly List<Func<Schema.IUpdate, Task>> _rawHandlers = new();
 
     /// <summary>Registers a handler invoked for every new incoming/outgoing message while <see cref="RunAsync"/> runs.</summary>
     public void OnMessage(Func<Message, Task> handler) => _messageHandlers.Add(handler);
@@ -15,6 +18,15 @@ public sealed partial class EitaaClient
     /// <summary>Registers a message handler that only runs when <paramref name="filter"/> matches.</summary>
     public void OnMessage(Func<Message, bool> filter, Func<Message, Task> handler)
         => _messageHandlers.Add(m => filter(m) ? handler(m) : Task.CompletedTask);
+
+    /// <summary>Registers a handler invoked when a message is edited.</summary>
+    public void OnEditedMessage(Func<Message, Task> handler) => _editedHandlers.Add(handler);
+
+    /// <summary>Registers a handler invoked when messages are deleted (carrying their ids).</summary>
+    public void OnDeletedMessages(Func<DeletedMessages, Task> handler) => _deletedHandlers.Add(handler);
+
+    /// <summary>Registers a handler invoked for every raw <see cref="Schema.IUpdate"/> — the escape hatch for update types without a friendly wrapper.</summary>
+    public void OnRawUpdate(Func<Schema.IUpdate, Task> handler) => _rawHandlers.Add(handler);
 
     /// <summary>
     /// Invoked when <see cref="RunAsync"/> cannot deserialize an update batch (e.g. the server sent a
@@ -92,13 +104,56 @@ public sealed partial class EitaaClient
         }
     }
 
-    private async Task DispatchAsync(
+    internal async Task DispatchAsync(
         Schema.IMessage[] newMessages, Schema.IUpdate[] otherUpdates, Schema.IUser[] users, Schema.IChat[] chats)
     {
-        var messages = ParseContext.MessagesFromDifference(this, newMessages, otherUpdates, users, chats);
-        foreach (var message in messages)
-            foreach (var handler in _messageHandlers)
-                await handler(message).ConfigureAwait(false);
+        var ctx = new ParseContext(this, users, chats);
+
+        // New messages arrive flattened in new_messages.
+        foreach (var m in newMessages)
+            if (ctx.ParseMessage(m) is { } pm)
+                await FireAsync(_messageHandlers, pm).ConfigureAwait(false);
+
+        // Everything else (edits, deletions, read receipts, …) is in other_updates.
+        foreach (var update in otherUpdates)
+        {
+            foreach (var raw in _rawHandlers)
+                await raw(update).ConfigureAwait(false);
+
+            switch (update)
+            {
+                case Schema.UpdateNewMessage u when ctx.ParseMessage(u.Message) is { } pm:
+                    await FireAsync(_messageHandlers, pm).ConfigureAwait(false);
+                    break;
+                case Schema.UpdateNewChannelMessage u when ctx.ParseMessage(u.Message) is { } pm:
+                    await FireAsync(_messageHandlers, pm).ConfigureAwait(false);
+                    break;
+                case Schema.UpdateEditMessage u when ctx.ParseMessage(u.Message) is { } pm:
+                    await FireAsync(_editedHandlers, pm).ConfigureAwait(false);
+                    break;
+                case Schema.UpdateEditChannelMessage u when ctx.ParseMessage(u.Message) is { } pm:
+                    await FireAsync(_editedHandlers, pm).ConfigureAwait(false);
+                    break;
+                case Schema.UpdateDeleteMessages u:
+                    await FireDeletedAsync(new DeletedMessages(u.Messages, null)).ConfigureAwait(false);
+                    break;
+                case Schema.UpdateDeleteChannelMessages u:
+                    await FireDeletedAsync(new DeletedMessages(u.Messages, u.ChannelId)).ConfigureAwait(false);
+                    break;
+            }
+        }
+    }
+
+    private static async Task FireAsync(List<Func<Message, Task>> handlers, Message message)
+    {
+        foreach (var handler in handlers)
+            await handler(message).ConfigureAwait(false);
+    }
+
+    private async Task FireDeletedAsync(DeletedMessages deleted)
+    {
+        foreach (var handler in _deletedHandlers)
+            await handler(deleted).ConfigureAwait(false);
     }
 
     private static (int pts, int qts, int date) StateOf(Upd.IState state)

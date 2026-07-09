@@ -17393,7 +17393,7 @@
           "type": "string"
         }
       ],
-      "type": "TLObject"
+      "type": "MessageUserReaction"
     },
     {
       "id": 1653816932,
@@ -17519,6 +17519,14 @@
         {
           "name": "count",
           "type": "int"
+        },
+        {
+          "name": "reactions",
+          "type": "Vector<MessageUserReaction>"
+        },
+        {
+          "name": "users",
+          "type": "Vector<User>"
         },
         {
           "name": "next_offset",
@@ -18440,6 +18448,10 @@
         {
           "name": "min",
           "type": "flags.0?true"
+        },
+        {
+          "name": "results",
+          "type": "Vector<ReactionCount>"
         }
       ],
       "type": "TLObject"
@@ -18817,7 +18829,7 @@
         },
         {
           "name": "link",
-          "type": "string"
+          "type": "flags.1?string"
         },
         {
           "name": "expireDate",
@@ -18825,7 +18837,7 @@
         },
         {
           "name": "message",
-          "type": "Object"
+          "type": "EitaaNotification_message"
         }
       ],
       "type": "Update"
@@ -18847,15 +18859,23 @@
           "type": "string"
         },
         {
+          "name": "entity",
+          "type": "flags.0?Vector<MessageEntity>"
+        },
+        {
           "name": "photo",
           "type": "flags.1?PhotoSize"
+        },
+        {
+          "name": "button",
+          "type": "flags.2?Vector<EitaaNotification_button>"
         },
         {
           "name": "banner",
           "type": "flags.3?PhotoSize"
         }
       ],
-      "type": "TLObject"
+      "type": "EitaaNotification_message"
     },
     {
       "id": -1586283796,
@@ -19746,7 +19766,7 @@
           "type": "int"
         }
       ],
-      "type": "TLObject"
+      "type": "ReactionCount"
     },
     {
       "id": 467867529,
@@ -20945,6 +20965,14 @@
         {
           "name": "short_name",
           "type": "string"
+        },
+        {
+          "name": "peer_types",
+          "type": "Vector<AttachMenuPeerType>"
+        },
+        {
+          "name": "icons",
+          "type": "Vector<AttachMenuBotIcon>"
         }
       ],
       "type": "AttachMenuBot"
@@ -20962,7 +20990,7 @@
           "type": "int"
         }
       ],
-      "type": "TLObject"
+      "type": "AttachMenuBotIconColor"
     },
     {
       "id": -1297663893,
@@ -20979,9 +21007,13 @@
         {
           "name": "icon",
           "type": "Document"
+        },
+        {
+          "name": "colors",
+          "type": "flags.0?Vector<AttachMenuBotIconColor>"
         }
       ],
-      "type": "TLObject"
+      "type": "AttachMenuBotIcon"
     },
     {
       "id": 1011024320,
@@ -20990,6 +21022,14 @@
         {
           "name": "hash",
           "type": "long"
+        },
+        {
+          "name": "bots",
+          "type": "Vector<AttachMenuBot>"
+        },
+        {
+          "name": "users",
+          "type": "Vector<User>"
         }
       ],
       "type": "AttachMenuBots"
@@ -21041,6 +21081,10 @@
         {
           "name": "bot",
           "type": "AttachMenuBot"
+        },
+        {
+          "name": "users",
+          "type": "Vector<User>"
         }
       ],
       "type": "TLObject"
@@ -21656,6 +21700,21 @@
         }
       ],
       "type": "User"
+    },
+    {
+      "id": 1988797784,
+      "predicate": "EitaaNotification_button",
+      "params": [
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "buttonText",
+          "type": "string"
+        }
+      ],
+      "type": "EitaaNotification_button"
     }
   ],
   "methods": [

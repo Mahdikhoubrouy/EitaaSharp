@@ -123,6 +123,8 @@ secret store or an encrypted column, and never log it.
 - `client.Uploads` / `client.Downloads` — chunked file transfer.
 - `client.UpdatesReceived` / `client.UpdateReceived` — update events.
 - `client.CallAsync` / `client.InvokeAsync` — invoke any of the ~423 TL methods, strongly typed.
+- `client.SendReactionAsync` / `message.ReactAsync` / `client.GetMessageReactionsAsync` — emoji reactions.
+- `client.RequestWebViewAsync` — resolve a bot mini-app / web-view launch URL.
 
 ### Method groups (`Methods/<Category>/`, one method per file)
 `Auth` · `Messages` · `Chats` · `Users` · `Contacts` · `Account` · `Utilities`

@@ -1180,9 +1180,10 @@ namespace EitaaSharp.Schema
                 registry.Register(0x1F486803u, global::EitaaSharp.Schema.ExportedMessageLink.Deserialize, "ExportedMessageLink");
                 registry.Register(0xC6D14312u, global::EitaaSharp.Schema.Channel.Deserialize, "Channel");
                 registry.Register(0x3FF6ECB0u, global::EitaaSharp.Schema.UserWeb.Deserialize, "UserWeb");
+                registry.Register(0x768AA558u, global::EitaaSharp.Schema.EitaaNotificationButton.Deserialize, "EitaaNotificationButton");
                 if (registry == global::EitaaSharp.Tl.TlRegistry.Default) _registered = true;
             }
         }
-        public const int ConstructorCount = 1166;
+        public const int ConstructorCount = 1167;
     }
 }

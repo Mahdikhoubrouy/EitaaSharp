@@ -36,6 +36,9 @@ public sealed class Chat
     /// <summary>Member count for groups/channels, when known.</summary>
     public int? MembersCount { get; private init; }
 
+    /// <summary>The chat/channel description ("about"), populated by <see cref="EitaaClient.GetChatAsync"/>.</summary>
+    public string? About { get; internal set; }
+
     /// <summary>The raw TL <c>chat</c>/<c>channel</c> (null for a user-backed private chat).</summary>
     public Schema.IChat? Raw { get; private init; }
 

@@ -26618,6 +26618,42 @@ namespace EitaaSharp.Schema
         }
     }
 
+    /// <summary>TL <c>chatPhoto_layer126#d20b9f3c</c>.</summary>
+    public sealed record ChatPhotoLayer126 : global::EitaaSharp.Schema.IChatPhoto
+    {
+        public const uint TypeId = 0xD20B9F3Cu;
+        public uint ConstructorId => TypeId;
+
+        public bool HasVideo { get; init; }
+        public required long PhotoId { get; init; }
+        public required global::EitaaSharp.Schema.IFileLocation PhotoSmall { get; init; }
+        public required global::EitaaSharp.Schema.IFileLocation PhotoBig { get; init; }
+        public required int DcId { get; init; }
+
+        public void Serialize(global::EitaaSharp.Tl.TlWriter writer)
+        {
+            writer.WriteUInt32(TypeId);
+            int flags = 0;
+            if (HasVideo) flags |= 0x1;
+            writer.WriteInt32(flags);
+            writer.WriteLong(PhotoId);
+            writer.WriteObject(PhotoSmall);
+            writer.WriteObject(PhotoBig);
+            writer.WriteInt32(DcId);
+        }
+
+        public static ChatPhotoLayer126 Deserialize(global::EitaaSharp.Tl.TlReader reader)
+        {
+            int flags = reader.ReadInt32();
+            bool _HasVideo = (flags & 0x1) != 0;
+            long _PhotoId = reader.ReadLong();
+            global::EitaaSharp.Schema.IFileLocation _PhotoSmall = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
+            global::EitaaSharp.Schema.IFileLocation _PhotoBig = reader.ReadObject<global::EitaaSharp.Schema.IFileLocation>();
+            int _DcId = reader.ReadInt32();
+            return new ChatPhotoLayer126 { HasVideo = _HasVideo, PhotoId = _PhotoId, PhotoSmall = _PhotoSmall, PhotoBig = _PhotoBig, DcId = _DcId };
+        }
+    }
+
     /// <summary>TL <c>invokeAfterMsg#cb9f372d</c>.</summary>
     public sealed record InvokeAfterMsg : global::EitaaSharp.Tl.ITlMethod<global::EitaaSharp.Tl.ITlObject>
     {

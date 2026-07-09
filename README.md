@@ -125,6 +125,10 @@ secret store or an encrypted column, and never log it.
 - `client.CallAsync` / `client.InvokeAsync` — invoke any of the ~423 TL methods, strongly typed.
 - `client.SendReactionAsync` / `message.ReactAsync` / `client.GetMessageReactionsAsync` — emoji reactions.
 - `client.RequestWebViewAsync` — resolve a bot mini-app / web-view launch URL.
+- `client.PinChatMessageAsync` / `UnpinChatMessageAsync` (+ `message.PinAsync` / `UnpinAsync`) — pin management.
+- `client.EditMessageMediaAsync` / `EditMessageCaptionAsync` — replace media or edit a caption.
+- `client.GetMessageAsync` / `DeleteChatHistoryAsync` — single-message fetch, clear history.
+- `client.GetChatAsync` — full chat info (`Title`, `Username`, `MembersCount`, `About`).
 
 ### Method groups (`Methods/<Category>/`, one method per file)
 `Auth` · `Messages` · `Chats` · `Users` · `Contacts` · `Account` · `Utilities`

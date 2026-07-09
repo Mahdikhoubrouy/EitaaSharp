@@ -200,9 +200,22 @@ internal sealed class ParseContext
     public static Chat ChatFromFull(EitaaClient client, Messages.IChatFull full, long id)
     {
         if (full is Messages.ChatFull cf)
+        {
+            Chat? chat = null;
             foreach (var ch in cf.Chats)
-                if (ChatId(ch) == id)
-                    return Chat.FromRaw(client, ch);
+                if (ChatId(ch) == id) { chat = Chat.FromRaw(client, ch); break; }
+            chat ??= Chat.Minimal(client, id, ChatType.Group);
+
+            // Enrich with the description carried by the full_chat part.
+            string? about = cf.FullChat switch
+            {
+                Schema.ChannelFull chf => chf.About,
+                Schema.ChatFull cfull => cfull.About,
+                _ => null,
+            };
+            chat.About = string.IsNullOrEmpty(about) ? null : about;
+            return chat;
+        }
         return Chat.Minimal(client, id, ChatType.Group);
     }
 

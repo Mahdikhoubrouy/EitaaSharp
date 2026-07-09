@@ -75,6 +75,14 @@ public sealed class Message
     public Task ReactAsync(string? emoji, CancellationToken cancellationToken = default)
         => _client.SendReactionAsync(Chat.Id, Id, emoji, cancellationToken);
 
+    /// <summary>Pins this message in its chat.</summary>
+    public Task PinAsync(bool silent = false, CancellationToken cancellationToken = default)
+        => _client.PinChatMessageAsync(Chat.Id, Id, silent, cancellationToken: cancellationToken);
+
+    /// <summary>Unpins this message in its chat.</summary>
+    public Task UnpinAsync(CancellationToken cancellationToken = default)
+        => _client.UnpinChatMessageAsync(Chat.Id, Id, cancellationToken);
+
     /// <summary>True if this message has a downloadable photo or document.</summary>
     public bool HasMedia => Media is Schema.MessageMediaPhoto or Schema.MessageMediaDocument;
 

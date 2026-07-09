@@ -64,6 +64,23 @@ public class MemorySession : IEitaaSession
 
     public virtual Task SaveAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
 
+    /// <summary>
+    /// Builds a <see cref="MemorySession"/> from a portable Base64 session string (see
+    /// <see cref="SessionString"/>). Ideal for loading one of N sessions stored in a database.
+    /// </summary>
+    /// <param name="session">A Base64 session string produced by <see cref="ExportString"/>.</param>
+    /// <returns>A ready in-memory session (token, imei, and — if the string carried it — the peer cache).</returns>
+    /// <exception cref="FormatException">The string is not a valid Eitaa session string.</exception>
+    public static MemorySession FromString(string session) => new(SessionString.Deserialize(session));
+
+    /// <summary>
+    /// Exports this session to a portable Base64 session string. It contains the account token — treat it
+    /// as a secret (store it in a secret store or an encrypted column, never in logs).
+    /// </summary>
+    /// <param name="includePeers">When <c>true</c> (the default), includes the learned peer-access-hash cache.</param>
+    /// <returns>A Base64 session string that <see cref="FromString"/> reads back.</returns>
+    public string ExportString(bool includePeers = true) => SessionString.Serialize(Snapshot(), includePeers);
+
     /// <summary>Snapshots the current state for persistence.</summary>
     protected SessionData Snapshot() => new()
     {

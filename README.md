@@ -90,6 +90,28 @@ byte[] bytes = await sent.DownloadAsync();   // when sent.HasMedia
 var wallpapers = await client.InvokeAsync(new EitaaSharp.Schema.Account.GetWallPapers { Hash = 0 });
 ```
 
+### Storing sessions in a database (session strings)
+
+Export a session to one compact Base64 **session string** and rebuild a client from it later —
+ideal for keeping N accounts in a database with no `.session` files on disk.
+
+```csharp
+// After login/refresh, persist the string (e.g. an encrypted DB column):
+string session = client.ExportSessionString();          // token + imei + peer cache
+myDb.Save(accountId, session);
+
+// On startup, reconstruct the client from just the string — no file involved:
+using var client = new EitaaClient(new EitaaClientOptions { SessionString = myDb.Load(accountId) });
+User me = await client.GetMeAsync();
+
+// Token-only (smaller; the peer cache rebuilds from updates/dialogs):
+string minimal = client.ExportSessionString(includePeers: false);
+```
+
+Each client keeps its own in-memory state, so many independent sessions can run in one process.
+⚠️ A session string is a **bearer credential** (it contains the account token) — store it in a
+secret store or an encrypted column, and never log it.
+
 ### Two layers (like Pyrogram)
 - **High-level** — friendly methods returning `Message`/`Chat`/`User`/`Dialog`/`ChatMember`,
   accepting a `ChatId` (id / `@username` / `"me"`). Bound methods: `message.ReplyAsync/EditAsync/DeleteAsync/ForwardAsync/DownloadAsync`, `chat.SendMessageAsync`, `user.SendMessageAsync`.

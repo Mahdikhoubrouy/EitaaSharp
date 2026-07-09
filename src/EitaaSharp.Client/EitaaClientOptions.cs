@@ -11,6 +11,13 @@ public sealed class EitaaClientOptions
     /// </summary>
     public IEitaaSession? Session { get; init; }
 
+    /// <summary>
+    /// A portable Base64 session string (see <see cref="Session.SessionString"/>) to construct the client
+    /// from — the equivalent of loading a session row from a database. A <see cref="Session.MemorySession"/>
+    /// is created under the hood. Mutually exclusive with <see cref="Session"/>; ignored when that is set.
+    /// </summary>
+    public string? SessionString { get; init; }
+
     /// <summary>The Eitaa account token. Optional — null/empty until sign-in. Ignored if <see cref="Session"/> is set.</summary>
     public string? Token { get; init; }
 

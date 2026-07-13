@@ -5,6 +5,9 @@ Telegram-style TL (Type Language) binary wire format and the Eitaa transport env
 (plaintext-over-HTTPS — no MTProto encryption), with strongly-typed, code-generated
 schema bindings.
 
+📖 **Full documentation: the [EitaaSharp Wiki](docs/wiki/Home.md)** — every method, with
+signatures and examples, plus sessions, updates, error handling, and how the wire works.
+
 ## Projects
 
 | Project | Purpose |

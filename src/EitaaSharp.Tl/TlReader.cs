@@ -130,7 +130,7 @@ public sealed class TlReader
             if (_tolerateUnknownTopLevel && _depth == 0)
                 return new UnknownConstructor(id, ReadRawBytes(Remaining));
 
-            throw new TlDeserializeException(id, idOffset, BuildTypePath());
+            throw new TlDeserializeException(id, idOffset, BuildTypePath(), HexDumpFrom(0));
         }
 
         _depth++;
@@ -144,6 +144,24 @@ public sealed class TlReader
             _typeStack.Pop();
             _depth--;
         }
+    }
+
+    /// <summary>
+    /// Hex-dumps the wire bytes from <paramref name="start"/> to the end of the buffer (capped) so an
+    /// unknown constructor — often an Eitaa rehash of a standard type — can be decoded by hand and
+    /// registered. Called with <c>start = 0</c> to dump the whole object; the offending id sits at the
+    /// exception's <see cref="TlDeserializeException.Offset"/> within the dump.
+    /// </summary>
+    private string HexDumpFrom(int start)
+    {
+        const int cap = 2048;
+        int available = _buffer.Length - start;
+        if (available <= 0)
+            return string.Empty;
+
+        int count = Math.Min(cap, available);
+        var hex = Convert.ToHexString(_buffer, start, count);
+        return count < available ? $"{hex}… (+{available - count} more)" : hex;
     }
 
     /// <summary>Builds an outermost-first, arrow-separated breadcrumb of the types currently being read.</summary>

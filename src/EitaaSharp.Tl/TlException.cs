@@ -28,6 +28,13 @@ public sealed class TlDeserializeException : TlException
     /// </summary>
     public string? TypePath { get; }
 
+    /// <summary>
+    /// A hex dump of the wire bytes from the offending constructor id to the end of the buffer
+    /// (capped), or null when unavailable. Lets an unknown (often Eitaa-rehashed) constructor be
+    /// decoded by hand and registered. See <see cref="TlReader"/>.
+    /// </summary>
+    public string? HexDump { get; }
+
     /// <summary>Creates the exception with just the offending id (no positional context).</summary>
     /// <param name="constructorId">The unregistered constructor id.</param>
     public TlDeserializeException(uint constructorId)
@@ -39,21 +46,25 @@ public sealed class TlDeserializeException : TlException
     /// <param name="constructorId">The unregistered constructor id.</param>
     /// <param name="offset">The byte offset the id was read at, or -1 if unknown.</param>
     /// <param name="typePath">Arrow-separated parent types the reader was inside, or null at top level.</param>
-    public TlDeserializeException(uint constructorId, int offset, string? typePath)
-        : base(BuildMessage(constructorId, offset, typePath))
+    /// <param name="hexDump">Hex dump of the tail bytes from the offending id onward, or null.</param>
+    public TlDeserializeException(uint constructorId, int offset, string? typePath, string? hexDump = null)
+        : base(BuildMessage(constructorId, offset, typePath, hexDump))
     {
         ConstructorId = constructorId;
         Offset = offset;
         TypePath = typePath;
+        HexDump = hexDump;
     }
 
-    private static string BuildMessage(uint constructorId, int offset, string? typePath)
+    private static string BuildMessage(uint constructorId, int offset, string? typePath, string? hexDump)
     {
         string message = $"No TL type registered for constructor id 0x{constructorId:X8} ({unchecked((int)constructorId)})";
         if (offset >= 0)
             message += $" at offset {offset}";
         if (!string.IsNullOrEmpty(typePath))
             message += $" while reading {typePath}";
+        if (!string.IsNullOrEmpty(hexDump))
+            message += $"\nWire bytes from start of object (hex): {hexDump}";
         return message;
     }
 }

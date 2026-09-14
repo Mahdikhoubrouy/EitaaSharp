@@ -55,24 +55,35 @@ public sealed class HttpEitaaTransport : IEitaaTransport, IDisposable
         public int Current;
     }
 
+    /// <summary>Per-attempt timeout when none is given — the same as <see cref="HttpClient.Timeout"/>'s default.</summary>
+    public static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(100);
+
     private readonly HttpClient _http;
     private readonly bool _ownsHttp;
+    private readonly TimeSpan _timeout;
     private readonly int _maxRetries;
     private readonly Pool _generic;
     private readonly Pool _download;
     private readonly Pool _upload;
 
     /// <summary>Creates a transport. With <paramref name="endpoint"/> null, uses the shuffled host groups.</summary>
+    /// <param name="endpoint">A single endpoint for every connection kind, or null for the host groups.</param>
+    /// <param name="httpClient">
+    /// A shared client to send through — typically one per process, so connections (and their TLS handshakes)
+    /// are reused across every <see cref="EitaaClient"/>. It is never disposed and never modified here: the
+    /// timeout is applied per attempt instead of through <see cref="HttpClient.Timeout"/>, which cannot be
+    /// changed once a client has sent a request. Null creates and owns a private client.
+    /// </param>
+    /// <param name="timeout">Per-attempt timeout; <see cref="DefaultTimeout"/> when null.</param>
+    /// <param name="maxRetries">Transient-failure retries (every host in the group is still tried once).</param>
     public HttpEitaaTransport(
         string? endpoint = null,
         HttpClient? httpClient = null,
         TimeSpan? timeout = null,
         int maxRetries = 2)
     {
-        _ownsHttp = httpClient is null;
-        _http = httpClient ?? new HttpClient();
-        if (timeout is { } t)
-            _http.Timeout = t;
+        (_http, _ownsHttp) = ClientFor(httpClient);
+        _timeout = timeout ?? DefaultTimeout;
         _maxRetries = Math.Max(0, maxRetries);
 
         if (endpoint is null)
@@ -107,10 +118,8 @@ public sealed class HttpEitaaTransport : IEitaaTransport, IDisposable
         if (uris.Length == 0)
             throw new ArgumentException("At least one endpoint is required.", nameof(endpoints));
 
-        _ownsHttp = httpClient is null;
-        _http = httpClient ?? new HttpClient();
-        if (timeout is { } t)
-            _http.Timeout = t;
+        (_http, _ownsHttp) = ClientFor(httpClient);
+        _timeout = timeout ?? DefaultTimeout;
         _maxRetries = Math.Max(0, maxRetries);
 
         var shared = new Pool(uris);
@@ -141,20 +150,34 @@ public sealed class HttpEitaaTransport : IEitaaTransport, IDisposable
         for (int attempt = 0; attempt < attempts; attempt++)
         {
             var endpoint = pool.Endpoints[idx % n];
+
+            // The attempt's own clock, linked to the caller's. Expiring it is a timeout (fail over); the caller
+            // cancelling is not (stop).
+            using var attemptCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            if (_timeout != System.Threading.Timeout.InfiniteTimeSpan)
+                attemptCts.CancelAfter(_timeout);
+
             try
             {
                 using var content = new ReadOnlyMemoryContent(payload);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-                using var response = await _http.PostAsync(endpoint, content, cancellationToken).ConfigureAwait(false);
+                using var response = await _http.PostAsync(endpoint, content, attemptCts.Token).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
 
+                var body = await response.Content.ReadAsByteArrayAsync(attemptCts.Token).ConfigureAwait(false);
                 Volatile.Write(ref pool.Current, idx % n); // stick to the host that worked
-                return await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+                return body;
             }
-            catch (Exception ex) when (IsTransient(ex, cancellationToken) && attempt + 1 < attempts)
+            catch (Exception ex) when (IsTransient(ex, cancellationToken))
             {
-                lastError = ex;
+                lastError = ex is OperationCanceledException
+                    ? new TimeoutException($"Eitaa {kind} request to {endpoint.Host} timed out after {_timeout.TotalSeconds:0.#}s.", ex)
+                    : ex;
+
+                if (attempt + 1 >= attempts)
+                    break;
+
                 idx++; // fail over to the next host in the group
                 await Task.Delay(TimeSpan.FromMilliseconds(200 * (attempt + 1)), cancellationToken).ConfigureAwait(false);
             }
@@ -163,6 +186,15 @@ public sealed class HttpEitaaTransport : IEitaaTransport, IDisposable
         throw new HttpRequestException(
             $"Eitaa {kind} transport failed after {attempts} attempt(s) across {n} host(s).", lastError);
     }
+
+    /// <summary>
+    /// The supplied client untouched, or a private one with no client-level timeout (the per-attempt timeout is
+    /// the only one, so both paths behave the same).
+    /// </summary>
+    private static (HttpClient Client, bool Owned) ClientFor(HttpClient? supplied)
+        => supplied is not null
+            ? (supplied, false)
+            : (new HttpClient { Timeout = System.Threading.Timeout.InfiniteTimeSpan }, true);
 
     private static Uri[] EndpointsFor(string[] hosts) => hosts.Select(h => new Uri($"https://{h}{DefaultPath}")).ToArray();
 

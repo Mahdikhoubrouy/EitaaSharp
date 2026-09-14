@@ -84,6 +84,23 @@ public sealed class EitaaClientOptions
     /// <summary>Per-request timeout.</summary>
     public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(30);
 
+    /// <summary>
+    /// A shared <see cref="System.Net.Http.HttpClient"/> to send through. Supply one per process (built over a
+    /// pooled <c>SocketsHttpHandler</c>) and every client reuses warm connections instead of paying DNS, TCP and
+    /// TLS again — for a short-lived client per call that setup is most of the call. The client is never disposed
+    /// or modified by EitaaSharp; <see cref="Timeout"/> is applied per request. Null (the default) gives each
+    /// client its own private connection pool, as before.
+    /// </summary>
+    public HttpClient? HttpClient { get; init; }
+
+    /// <summary>
+    /// Called after the token has been renewed — automatically on expiry, or through
+    /// <see cref="EitaaClient.RefreshTokenAsync"/> / <see cref="EitaaClient.TryRefreshTokenAsync"/> — with the new
+    /// token and its expiry. The session already holds the new token when this runs; this is the hook for
+    /// persisting it (and the expiry, which the session itself does not keep).
+    /// </summary>
+    public Func<EitaaClient, TokenRefreshedEventArgs, CancellationToken, Task>? OnTokenRefreshed { get; init; }
+
     /// <summary>Number of transient-failure retries before giving up.</summary>
     public int MaxRetries { get; init; } = 2;
 }

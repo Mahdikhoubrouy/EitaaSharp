@@ -3,6 +3,27 @@
 All notable changes to EitaaSharp are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.4.0]
+
+Connection reuse and observable token renewal — for hosts that create many short-lived clients.
+
+### Added
+- **`EitaaClientOptions.HttpClient`** — send through a shared `HttpClient` (e.g. one per process over a
+  pooled `SocketsHttpHandler`). Short-lived clients then reuse warm connections instead of paying DNS, TCP
+  and TLS on every call. A supplied client is never disposed or modified.
+- **`EitaaClient.TryRefreshTokenAsync`** — renews the token without the refresh-retry wrapper (safe inside a
+  custom `TokenRefreshHandler`). Concurrent callers are collapsed into a single `eitaaRefreshToken`.
+- **`OnTokenRefreshed`** (option and settable property) with `TokenRefreshedEventArgs(Token, ExpiresAt,
+  SocketToken)` — raised after every renewal, including the automatic one, so the expiry can be persisted.
+
+### Changed
+- `HttpEitaaTransport` applies its timeout **per attempt** (a linked cancellation token) instead of through
+  `HttpClient.Timeout`. A caller-supplied `HttpClient` no longer has its `Timeout` mutated; an owned client
+  uses an infinite client timeout. An attempt that times out fails over to the next host; the final failure
+  is an `HttpRequestException` whose inner exception is a `TimeoutException`. A caller's own cancellation is
+  still not retried.
+- The default automatic token refresh now also de-duplicates concurrent renewals.
+
 ## [0.3.0]
 
 Production-readiness release (Phase D): deserializer hardening, portable session

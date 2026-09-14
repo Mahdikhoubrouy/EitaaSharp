@@ -120,7 +120,8 @@ public sealed partial class EitaaClient : IDisposable
                     options.Imei ?? throw new ArgumentException("Session, SessionString, or Imei is required", nameof(options)),
                     options.Token));
 
-        var transport = new HttpEitaaTransport(options.Endpoint, timeout: options.Timeout, maxRetries: options.MaxRetries);
+        var transport = new HttpEitaaTransport(
+            options.Endpoint, httpClient: options.HttpClient, timeout: options.Timeout, maxRetries: options.MaxRetries);
         _ownedTransport = transport;
         _rpc = new EitaaRpc(transport, _session, options.Layer);
         _peers = new PeerResolver(_session);
@@ -132,6 +133,7 @@ public sealed partial class EitaaClient : IDisposable
         // supplied their own handler (or explicitly disabled it).
         TokenRefreshHandler = options.TokenRefreshHandler
             ?? (options.AutoRefreshToken ? DefaultTokenRefreshAsync : null);
+        OnTokenRefreshed = options.OnTokenRefreshed;
         ApiId = options.ApiId;
         ApiHash = options.ApiHash;
     }
